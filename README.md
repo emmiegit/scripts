@@ -10,6 +10,9 @@ A Windows script to predict the time needed to charge my phone, and turn off my 
 #### empty_cache.sh
 Clears the I/O cache from the RAM. Requires sudo access.
 
+#### findapp.py
+A python file to look in the `/usr/share/applications/` directory used by some WMs to store `.desktop` files by application name.
+
 #### gitcheck.sh
 Continually runs `git status` and `ls` to allow you to easily check what files you've changed for when you're working in a git repository.
 
