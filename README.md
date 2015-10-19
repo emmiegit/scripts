@@ -2,7 +2,7 @@
 A collection of scripts and other utilities I have written for my personal usage.
 
 #### backup.sh
-A simple script to use Duplicity to create encrypted incremental backups since Deja-dup is a broken mess. You need to install and configure `duply`. This script makes it possible to automate backups by adding this script to a cron job, as well as automatically adding/removing your password from the config file. (Since storing passwords in plaintext is insecure)
+A simple script to use Duplicity to create encrypted incremental backups since Deja-dup is a broken mess. You need to install and configure `duply`. This script makes it possible to automate backups by adding this script to a cron job, as well as automatically adding/removing your password from the config file. (Since storing passwords in plaintext is insecure). You can set your password by hashing it: `echo your_salt_here-your_password_here | sha256sum > .bakpasswd'
 
 #### charge_shutdown.py
 A Windows script to predict the time needed to charge my phone, and turn off my computer then to prevent overcharging.
