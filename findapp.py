@@ -7,30 +7,29 @@ APP_DIRS = ("/usr/share/applications/", expanduser("~/.local/share/applications/
 APP_NAME_RE = re.compile(r"(?:.*\n)*Name=(.*)\n(?:.*\n)")
 APP_COMM_RE = re.compile(r"(?:.*\n)*Comment=(.*)\n(?:.*\n)")
 
-def list_if_match(fn, regex, options):
-    for appdir in APP_DIRS
-        with open(appdir + fn, 'r') as fh:
-            contents = fh.read()
+def list_if_match(appdir, fn, regex, options):
+    with open(appdir + fn, 'r') as fh:
+        contents = fh.read()
 
-            try:
-                name = APP_NAME_RE.match(contents).group(1)
-            except AttributeError:
-                return
+        try:
+            name = APP_NAME_RE.match(contents).group(1)
+        except AttributeError:
+            return
 
-            try:
-                comment = APP_COMM_RE.match(contents).group(1)
-            except AttributeError:
-                return
+        try:
+            comment = APP_COMM_RE.match(contents).group(1)
+        except AttributeError:
+            return
 
-            if re.findall(regex, name, options["REGEX_FLAGS"]) or (options["SEARCH_COMMENT"] and re.findall(regex, comment, options["REGEX_FLAGS"])):
-                if options["SHOW_FILENAME"] and options["SHOW_COMMENT"]:
-                    print("%s (%s)\n\t%s" % (name, fn, comment))
-                elif options["SHOW_FILENAME"]:
-                    print("%s (%s)" % (name, fn))
-                elif options["SHOW_COMMENT"]:
-                    print("%s\n\t%s" % (name, comment))
-                else:
-                    print(name)
+        if re.findall(regex, name, options["REGEX_FLAGS"]) or (options["SEARCH_COMMENT"] and re.findall(regex, comment, options["REGEX_FLAGS"])):
+            if options["SHOW_FILENAME"] and options["SHOW_COMMENT"]:
+                print("%s (%s)\n\t%s" % (name, fn, comment))
+            elif options["SHOW_FILENAME"]:
+                print("%s (%s)" % (name, fn))
+            elif options["SHOW_COMMENT"]:
+                print("%s\n\t%s" % (name, comment))
+            else:
+                print(name)
 
 def usage():
     print("Usage: %s [options] pattern" % (sys.argv[0].split("/")[-1]))
@@ -113,6 +112,7 @@ if __name__ == "__main__":
                      .replace("*", ".*")    \
                      .replace("?", ".?")
 
-    for fn in os.walk(APP_DIR).next()[2]:
-        list_if_match(fn, regex, options)
+    for appdir in APP_DIRS:
+        for fn in os.walk(appdir).next()[2]:
+            list_if_match(appdir, fn, regex, options)
 
