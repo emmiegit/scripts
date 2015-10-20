@@ -8,7 +8,7 @@ A simple script to use Duplicity to create encrypted incremental backups since D
 A Windows script to predict the time needed to charge my phone, and turn off my computer then to prevent overcharging.
 
 #### days_until.py
-Lists all events in the specified file (by default `eventlist.txt`) by how the number of days until (or since) the specified event. All entries in the input file must have be in the exact form `[3-Month] [2-Day] [4-Year] \[Event name or description\]`. For example: `Jan 01 2000 Y2K`. The similar `January 1 00 Y2K` would not be accepted.
+Lists all events in the specified file (by default `eventlist.txt`) by how the number of days until (or since) the specified event. All entries in the input file must have be in the exact form `[3-Month] [2-Day] [4-Year] [Event name or description]`. For example: `Jan 01 2000 Y2K`. The similar `January 1 00 Y2K` would not be accepted.
 
 #### empty_cache.sh
 Clears the I/O cache from the RAM. Requires sudo access.
