@@ -13,9 +13,6 @@ Clears the I/O cache from the RAM. Requires sudo access.
 #### findapp.py
 A python file to look in the `/usr/share/applications/` directory used by some WMs to store `.desktop` files by application name.
 
-#### gitcheck.sh
-Continually runs `git status` and `ls` to allow you to easily check what files you've changed for when you're working in a git repository.
-
 #### hash_media.py <i>directories...</i>
 Walks through a directory recursively and removes exact duplicates by renaming media files to their SHA1 sum.
 
