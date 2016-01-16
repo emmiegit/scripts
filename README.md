@@ -11,7 +11,7 @@ A collection of scripts and other utilities I have written for my personal usage
 `wm` - Scripts used by bindings (such as media keys) or by my window manager directly. See my dotfiles repo for more information.
 
 ## Script summaries
-### Top level
+## Top level
 
 #### charge-shutdown.py
 A Windows script (for Cygwin) to predict the time needed to charge my phone, and turn off my computer then to prevent overcharging.
@@ -70,10 +70,10 @@ Checks all git repositories either in the current working directory or in the di
 #### vim-keyswap.sh
 I have swapped my caps lock and escape keys since caps lock is a useless key and, as a vim user, I use escape all the time. This scripts will check if the keys are already swapped, and if not, invoke `xmodmap` to switch them.
 
-### apps
+## apps
 This directory is pretty self-explanatory, and is pretty specific to my machine anyways. The only file that might be of interest is `gvim.sh`, which makes it so that opening files with Gvim create new tabs if Gvim is already running.
 
-### arch
+## arch
 (todo)
 
 #### hash-media.py <i>directory</i>...
@@ -85,21 +85,21 @@ Compresses or extracts an encrypted archive, removing exact duplicates and renam
 echo your_password_here | sha1sum > dat/.archpasswd
 ```
 
-#### dat
+### dat
 (todo)
 
-#### fun
+### fun
 (todo)
 
-#### sbin
+### sbin
 (todo)
 
 #### empty-cache.sh
 Clears the I/O cache from the RAM. Note that this will slightly worsen I/O performance until the cache is rebuilt. I wrote it because I didn't like seeing my ram filled up.
 
-#### wip
+### wip
 (todo)
 
-#### wm
+### wm
 (todo)
 
