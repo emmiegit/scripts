@@ -24,7 +24,7 @@ def get_quote():
 def listen():
     while True:
         connection, address = sock.accept()
-        message = "\nHello, %s.\nHere is today's quote of the day:\n\n%s\n\n" % (address[0], get_quote())
+        message = "\nHello %s.\nHere is today's quote of the day:\n\n%s\n\n" % (address[0], get_quote())
         connection.send(bytearray(message, "UTF-8"))
         connection.close()
 
