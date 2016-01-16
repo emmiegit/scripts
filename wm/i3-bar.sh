@@ -1,0 +1,1 @@
+/home/ammon/.config/lemonbar/bar

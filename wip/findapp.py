@@ -1,13 +1,17 @@
-#!/usr/bin/env python
+#!/bin/python
 from __future__ import with_statement
 from os.path import expanduser
 import re, os, sys
 
 APP_DIRS = ("/usr/share/applications/", expanduser("~/.local/share/applications/"))
 APP_NAME_RE = re.compile(r"(?:.*\n)*Name=(.*)\n(?:.*\n)")
+APP_EXEC_RE = re.compile(r"(?:.*\n)*Exec=(.*)\n(?:.*\n)")
 APP_COMM_RE = re.compile(r"(?:.*\n)*Comment=(.*)\n(?:.*\n)")
 
 def list_if_match(appdir, fn, regex, options):
+    if not appdir.endswith('/'):
+        appdir = appdir + '/'
+
     with open(appdir + fn, 'r') as fh:
         contents = fh.read()
 
@@ -17,13 +21,18 @@ def list_if_match(appdir, fn, regex, options):
             return
 
         try:
+            execn = APP_EXEC_RE.match(contents).group(1)
+        except AttributeError:
+            return
+
+        try:
             comment = APP_COMM_RE.match(contents).group(1)
         except AttributeError:
             return
 
-        if re.findall(regex, name, options["REGEX_FLAGS"]) or (options["SEARCH_COMMENT"] and re.findall(regex, comment, options["REGEX_FLAGS"])):
+        if re.findall(regex, name, options["REGEX_FLAGS"]) or (options["SEARCH_ONLY_NAME"] and re.findall(regex, comment, options["REGEX_FLAGS"])):
             if options["SHOW_FILENAME"] and options["SHOW_COMMENT"]:
-                print("%s (%s)\n\t%s" % (name, fn, comment))
+                print("%s (%s%s)\n\t%s\n\t%s" % (appdir, name, fn, comment, execn))
             elif options["SHOW_FILENAME"]:
                 print("%s (%s)" % (name, fn))
             elif options["SHOW_COMMENT"]:
@@ -40,7 +49,7 @@ def help_and_quit():
     print(" -c --casesensitive Perform a case-sensitive search.")
     print(" -h --help          Prints this help text and quits.")
     print(" -n --nofilename    Don't print the filenames of matches.")
-    print(" -o --onlynames     Don't search comments, only search application names.")
+    print(" -o --onlynames     Only search application names.")
     print(" -r --regex         Use regular expression instead of basic wildcards.")
     print(" -s --showcomment   Print the comment of the application.")
     exit(0)
@@ -59,7 +68,7 @@ if __name__ == "__main__":
     options = {
         "USE_REGEX" : False,
         "SHOW_FILENAME" : True,
-        "SEARCH_COMMENT" : True,
+        "SEARCH_ONLY_NAME" : False,
         "REGEX_FLAGS" : re.IGNORECASE,
         "SHOW_COMMENT" : False,
     }
@@ -80,8 +89,8 @@ if __name__ == "__main__":
         "help" : help_and_quit,
         "v"       : version_and_quit,
         "version" : version_and_quit,
-        "o"         : lambda: ASSIGN_FLAG("SEARCH_COMMENT", False),
-        "onlynames" : lambda: ASSIGN_FLAG("SEARCH_COMMENT", False),
+        "o"         : lambda: ASSIGN_FLAG("SEARCH_ONLY_NAME", False),
+        "onlynames" : lambda: ASSIGN_FLAG("SEARCH_ONLY_NAME", False),
         "r"     : lambda: ASSIGN_FLAG("USE_REGEX", True),
         "regex" : lambda: ASSIGN_FLAG("USE_REGEX", True),
         "n"          : lambda: ASSIGN_FLAG("SHOW_FILENAME", False),

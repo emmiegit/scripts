@@ -20,18 +20,17 @@ case $# in
     ;;
 esac
 
-[ -z "$EDITOR" ] && EDITOR=vi
+# Determine the user's default choice of editor
+if [ "x$VISUAL" == "x" ]; then
+    if [ "x$EDITOR" == "x" ]; then
+        EDITOR=vi
+    fi
+else
+    EDITOR=$VISUAL
+fi
 
-dest=$dest/$fn\.desktop
-echo "\
-[Desktop Entry]
-Version=1.0
-Name=
-Comment=
-Exec=
-Icon=
-Terminal=false
-Categories=Utility;Application;" > $dest
-chmod 755 $dest
-$EDITOR $dest
+dest="${dest}/${fn}.desktop"
+cp "$(dirname $0)/dat/template.desktop" "$dest"
+#chmod 755 "$dest" # Only for *buntu systems
+"$EDITOR" "$dest"
 

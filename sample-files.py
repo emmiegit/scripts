@@ -8,25 +8,25 @@ def sample(src, dest, amount):
     print(files)
     if len(files) < amount:
         print "Not enough files to select %d (only %d)." % (amount, len(files))
-    
+
     for i in range(amount):
         fn = files.pop()
         ext = fn.split(".")[-1]
         newfn = "%s%s%04d.%s" % (dest, os.sep, i, ext)
         print "%s -> %s" % (fn, newfn)
-        shutil.copyfile("%s%s%s" % (src, os.sep, fn), newfn) 
+        shutil.copyfile("%s%s%s" % (src, os.sep, fn), newfn)
 
 if __name__ == "__main__":
     if len(sys.argv) <= 3:
         print("Not enough arguments.")
-        print("Usage: %s [source directory] [output directory] [amount]" % sys.argv[0].split(os.sep)[-1])
+        print("Usage: %s [source directory] [output directory] [amount]" % os.path.basename(sys.argv[0]))
         exit(1)
-    
+
     src = sys.argv[1]
     if not os.path.isdir(src):
         print("Error: directory does not exist: \"%s\"." % src)
         exit(1)
-    
+
     dest = sys.argv[2]
     try:
         if not os.path.isdir(dest):
