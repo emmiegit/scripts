@@ -37,9 +37,9 @@ if __name__ == "__main__":
     sock.bind(("", 17)) # host, port
     sock.listen(5)
 
-    signal.signal(signal.SIGUSR1, load_quotes)
-    signal.signal(signal.SIGINT, quit)
-    signal.signal(signal.SIGTERM, quit)
+    signal.signal(signal.SIGUSR1, handle_sigusr1)
+    signal.signal(signal.SIGINT, handle_exit)
+    signal.signal(signal.SIGTERM, handle_exit)
     load_quotes()
     listen()
 
