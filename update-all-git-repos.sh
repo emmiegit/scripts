@@ -4,6 +4,7 @@
 
 GREEN='\e[32m'
 YELLOW='\e[33;1m'
+RED='\e[31;1m'
 RESET='\e[0m'
 
 for dir in *; do
