@@ -2,6 +2,10 @@
 
 [[ $# -gt 0 ]] && cd "$1"
 
+GREEN='\e[32m'
+YELLOW='\e[33;1m'
+RESET='\e[0m'
+
 for dir in *; do
     [[ ! -d $dir ]] && continue
     cd "$dir"
@@ -19,20 +23,20 @@ for dir in *; do
     BASE=$(git merge-base @ @{u})
 
     if [[ $LOCAL == $REMOTE ]]; then
-        printf '[UP-TO-DATE] %s\n' "$REPO"
+        printf "[${GREEN}UP-TO-DATE${RESET}] %s\n" "$REPO"
     elif [[ $LOCAL == $BASE ]]; then
-        printf '[NEEDS PULL] %s\n' "$REPO"
+        printf "[${YELLOW}NEEDS PULL${RESET}] %s\n" "$REPO"
         git pull --all
         git gc --aggressive
     elif [[ $REMOTE == $BASE ]]; then
-        printf '[NEEDS PUSH] %s\n' "$REPO"
+        printf "[${YELLOW}NEEDS PUSH${RESET}] %s\n" "$REPO"
         ((RET++))
     else
-        printf '[DIVERGED]   %s\n' "$REPO"
+        printf "[${RED}DIVERGED${RESET}]   %s\n" "$REPO"
         ((RET++))
     fi
 
-    cd - > /dev/null
+    cd ..
 done
 
 exit $RET
