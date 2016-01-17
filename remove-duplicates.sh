@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 HASH_SCRIPT='/usr/local/scripts/arch/hash-media.py'
-LOCATIONS="${HOME}/Pictures/Wallpapers"
+LOCATIONS=("${HOME}/Pictures/Anime" "${HOME}/Pictures/Wallpapers")
 
 on_exit() {
     read -p 'Done. '
@@ -21,7 +21,7 @@ if [[ ! -f $HASH_SCRIPT ]]; then
     exit 1
 fi
 
-for dir in $LOCATIONS; do
+for dir in "${LOCATIONS[@]}"; do
     if [[ -d $dir ]]; then
         "$HASH_SCRIPT" "$dir"
     fi
