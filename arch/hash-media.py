@@ -173,8 +173,6 @@ def hash_media(dir_to_explore, err_fh, pause=False):
                     print("Unable to rename \"%s\"." % fn)
                     traceback.print_exc(None, err_fh)
                     errors += 1
-                finally:
-                    print("Renaming \"%s\" to \"%s\"." % (fn, new_fn))
 
           # if new_fn in allfiles.viewkeys():
           #     print("Found collision for \"%s\" at \"%s\"..." % (new_fn, cd))
