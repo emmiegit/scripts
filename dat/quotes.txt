@@ -1,5 +1,6 @@
 Thanks to systemd, you can now watch your favorite anime in high resolution via the chinesecartoonctl command.
 You're not a real Linux user if you don't have a minimalist anime desktop.
+Your waifu is trash, just like your DE.
 If you find a random command on the internet, try running it as root. What's the worse that could happen?
 Can root create a process that even root can't kill?
 ERROR: Root device mounted successfully, but /sbin/init dies not exist. Bailing out, you are on your own. Good luck.
@@ -16,5 +17,4 @@ echo "Just another useless use of cat." | cat
 false - do nothing, unsuccessfully
 This user is not in the sudoers files. This incident will be reported.
 We've created a special character device for handling complaints. It's located at /dev/null.
-Best single threaded CPU benchmark: cat /dev/zero > /dev/null
 Rome wasn't burnt in a day.

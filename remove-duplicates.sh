@@ -4,12 +4,12 @@ HASH_SCRIPT='/usr/local/scripts/arch/hash-media.py'
 LOCATIONS=("${HOME}/Pictures/Anime" "${HOME}/Pictures/Wallpapers")
 
 on_exit() {
-    read -p 'Done. '
+    echo 'Done.'
     exit $?
 }
 
 on_cancel() {
-    read -p 'Interrupted by user. '
+    echo 'Interrupted by user.'
     exit 1
 }
 

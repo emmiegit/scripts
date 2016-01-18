@@ -1,15 +1,41 @@
 #!/bin/sh
 set -e
 
-encfs /media/archive/Backup/Nexus\ One.crypt          /media/archive/Backup/Nexus\ One
-encfs /media/archive/Backup/Nexus\ Five.crypt         /media/archive/Backup/Nexus\ Five
-encfs /media/archive/Backup/Novus\ USB.crypt          /media/archive/Backup/Novus\ USB
-encfs /media/archive/Backup/Tomboy\ Notes.crypt       /media/archive/Backup/Tomboy\ Notes
+encmount() {
+    if ! mount | grep -q "$1"; then
+        echo "Mounting $1..."
+        encfs "$1.crypt" "$1"
+    else
+        echo "$1 already mounted."
+    fi
+}
 
-rclone sync /media/archive/Backup/Titus               Amazon\ Backup:/Live/Titus
-rclone sync /media/archive/Backup/Archive\ Disk       Amazon\ Backup:/Live/Archive
-rclone sync /media/archive/Backup/Nexus One.crypt     Amazon\ Backup:/Live/NexusOne
-rclone sync /media/archive/Backup/Nexus Five.crypt    Amazon\ Backup:/Live/NexusFive
-rclone sync /media/archive/Backup/Novus USB.crypt     Amazon\ Backup:/Live/NovusUSB
-rclone sync /media/archive/Backup/Tomboy\ Notes.crypt Amazon\ Backup:/Live/TomboyNotes
+rclone_sync() {
+    if [ "$1" == "*.crypt" ]; then
+        name="${1:0:-6}"
+        src="/media/archive/Backup/$1"
+        dest="Amazon Backup:/Live/$name"
+    else
+        name="$1"
+        src="/media/archive/Backup/$1"
+        dest="Amazon Backup:/Live/$1"
+    fi
+
+    echo "Synchronizing $name..."
+    rclone sync "$src" "$dest"
+}
+
+printf 'Mounting encrypted filesystems...\n'
+encmount /media/archive/Backup/Nexus\ One
+encmount /media/archive/Backup/Nexus\ Five
+encmount /media/archive/Backup/Novus\ USB
+encmount /media/archive/Backup/Tomboy\ Notes
+
+printf '\nStarting backup...\n'
+rclone_sync 'Titus'
+rclone_sync 'Archive Disk'
+rclone_sync 'Nexus One.crypt'
+rclone_sync 'Nexus Five.crypt'
+rclone_sync 'Novus USB.crypt'
+rclone_sync 'Tomboy Notes.crypt'
 

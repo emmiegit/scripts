@@ -100,7 +100,7 @@ def hash_media(dir_to_explore, err_fh, pause=False):
             continue
 
         cd = dirify(os.path.abspath(cd))
-        print("Entering %s (%d items)..." % (_dir, len(files)))
+        print("Entering %s (%d files)..." % (_dir, len(files)))
 
         del _dir, ignorethis
 

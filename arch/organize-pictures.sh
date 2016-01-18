@@ -1,15 +1,13 @@
-#!/bin/bash
+#!/usr/bin/env bash
 set -e
 
-CONFIRM_DELETE=false
+CONFIRM=false
 RECURSIVE=false
-OPEN='feh -g 840x600'
 LIST_DIRS=false
-LIST_CMD='/bin/ls -d --color=tty */ .*/'
 
 confirmation() {
-    if $CONFIRM_DELETE; then
-        read -p "Are you sure you would like to delete this file? [y/N] " response
+    if $CONFIRM; then
+        read -p "Are you sure you want to do this? [y/N] " response
         case $response in
             yes) return 0 ;;
             y) return 0 ;;
@@ -23,15 +21,22 @@ confirmation() {
 
 movefile() {
     while true; do
-        if $LIST_DIRS; then
-            $LIST_CMD
-        fi
-
         read -p "To which directory would you like to move $1 to? " dest
         if [[ -z $dest ]] || [ "$dest" == "." ]; then
             return
-        elif [ "$dest" == "!" ]; then
+        elif [[ $dest == '!' ]]; then
             confirmation && trash "$1" && return
+        elif [[ $dest == '!!' ]]; then
+            confirmation && rm "$1" && return
+        elif [[ $dest == '*' ]]; then
+            tree -ld
+        elif [[ $dest == '+' ]]; then
+            read -p "What should the directoy be called? " dest
+            mkdir "$dest" && return
+        elif [[ $dest == +* ]]; then
+            mkdir "${dest:1}" && return
+        elif [[ $dest == '_' ]]; then
+            xdg-open .
         elif [[ -d $dest ]]; then
             mv "$1" "$dest"
             return
@@ -42,14 +47,14 @@ movefile() {
 }
 
 organize() {
-    prev=`pwd`
+    prev=$(pwd)
     cd "$1"
     for fn in *; do
         if [[ -d $fn ]] && $RECURSIVE; then
             echo "Recursively organizing $fn..."
             organize "$fn"
-        elif file "$fn" | grep -q "image"; then
-            $OPEN "$fn" &
+        elif file "$fn" | grep -q 'image'; then
+            feh -g 960x600 "$fn" 2> /dev/null &
             movefile "$fn"
             kill $! ||:
         else
@@ -60,13 +65,28 @@ organize() {
     cd "$prev"
 }
 
-if [[ $# -eq 0 ]]; then
-    echo "Usage: $(dirname $0) directory-to-organize..."
-    exit 1
-fi
+main() {
+    if [[ $# -eq 0 ]]; then
+        echo "Usage: $(basename $0) directory-to-organize..."
+        exit 1
+    fi
 
-while [[ $# -gt 0 ]]; do
-    organize "$1"
-    shift
-done
+    echo 'For each picture, enter the directory it should be moved to.'
+    echo 'Note that you can specify any directory, such as abc/def or /tmp/pictures.'
+    echo 'Specifying nothing, or . will keep the image where it is.'
+    echo 'In addition, there are special commands you can specify:'
+    echo ' !  - Trash the current image. (This assumes you have a binary called "trash" on your $PATH)'
+    echo ' !! - Delete the current image.'
+    echo ' *  - List all directories in the current working directory.'
+    echo ' +  - Create a directory. You can specify the name directly by using "+dir_name".'
+    echo ' _  - Open the current directory in your file explorer of choice.'
+    echo ''
+
+    while [[ $# -gt 0 ]]; do
+        organize "$1"
+        shift
+    done
+}
+
+main $@
 
