@@ -19,35 +19,35 @@ touch $lockfile
 notify-send 'Locking screen...'
 
 # Detect number of monitors
-case $(xrandr --query | grep ' connected' | wc -l) in
+case $(xrandr --query | grep -c ' connected') in
     1)
-        screen=$(mktemp /tmp/lockscreen-XXXXXX.png)
         result=$(mktemp /tmp/lockscreen-XXXXXX.png)
-        maim --opengl $screen
-        convert $screen -scale 10% -scale 1000% $screen
-        composite -gravity Center $lock $screen $result
-        rm -f $screen $result
+        maim --opengl --format png /dev/stdout \
+            | convert /dev/stdin -scale 10% -scale 1000% /dev/stdout \
+            | composite -gravity Center $lock /dev/stdin $result
+        i3lock -i $result
+        rm -f $result
         ;;
     2)
         left=$(mktemp /tmp/lockscreen-XXXXXX.png)
         right=$(mktemp /tmp/lockscreen-XXXXXX.png)
-        left_2=$(mktemp /tmp/lockscreen-XXXXXX.png)
-        right_2=$(mktemp /tmp/lockscreen-XXXXXX.png)
         result=$(mktemp /tmp/lockscreen-XXXXXX.png)
-        maim --opengl --geometry=${x_res}x${y_res}+0+0 $left
-        maim --opengl --geometry=${x_res}x${y_res}+${x_res}+0 $right
-        convert $left -scale 10% -scale 1000% $left
-        convert $right -scale 10% -scale 1000% $right
-        composite -gravity Center $lock $left $left_2
-        composite -gravity Center $lock $right $right_2
-        convert +append $left_2 $right_2 $result
+        maim --opengl --format png --geometry=${x_res}x${y_res}+0+0 /dev/stdout \
+            | convert /dev/stdin -scale 10% -scale 1000% /dev/stdout \
+            | composite -gravity Center $lock /dev/stdin $left &
+        maim --opengl --format png --geometry=${x_res}x${y_res}+${x_res}+0 /dev/stdout \
+            | convert /dev/stdin -scale 10% -scale 1000% /dev/stdout \
+            | composite -gravity Center $lock /dev/stdin $right &
+        wait
+        convert +append $left $right $result
         i3lock -i $result
-        rm -f $left $left_2 $right $right_2 $result
+        rm -f $left $right $result
         ;;
     *)
-        screen=$(mktemp /tmp/lockscreen-XXXXXX.png)
-        i3lock -i $screen
-        rm -f $screen
+        result=$(mktemp /tmp/lockscreen-XXXXXX.png)
+        maim --opengl $result
+        i3lock -i $result
+        rm -f $result
         ;;
 esac
 

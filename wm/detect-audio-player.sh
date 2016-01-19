@@ -13,10 +13,10 @@ detect-pianobar() {
     pgrep -U $UID pianobar > /dev/null
 }
 
-if detect-mocp; then
-    printf "mocp"
-elif detect-pianobar; then
+if detect-pianobar; then
     printf "pianobar"
+elif detect-mocp; then
+    printf "mocp"
 else
     printf "unknown"
 fi
