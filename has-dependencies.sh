@@ -2,10 +2,8 @@
 
 missing=0
 
-# Uses pacman -Q instead of pacman -Qs because the latter does not allow
-# searching by exact package name. It is slower, but oh well.
 for dep in $@; do
-    if pacman -Q | grep -q "^$dep"; then
+    if pacman -Qs "^$dep$" > /dev/null; then
         printf "$dep: \e[32m\e[1mok\e[0m\n"
     else
         printf "$dep: \e[31m\e[1mfail\e[0m\n"
