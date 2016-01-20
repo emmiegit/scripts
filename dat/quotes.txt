@@ -3,8 +3,10 @@ You're not a real Linux user if you don't have a minimalist anime desktop.
 Your waifu is trash, just like your DE.
 If you find a random command on the internet, try running it as root. What's the worse that could happen?
 Can root create a process that even root can't kill?
+There's no place like ~
+Thou shalt not kill -9.
+You don't exist. Go away.
 ERROR: Root device mounted successfully, but /sbin/init dies not exist. Bailing out, you are on your own. Good luck.
-Famous last words: rm isn't working, lemme try sudo rm...
 Roll your own crypto! If the system is secret, there's no way anyone can break in, right?
 Macs use some of the GNU coreutils, so why isn't it GNU/Mac?
 You need to install yaourt from the AUR so you can install AUR packages? Just run yaourt -S yaourt.
