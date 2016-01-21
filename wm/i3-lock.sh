@@ -16,7 +16,7 @@ on_exit() {
 trap on_exit EXIT SIGTERM SIGINT SIGHUP SIGSEGV
 
 touch $lockfile
-notify-send 'Locking screen...'
+#notify-send 'Locking screen...'
 
 # Detect number of monitors
 case $(xrandr --query | grep -c ' connected') in
