@@ -1,0 +1,292 @@
+#!/usr/bin/env python
+"""
+convenience script for making animated gifs from
+youtube or other videos using ffmpeg, imagemagick and/or gifsicle
+
+Copyright (c) 2014 Dan Panzarella
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
+"""
+import os, sys
+import subprocess
+import glob
+import argparse
+import shutil
+import string, random
+
+
+"""
+	@todo:
+		- fuzzing / quality slider?
+		- restore optimizer (gifsicle -O3)
+		- frame skipping+speed reduction for some savings (affects frame rate)
+"""
+
+FRAME_PATTERN="frame-%04d.png"
+FRAME_GLOB="frame-*.png"
+
+PALETTE_NAME="/tmp/palette-%s.png"
+PALETTE_GLOB=PALETTE_NAME % "*"
+
+TMP_VIDEO_NAME="tmp.mp4"
+
+#decorator to specify that a function requires a specific program be installed
+def requires(program):
+	def not_installed():
+		print("%s needs to be installed for this to work" % program,file=sys.stderr)
+		sys.exit(1)
+	def decorator(func):
+		if shutil.which(program):
+			return func
+		else:
+			return not_installed
+	return decorator
+
+
+def parse_args():
+	parser = argparse.ArgumentParser(description='Creates gifs')
+	#positional args
+	parser.add_argument('sources',metavar='SOURCE',nargs='+',help="Input to be converted. Can be Video file, YouTube URL or series of still images")
+	#flag arguments
+	parser.add_argument('-s','--size',metavar="WxH",default="1280:-1",help="output dimensions. You may specify both axes, or use -1 in one to preserve aspect ratio")
+	parser.add_argument('-b','--begin',dest='start',metavar='TIME',default="0",help="start time (roughly, will ask for exact frame later)")
+	parser.add_argument('-d','--duration',metavar='TIME',default="5",help="duration (roughly, will ask for exact frame later)")
+	parser.add_argument('-o','--output',metavar='GIF_NAME',default="out.gif",help="Output gif name")
+	parser.add_argument('-k','--keep',dest='keep_frames',action='store_true',help="Keep (do not discard) PNG frames")
+	parser.add_argument('-f','--frames-only',dest='frames_only',action='store_true',help="Generate PNG frames only, then exit")
+	parser.add_argument('-tv','--to-video',dest='video_only',action='store_true',help="Create video clip only, and exit")
+	parser.add_argument('-r','--rate',metavar='RATE',dest='frame_rate',default=None,help="Use specific frame rate")
+	#parser.add_argument('--optimize',dest='optimize',action='store_true',help="generate gifsicle optimized gifs")
+
+	return parser.parse_args()
+
+"""
+	Validates input files exist, and determines whether is is a single video
+	source, or frames to be combined.
+
+	@param srcs - list, raw input
+	@return list - single element in the case of video files, containing filename
+				   multi-element for frames
+"""
+def validate_sources(srcs):
+	if len(srcs) == 1:
+		# assume video file or URL to one
+		if srcs[0].lower()[:4] == 'http':
+			filename = video_filename(srcs[0])
+			if os.path.isfile(filename):
+				print('file exists, not re-downloading')
+			else:
+				print("downloading video from youtube")
+				download_video(srcs[0])
+				if not os.path.isfile(filename):
+					print("downloaded video, but could not locate saved file",file=sys.stderr)
+					sys.exit(1)
+			return [filename]
+		else:
+			if not os.path.isfile(srcs[0]):
+				print("could not find video file %s" % srcs[0],file=sys.stderr)
+				sys.exit(1)
+			return srcs
+	else:
+		for src in srcs:
+			if not os.path.isfile(src):
+				print("could not find source frame: %s" % src,file=sys.stderr)
+				sys.exit(1)
+		return srcs
+
+
+
+
+@requires('youtube-dl')
+def download_video(url):
+	result = subprocess.run(["youtube-dl","-c","-i","-f","22",url],check=True)
+
+@requires('youtube-dl')
+def video_filename(url):
+	filename = subprocess.run(["youtube-dl","--get-filename",url],stdout=subprocess.PIPE,check=True)
+	filename = filename.stdout.decode('utf-8').strip()
+	return filename
+
+@requires('ffmpeg')
+def video_to_frames(video,size,start,duration,rate=None):
+	print('creating frames...')
+	args = ["ffmpeg","-ss",start,"-t",duration,"-i",video,"-vf","scale=%s:flags=lanczos" % size,"-f","image2",FRAME_PATTERN]
+	if rate:
+		args.insert(7,"-r")
+		args.insert(8,str(rate))
+	result = subprocess.run(args,check=True,stdout=subprocess.DEVNULL,stderr=subprocess.DEVNULL)
+
+@requires('ffmpeg')
+def frames_to_video(frames,filename,rate=None):
+
+	if not rate:
+		rate = '24'
+
+	os.mkdir("frames")
+	for i,frame in enumerate(frames,start=1):
+		os.symlink(os.path.abspath(frame),"frames/%s" % (FRAME_PATTERN % i))
+	args = ["ffmpeg","-f","image2","-i","frames/%s" % FRAME_PATTERN,"-c:v","libx264","-qp","0","-preset","fast","-pix_fmt","yuv444p","-r",str(rate),"-y",filename]
+	result = subprocess.run(args,check=True,stdout=subprocess.DEVNULL,stderr=subprocess.DEVNULL)
+	shutil.rmtree("frames")
+
+def clear_frame_files():
+	for filename in glob.glob(FRAME_GLOB):
+		os.remove(filename)
+
+def clear_palette_files():
+	for filename in glob.glob(PALETTE_GLOB):
+		os.remove(filename)
+
+@requires('sxiv') #@todo: pop up our own window? not hard to add an image viewer here
+def choose_frames():
+	files = sorted(glob.glob(FRAME_GLOB))
+	proc = subprocess.Popen(["sxiv"]+files)
+	start_frame = int(input("Review the images and enter the starting frame number: "))
+	if not os.path.isfile(FRAME_PATTERN % start_frame):
+		print("That was not a valid frame we showed you",file=sys.stderr)
+	end_frame = int(input("Enter the ending frame number: "))
+	if not os.path.isfile(FRAME_PATTERN % end_frame):
+		print("That was not a valid frame we showed you",file=sys.stderr)
+
+	proc.terminate()
+	return (start_frame,end_frame)
+
+
+def convert_time(tm):
+	"""
+	Converts a given time to seconds
+	Time can be presented as just seconds (does nothing)
+	or of the format HH:MM:SS.MICROSECONDS
+	"""
+	seconds=0 #our accumulator
+	scale=1 #used when converting minutes, hours
+	micro="0" #add back any microseconds given
+	tm=str(tm)
+	if '.' in tm:
+		tm,micro = tm.split('.')
+	units = tm.split(':')
+	#now, work in increasing order as (minutes,hours) are optional
+	units.reverse()
+	for i in units:
+		seconds += (int(i)*scale)
+		scale *= 60 #next time unit up will need this as the scaler
+	return float("%d.%s" % (seconds,micro))
+
+
+def random_name(n=5):
+	return ''.join(random.choice(string.ascii_letters) for _ in range(n))
+
+
+def calculate_exact_times(rate,start_time,end_time,start_frame,end_frame):
+	"""
+	The problem with going back to the start video with these start and
+	stop times is that these times assumed a certain frame reate that the
+	source video might not be! It won't always be frame-accurate
+	"""
+	start = convert_time(start_time)
+
+	start += start_frame/(rate*1.0) #move start forward by however many chosen frames
+	end = (end_frame - start_frame - 1)/(rate*1.0) #original chosen time can be totally discarded
+	# duration is simply relative to new start. get there just by frame counting
+
+	return ("%.03f" % start,"%.03f" % end)
+
+def make_all(video,size,start,end,filename):
+	pids=[]
+	simple = ffmpeg(video,size,start,end)
+
+	pids += [simple("-gifflags","-transdiff","-y","01-notrans-%s" % filename)]
+	pids += [simple("-gifflags","+transdiff","-y","01-trans-%s" % filename)]
+
+	#generate webm!
+	pids += [simple("-c:v","libvpx","-crf","4","-b:v","50M","-c:a","libvorbis","-an","-y","%s.webm" % filename.rsplit(".",1)[0])]
+
+	pids += [ffmpeg(video,size,start,end,':sws_dither=ed')("-y","02-sws_dither-%s" % filename)]
+
+	name=PALETTE_NAME % random_name()
+	ffmpeg(video,size,start,end,',palettegen')("-y",name,bg=False) #create palette
+	pids += [ffmpeg(video,size,start,end,' [x]; [x][1:v] paletteuse','-lavfi')("-i",name,"-y","03-palette-%s"%filename)]
+
+
+	pids += stats_mode(video,size,start,end,filename,"full") # overall palette quality
+	pids += stats_mode(video,size,start,end,filename,"diff") # care more about moving parts
+
+	return pids #return all the background processes we launched, so you can check when they're all done
+
+
+def stats_mode(video,size,start,end,filename,mode):
+	pids=[]
+	diffusers = ("none","bayer:bayer_scale=1","bayer:bayer_scale=2","bayer:bayer_scale=3","floyd_steinberg","sierra2","sierra2_4a")
+
+	name=PALETTE_NAME % random_name()
+	ffmpeg(video,size,start,end,',palettegen=stats_mode=%s' % mode)("-y",name,bg=False) #create palette
+	pids += [ffmpeg(video,size,start,end,' [x]; [x][1:v] paletteuse','-lavfi')("-i",name,"-y","04-palette_%s-%s"%(mode,filename))] #base without diffusers
+	for d in diffusers:
+		pids += [ffmpeg(video,size,start,end,' [x]; [x][1:v] paletteuse=dither=%s' % d,'-lavfi')("-i",name,"-y","05-palette_%s_%s-%s"%(mode,d,filename))]
+	return pids
+
+@requires('ffmpeg')
+def ffmpeg(video,size,start,end,scaleopts='',flagname="-vf"):
+	def newfunc(*args,bg=True):
+		launch = subprocess.Popen if bg else subprocess.run
+		return launch(["ffmpeg","-v","warning","-ss",start,"-t",end,"-i",video,flagname,"scale=%s:flags=lanczos%s" % (size,scaleopts),*args],stdout=subprocess.DEVNULL,stderr=subprocess.DEVNULL)
+	return newfunc
+
+def main():
+	args = parse_args()
+	args.size = args.size.replace('x',':')
+	sources = validate_sources(args.sources)
+
+	if args.frame_rate:
+		args.frame_rate = float(args.frame_rate)
+
+	if len(sources) == 1:
+		#video file
+		video_to_frames(sources[0],args.size,args.start,args.duration,args.frame_rate)
+
+		if args.frames_only:
+			sys.exit(0)
+
+		start_frame,end_frame = choose_frames()
+
+		frames_to_video([FRAME_PATTERN % x for x in range(start_frame,end_frame)],TMP_VIDEO_NAME,args.frame_rate)
+
+		if not args.keep_frames:
+			clear_frame_files()
+	else:
+		frames_to_video(sources,TMP_VIDEO_NAME,args.frame_rate)
+
+	if args.video_only:
+		sys.exit(0)
+
+	print("creating gifs...")
+	background_processes = make_all(TMP_VIDEO_NAME,args.size,"0","0",args.output)
+	print("processing...")
+	for pid in background_processes:
+		pid.wait()
+	print('cleaning up')
+	clear_palette_files()
+	os.remove(TMP_VIDEO_NAME)
+	print('done')
+
+
+
+if __name__ == "__main__":
+	main()
+

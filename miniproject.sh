@@ -8,6 +8,7 @@ usage_and_exit() {
 }
 
 compile() {
+    local ret=0
     for dir in $@; do
         if [[ ! -d $dir ]]; then
             printf >&2 'Directory %s does not exist, cannot compile.\n' "$dir"
@@ -19,12 +20,15 @@ compile() {
             [[ ! -f $fn ]] && [[ $fn != *.cpp ]] && continue
             echo "[CC] $fn"
             g++ -Wall -Werror -o "${fn:0:-4}" "$fn"
+            ((ret += $?))
         done
         cd ..
     done
+    return $ret
 }
 
 clean() {
+    local ret=0
     for dir in $@; do
         if [[ ! -d $dir ]]; then
             printf >&2 'Directory %s does not exist, cannot clean.\n' "$dir"
@@ -36,13 +40,16 @@ clean() {
             if [[ -f $fn.cpp ]] && [[ -x $fn ]]; then
                 echo "[RM] $fn"
                 rm -- "$fn"
+                ((ret += $?))
             fi
         done
         cd ..
     done
+    return $ret
 }
 
 new() {
+    local ret=0
     for dir in $@; do
         if [[ -e $dir ]]; then
             printf >&2 'Path at %s already exists, cannot create directory.\n' "$dir"
@@ -56,16 +63,21 @@ new() {
 #!/bin/sh
 ../$(basename $0) cc '$dir'
 EOF
+        ((ret += $?))
         cat << EOF > clean.sh
 #!/bin/sh
 ../$(basename $0) clean '$dir'
 EOF
+        ((ret += $?))
         chmod +x *.sh
+        ((ret += $?))
         cd ..
     done
+    return $ret
 }
 
 run() {
+    local ret=0
     for dir in $@; do
         local exe=main
         if [[ ! -d $dir ]]; then
@@ -81,12 +93,14 @@ run() {
 
         echo "[RUN] $dir"
         "$dir/$exe"
+        ((ret += $?))
     done
+    return $ret
 }
 
 ### MAIN ###
 [ $# -eq 0 ] && usage_and_exit
-cd $(dirname $0)
+cd "$(dirname $0)"
 case "$1" in
     cc)
         shift

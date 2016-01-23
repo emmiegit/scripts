@@ -21,12 +21,10 @@ touch $lockfile
 # Detect number of monitors
 case $(xrandr --query | grep -c ' connected') in
     1)
-        result=$(mktemp /tmp/lockscreen-XXXXXX.png)
         maim --opengl --format png /dev/stdout \
             | convert /dev/stdin -scale 10% -scale 1000% /dev/stdout \
             | composite -gravity Center $lock /dev/stdin /dev/stdout \
             | i3lock -i /dev/stdin
-        rm -f $result
         ;;
     2)
         left=$(mktemp /tmp/lockscreen-XXXXXX.png)
@@ -40,13 +38,11 @@ case $(xrandr --query | grep -c ' connected') in
         wait
         convert +append $left $right /dev/stdout \
             | i3lock -i /dev/stdin
-        rm -f $left $right $result
+        rm -f $left $right
         ;;
     *)
-        result=$(mktemp /tmp/lockscreen-XXXXXX.png)
-        maim --opengl $result
-        i3lock -i $result
-        rm -f $result
+        maim --opengl /dev/stdout \
+            | i3lock -i /dev/stdin
         ;;
 esac
 
