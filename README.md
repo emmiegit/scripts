@@ -71,7 +71,7 @@ Opens up the editor specified by the passed arguments, `$VISUAL`, `$EDITOR`, and
 Checks all git repositories either in the current working directory or in the directory passed to it and determines whether they are ahead or behind. If they are behind, it automatically invokes `git pull --all` and `git gc --aggressive`.
 
 #### vim-keyswap.sh
-I have swapped my caps lock and escape keys since caps lock is a useless key and, as a vim user, I use escape all the time. This scripts will check if the keys are already swapped, and if not, invoke `xmodmap` to switch them.
+I have swapped my caps lock and escape keys since caps lock is useless and, since I'm a vim user, I use escape all the time. This scripts will check if the keys are already swapped, and if not, invoke `xmodmap` to switch them.
 
 ## apps
 This directory is pretty self-explanatory, and is pretty specific to my machine anyways. The only file that might be of interest is `gvim.sh`, which makes it so that opening files with Gvim create new tabs if Gvim is already running.

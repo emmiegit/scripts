@@ -10,7 +10,7 @@ detect-mocp() {
 }
 
 detect-pianobar() {
-    pgrep -U $UID pianobar > /dev/null
+    pgrep -U "$UID" pianobar > /dev/null
 }
 
 if detect-pianobar; then

@@ -11,12 +11,13 @@ fi
 
 on_exit() {
     rm -f $lockfile
+    killall -SIGUSR2 dunst
 }
 
 trap on_exit EXIT SIGTERM SIGINT SIGHUP SIGSEGV
 
 touch $lockfile
-#notify-send 'Locking screen...'
+killall -SIGUSR1 dunst
 
 # Detect number of monitors
 case $(xrandr --query | grep -c ' connected') in
@@ -45,5 +46,4 @@ case $(xrandr --query | grep -c ' connected') in
             | i3lock -i /dev/stdin
         ;;
 esac
-
 
