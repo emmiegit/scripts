@@ -37,6 +37,9 @@ Looks for the given packages on your system. By default, uses the pacman package
 #### hashsum.py <i>algorithm</i> <i>file-name</i>...
 Allows hashing of whatever hash algorithms are supported by Python.
 
+#### makemake.sh <i>directory</i>...
+Creates a directory with a template Makefile inside. I wrote this so I could create projects for school easily.
+
 #### mkdesktop.sh [<i>desktop-file-name</i>] [<i>destination-directory</i>]
 Makes a desktop file from the template in `dat/`. You can choose where you want it, though by default it goes to `~/Desktop`.
 
