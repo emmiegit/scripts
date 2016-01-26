@@ -1,7 +1,6 @@
 #!/usr/bin/env bash
 set -e
 
-LOCK=~/Relic/.$1
 DEST=~/Relic
 HASH_SCRIPT=~/Scripts/arch/hash-media.py
 PASSWD=~/Scripts/dat/archpasswd
@@ -44,7 +43,7 @@ read_password() {
 
 # Lock check
 if [[ -f $LOCK ]]; then
-    echo >&2 "This script is already running."
+    echo >&2 'This script is already running.'
     _remove_lock=false
     read
     exit 1
@@ -52,14 +51,15 @@ fi
 
 # Sanity tests
 if [[ ! -d $DEST ]]; then
-    echo >&2 "Destination directory does not exist."
+    echo >&2 'Destination directory does not exist.'
     exit 1
 elif [[ ! -f $PASSWD ]]; then
-    echo >&2 "Cannot find archive password."
+    echo >&2 'Cannot find archive password.'
     exit 1
 fi
 
 varch() {
+    LOCK=~/Relic/.$1
     cd $DEST
     touch $LOCK
 
