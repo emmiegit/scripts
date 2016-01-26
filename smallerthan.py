@@ -10,7 +10,12 @@ def main(directory, end, min_width, min_height):
         os.chdir(dirpath)
         for fn in files:
             if fn.lower().split('.')[-1] in IMAGE_FILES:
-                size = subprocess.check_output(["identify", "-format", "%[fx:w]x%[fx:h]", fn])
+                try:
+                    size = subprocess.check_output(["identify", "-format", "%[fx:w]x%[fx:h]", fn])
+                except subprocess.CalledProcessError as err:
+                    print("Error getting size for \"%s\": %s" % (os.path.abspath(fn), err))
+                    continue
+
                 width, height = size.split(b'x')
 
                 if int(width) < min_width or int(height) < min_height:

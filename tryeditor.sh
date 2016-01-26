@@ -1,6 +1,8 @@
-#!/bin/bash
+#!/usr/bin/env bash
+set -e
 
 FILE='/usr/local/scripts/dat/hamlet.txt'
+COPY="$(mktemp /tmp/hamlet-XXXXXXXXX.txt)"
 
 if [[ ! -z $1 ]]; then
     EDITOR=$1
@@ -12,8 +14,8 @@ else
     EDITOR=vi
 fi
 
-cp -f "${FILE}" ".${FILE}"
-chmod +w ".${FILE}"
-"$EDITOR" ".${FILE}" 2> /dev/null
-rm ".${FILE}"
+cp -f "$FILE" "$COPY"
+chmod +w "$COPY"
+"$EDITOR" "$COPY" 2> /dev/null
+rm -f "$COPY"
 
