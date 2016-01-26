@@ -11,19 +11,23 @@ encmount() {
 }
 
 rclone_sync() {
+
     if [ "$1" == "*.crypt" ]; then
         name="${1:0:-6}"
         src="/media/archive/Backup/$1"
-        dest="Amazon Backup:/Live/$name"
+        dest="Amazon Backup:/Live/$name/$uid"
     else
         name="$1"
         src="/media/archive/Backup/$1"
-        dest="Amazon Backup:/Live/$1"
+        dest="Amazon Backup:/Live/$1/$uid"
     fi
 
     echo "Synchronizing $name..."
+    rclone mkdir "$dest"
     rclone sync "$src" "$dest"
 }
+
+uid="$(date +%j%Y)"
 
 printf 'Mounting encrypted filesystems...\n'
 encmount /media/archive/Backup/Nexus\ One

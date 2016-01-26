@@ -12,14 +12,15 @@ SAMPLES = '/usr/local/scripts/dat/samples/*'
 
 if __name__ == "__main__":
     theme_fn = subprocess.check_output(["mktemp", "/tmp/vim-themes-XXXXXXX.txt"])
-    themes = []
+    themes = set()
 
     for path in THEME_PATHS:
         for dirname, dirs, files in os.walk(path):
             for fn in files:
                 if fn.lower().endswith(".vim"):
-                    themes.append(fn[:-4])
+                    themes.add(fn[:-4])
 
+    themes = list(themes)
     themes.sort()
 
     with open(theme_fn, 'w+') as fh:
