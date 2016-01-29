@@ -1,4 +1,5 @@
 sync-*.sh
 levyx-vpn.sh
+dat/levyx_vpn
 *.pyc
 

@@ -1,4 +1,5 @@
-#!/usr/bin/env bash
-~/Scripts/wm/lock.sh
+#!/bin/sh
+notify-send 'Suspending computer...'
+/usr/local/scripts/wm/lock.sh
 sudo pm-suspend
 

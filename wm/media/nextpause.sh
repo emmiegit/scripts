@@ -6,7 +6,13 @@ case "$(~/Scripts/wm/detect-audio-player.sh)" in
         sleep .05
         mocp --pause
         ;;
-    pianobar) printf 'nS' > ~/.config/pianobar/ctl ;;
-    *) false ;;
+    pianobar)
+        printf 'n' > ~/.config/pianobar/ctl
+        sleep .05
+        printf 'S' > ~/.config/pianobar/ctl
+        ;;
+    *)
+        false
+        ;;
 esac
 

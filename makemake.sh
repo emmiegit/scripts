@@ -10,9 +10,9 @@ write_makefile() {
 		cat << EOF > Makefile
 # Note for OBJECTS: list all *.o files necessary for compilation in the
 # given variable. They must be listed like this:
-# OBJECTS=abc.o \\
-#		def.o   \\
-#		main.o
+# OBJECTS=abc.cpp.o \\
+#		def.cpp.o   \\
+#		main.cpp.o
 # You *must* use tabs in front of each object name, you must escape each line
 # with a backslash, like shown.
 
@@ -20,13 +20,13 @@ write_makefile() {
 
 CC=g++
 FLAGS=-Wall -Werror
-OBJECTS=main.o
+OBJECTS=main.cpp.o
 EXE=main
 DEBUGGER=gdb
 
 all: \$(EXE)
 
-%.o: %.cpp
+%.cpp.o: %.cpp
 	\$(CC) \$(FLAGS) \$(EXTRA_FLAGS) -c -o \$@ \$<
 
 \$(EXE): \$(OBJECTS)
