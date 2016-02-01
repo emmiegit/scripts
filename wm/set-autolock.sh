@@ -8,10 +8,15 @@ restart_autolock() {
         notify-send 'Unable to restart autolock process.'
         return 1
     else
-        notify-send 'Restarted autolock process. Attempting to set mode.'
         case "$1" in
-            on)  xautolock -enable ;;
-            off) xautolock -disable ;;
+            on)
+                xautolock -enable
+                notify-send 'Restarted autolock process. Autolock enabled.'
+                ;;
+            off)
+                xautolock -disable
+                notify-send 'Restarted autolock process. Autolock disabled.'
+                ;;
         esac
     fi
 }

@@ -16,7 +16,7 @@ write_makefile() {
 # You *must* use tabs in front of each object name, you must escape each line
 # with a backslash, like shown.
 
-.PHONY: all debug force distclean clean
+.PHONY: all debug force direct distclean clean
 
 CC=g++
 FLAGS=-Wall -Werror
@@ -37,6 +37,9 @@ debug: clean
 	\$(DEBUGGER) \$(EXE)
 
 force: clean \$(EXE)
+
+direct: clean
+	\$(CC) \$(FLAGS) *.cpp *.h -o \$(EXE)
 
 distclean:
 	rm -f *.o *~ \$(EXE) core core.*

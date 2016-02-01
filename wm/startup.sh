@@ -1,5 +1,5 @@
-#!/usr/bin/env bash
+#!/bin/sh
 
-#[[ -f ~/.Xresources ]] && xrdb -merge -I$HOME ~/.Xresources
+#[ -f "$HOME/.Xresources" ] && xrdb -merge -I$HOME ~/.Xresources
 /usr/local/scripts/vim_keyswap.sh
 
