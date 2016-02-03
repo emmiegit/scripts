@@ -80,33 +80,7 @@ public abstract class GeneticAlgorithm<C extends Chromosome<C>> implements Runna
         for(int i = 0; i < scores.length; i++)
             scores[i] = population[i].getFitness();
     }
-    
-    /**
-     * Sets how many generations should pass before a status message should be displayed.
-     * Setting {@code freq} to zero or a negative number will disable it.
-     * @param freq the status message frequency
-     */
-    public final void setStatusFrequency(int freq) {
-        this.freq = freq;
-    }
-    
-    /**
-     * Returns how many generations pass in between each status message.
-     * A zero or negative value means this setting is disabled.
-     * @return the status message frequency
-     */
-    public final int getStatusFrequency() {
-        return freq;
-    }
-    
-    /**
-     * The status message to be printed while running the genetic algorithm.
-     * This method can be overridden.
-     */
-    public void printStatusMessage() {
-        System.out.printf("Generation: %d - best score: %s (%s).\n", generation, getBestIndividual().getFitness(), getBestIndividual());
-    }
-    
+
     /**
      * Initializes the next generation of the genetic algorithm.
      */
@@ -120,73 +94,7 @@ public abstract class GeneticAlgorithm<C extends Chromosome<C>> implements Runna
         repopulate();
         generation++;
     }
-    
-    /**
-     * Returns the mutation rate used by the default implementation
-     * of {@code repopulate()}.
-     * @see GeneticAlgorithm#repopulate()
-     * @return the current mutation rate
-     */
-    public final double getMutationRate() {
-        return mutationRate;
-    }
-    
-    /**
-     * Sets the mutation rate used by the default implementation
-     * of {@code repopulate()} with the new value.
-     * @see GeneticAlgorithm#repopulate()
-     * @param rate the new mutation rate
-     */
-    public final void setMutatationRate(double rate) {
-        mutationRate = rate;
-    }
-    
-    /**
-     * Repopulates the individuals in this genetic algorithm.
-     * The default implementation divides the population in four parts and
-     * uses multi-threading to created the new generation.
-     * This method can be overridden.
-     */
-    @SuppressWarnings("unchecked")
-    protected void repopulate() {
-        for(int i = 0; i < population.length; i++) {
-            population[i] = selector.select().crossover(selector.select());
-            scores[i] = population[i].getFitness();
 
-            if(Math.random() < mutationRate)
-                population[i] = population[i].mutate();
-        }
-    }
-    
-    /**
-     * Returns a copy of the internally stored {@code population} field, which
-     * contains a {@code Chromosome} array.
-     * @return {@code Chromosome[]}
-     */
-    public final C[] getPopulation() {
-        return population.clone();
-    }
-    
-    /**
-     * Gets the individual located at the given {@code index}.
-     * @param index the location of the desired individual {@code Chromosome}.
-     * @return the specified individual
-     */
-    public final C getIndividual(int index) {
-        return population[index];
-    }
-    
-    /**
-     * Returns the fitness score of the individual located at {@code index}.
-     * Depending on the implementation, this may be more efficient
-     * than {@code getIndividual(index).getFitness()}.
-     * @param index the location of the desired individual {@code Chromosome}.
-     * @return the specified fitness score
-     */
-    public final float getFitnessScore(int index) {
-        return scores[index];
-    }
-    
     /**
      * Finds and returns the {@code Chromosome} with the best
      * fitness score. If multiple {@code Chromosome}s are found
@@ -220,87 +128,11 @@ public abstract class GeneticAlgorithm<C extends Chromosome<C>> implements Runna
     }
     
     /**
-     * Returns the population size used by this {@code GeneticAlgorithm}.
-     * @return population size
-     */
-    public final int getPopulationSize() {
-        return population.length;
-    }
-    
-    /**
-     * Returns what generation number the {@code GeneticAlgorithm} is
-     * currently on.
-     * @return generation number
-     */
-    public final int getGeneration() {
-        return generation;
-    }
-    
-    /**
-     * Runs the genetic algorithm until a solution is found.
-     */
-    @Override
-    public final void run() {
-        best = execute();
-    }
-    
-    /**
-     * Runs the genetic algorithm until a solution is found.
-     * @return the solution {@code Chromosome}
-     */
-    public final C runToCompletion() {
-        best = execute();
-        return best;
-    }
-    
-    /**
      * The abstract method that runs the genetic algorithm until
      * a solution is found. This method is not intended to be
      * executed by the result.
      * @return the solution {@code Chromosome}
      */
     protected abstract C execute();
-    
-    /**
-     * {@inheritDoc}
-     * @param other the object to be compared to {@code this} object
-     */
-    @Override
-    public boolean equals(Object other) {
-        if(other == null || this.getClass() != other.getClass())
-            return false;
-        
-        return this.hashCode() == other.hashCode();
-    }
-
-    /**
-     * {@inheritDoc} 
-     */
-    @Override
-    public int hashCode() {
-        int hash = 3;
-        hash = 51 * hash + Arrays.hashCode(population);
-        hash = 51 * hash + Arrays.hashCode(scores);
-        hash = 51 * hash + selector.hashCode();
-        hash = 51 * hash + best.hashCode();
-        hash = 51 * hash + (int)(Double.doubleToLongBits(mutationRate) ^ (Double.doubleToLongBits(mutationRate) >>> 32));
-        hash = 51 * hash + generation;
-        hash = 51 * hash + freq;
-        return hash;
-    }
-    
-    /**
-     * {@inheritDoc} 
-     */
-    @Override
-    public void validateObject() throws InvalidObjectException {
-        if(population == null)
-            throw new InvalidObjectException("Population is null.");
-        
-        if(population.length == 0)
-            throw new InvalidObjectException("Empty population.");
-        
-        if(generation < 0)
-            throw new InvalidObjectException("Negative generation.");
-    }
 }
+
