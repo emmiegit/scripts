@@ -10,7 +10,7 @@ NS = '{http://purl.org/atom/ns#}'
 
 # Options
 GMAIL_CREDENTIALS = "/usr/local/scripts/dat/gmail.gpg"
-DELAY = 300
+DELAY = 60
 
 def notify(summary, text=None):
     if text:

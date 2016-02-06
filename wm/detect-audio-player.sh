@@ -1,6 +1,6 @@
-#!/usr/bin/env bash
+#!/bin/sh
 
-detect-mocp() {
+detect_mocp() {
     case "$(mocp --info 2>&1 | grep State)" in
         'State: PLAY') return 0 ;;
         'State: PAUSE') return 0 ;;
@@ -9,13 +9,13 @@ detect-mocp() {
     esac
 }
 
-detect-pianobar() {
+detect_pianobar() {
     pgrep -U "$UID" pianobar > /dev/null
 }
 
-if detect-pianobar; then
+if detect_pianobar; then
     printf "pianobar"
-elif detect-mocp; then
+elif detect_mocp; then
     printf "mocp"
 else
     printf "unknown"

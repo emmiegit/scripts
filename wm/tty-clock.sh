@@ -1,7 +1,13 @@
 #!/usr/bin/env bash
 
+if [ $# -eq 0 ]; then
+    COLOR="$((($RANDOM % 7) + 1))"
+else
+    COLOR="$1"
+fi
+
 OWN_WINDOW=false
-ARGS="-C $(($RANDOM % 8))"
+ARGS="-C $COLOR"
 
 $OWN_WINDOW && ARGS+=" -cn"
 

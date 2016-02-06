@@ -2,7 +2,7 @@
 
 restart_autolock() {
     pkill xautolock
-    ~/Scripts/wm/start-autolock.sh
+    /usr/local/scripts/wm/start-autolock.sh
 
     if [[ $? -gt 0 ]]; then
         notify-send 'Unable to restart autolock process.'
