@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/bin/sh
 
 # TODO: figure out how to remove an item from MOC's playlist
 case "$(~/Scripts/wm/detect-audio-player.sh)" in

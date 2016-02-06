@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/bin/sh
 
 case "$(~/Scripts/wm/detect-audio-player.sh)" in
     mocp) mocp --next ;;

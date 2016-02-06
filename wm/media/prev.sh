@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/bin/sh
 
 # There's not way to go back in Pandora, so the
 # pianobar option does nothing.

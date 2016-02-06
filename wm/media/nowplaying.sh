@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/bin/sh
 
 main() {
     case "$(~/Scripts/wm/detect-audio-player.sh)" in

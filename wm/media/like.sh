@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/bin/sh
 
 # Liking a song already in your music library isn't meaningful, so it does nothing.
 case "$(~/Scripts/wm/detect-audio-player.sh)" in
