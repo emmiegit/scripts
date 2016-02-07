@@ -15,6 +15,10 @@ main() {
                 echo "$title by $artist"
             fi
             ;;
+        vlc)
+            local title="$(qdbus org.mpris.MediaPlayer2.vlc /org/mpris/MediaPlayer2 org.freedesktop.DBus.Properties.Get org.mpris.MediaPlayer2.Player Metadata | grep '^xesam:title: ')"
+            echo "${title:13}"
+            ;;
         *)
             echo '(none)'
             ;;
