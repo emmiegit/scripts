@@ -1,6 +1,6 @@
 #!/bin/sh
 
-case "$(~/Scripts/wm/detect-audio-player.sh)" in
+case "$(/usr/local/scripts/wm/media/detect-audio-player.sh)" in
     mocp) ;;
     pianobar) printf '+' > ~/.config/pianobar/ctl ;;
     vlc) ;;

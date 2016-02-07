@@ -1,7 +1,7 @@
 #!/bin/sh
 
 main() {
-    case "$(~/Scripts/wm/detect-audio-player.sh)" in
+    case "$(/usr/local/scripts/wm/media/detect-audio-player.sh)" in
         mocp)
             mocp -Q '%song by %artist'
             ;;
