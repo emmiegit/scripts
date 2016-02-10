@@ -22,7 +22,6 @@ CC=g++
 FLAGS=-Wall -Werror
 OBJECTS=main.cpp.o
 EXE=main
-DEBUGGER=gdb
 
 all: \$(EXE)
 
@@ -34,7 +33,6 @@ all: \$(EXE)
 
 debug: clean
 	make \$(EXE) EXTRA_FLAGS=-g
-	\$(DEBUGGER) \$(EXE)
 
 force: clean \$(EXE)
 
@@ -45,7 +43,7 @@ distclean:
 	rm -f *.o *~ \$(EXE) core core.*
 
 clean:
-	rm -f *.o \$(EXE)
+	rm -f *.o core core.* vgcore.* \$(EXE)
 
 EOF
 }

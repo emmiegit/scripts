@@ -1,7 +1,9 @@
 #!/usr/bin/env bash
 
+STATUS_FILE='/usr/local/scripts/dat/autolock_state'
+
 restart_autolock() {
-    pkill xautolock
+    pkill -U "${USER}" xautolock
     /usr/local/scripts/wm/start-autolock.sh
 
     if [[ $? -gt 0 ]]; then
@@ -34,9 +36,11 @@ main() {
                 || restart_autolock "$1"
             ;;
         *)
-            echo "\"$1\" is not either \"on\" or \"off\"." >&2
+            echo >&2 "\"$1\" is not either \"on\" or \"off\"."
+            return 1
             ;;
     esac
+    echo "$1" > "${STATUS_FILE}"
 }
 
 main "$1"

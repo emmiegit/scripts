@@ -1,3 +1,4 @@
+autolock_state
 *.gpg
 *.pgp
 *passwd*

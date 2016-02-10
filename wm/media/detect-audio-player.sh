@@ -10,7 +10,8 @@ detect_mocp() {
 }
 
 detect_vlc() {
-    case "$(qdbus org.mpris.MediaPlayer2.vlc /org/mpris/MediaPlayer2 org.freedesktop.DBus.Properties.Get org.mpris.MediaPlayer2.Player PlaybackStatus)" in
+    case "$(qdbus org.mpris.MediaPlayer2.vlc /org/mpris/MediaPlayer2 org.freedesktop.DBus.Properties.Get \
+        org.mpris.MediaPlayer2.Player PlaybackStatus 2>&1)" in
         'Playing') return 0 ;;
         'Paused') return 0 ;;
         'Stopped') return 1 ;;

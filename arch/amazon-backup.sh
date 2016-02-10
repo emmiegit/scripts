@@ -31,8 +31,8 @@ uid="$(date +%j%Y)"
 
 printf 'Mounting encrypted filesystems...\n'
 #encmount /media/archive/Backup/Nexus\ One
-encmount /media/archive/Backup/Nexus\ Five
-encmount /media/archive/Backup/Novus\ USB
+#encmount /media/archive/Backup/Nexus\ Five
+#encmount /media/archive/Backup/Novus\ USB
 encmount /media/archive/Backup/Tomboy\ Notes
 
 printf '\nStarting backup...\n'

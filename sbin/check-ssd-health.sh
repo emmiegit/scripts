@@ -7,5 +7,5 @@ get_health() {
     sudo smartctl -a "$DEVICE" | grep 'Wear_Leveling_Count' | awk '{print $4}'
 }
 
-echo "Health of $DEVICE: $(get_health | perl -pe 'chomp')%"
+echo "Life remaining for $DEVICE: $(get_health | perl -pe 'chomp')%"
 

@@ -1,1 +1,1 @@
-/home/ammon/.config/lemonbar/bar
+/home/ammon/.config/i3/lemonbar/lemonbar.py

@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python2
 from __future__ import print_function, with_statement
 import hashlib, os, re, sys, traceback, time
 
