@@ -10,7 +10,7 @@ encmount() {
     fi
 }
 
-for dir in $@; do
+for dir in "$@"; do
     encmount "/media/archive/Backup/$dir"
 done
 
