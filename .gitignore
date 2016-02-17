@@ -1,5 +1,6 @@
 sync-*.sh
 levyx-vpn.sh
 dat/levyx_vpn
+dat/autolock_killer_cmd
 *.pyc
 

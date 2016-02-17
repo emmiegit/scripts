@@ -1,10 +1,10 @@
 #!/bin/sh
 LOCKER='/usr/local/scripts/wm/lock.sh'
-SUSPEND=false
-SUSPEND_CMD='sudo pm-suspend'
+KILL=true
+KILLER_CMD="$(cat '/usr/local/scripts/dat/autolock_killer_cmd')"
 
-if $SUSPEND; then
-    xautolock -resetsaver -detectsleep -time 5 -locker "${LOCKER}" -killtime 30 -killer "${SUSPEND_CMD}" &
+if $KILL; then
+    xautolock -resetsaver -detectsleep -time 5 -locker "${LOCKER}" -killtime 30 -killer "${KILLER_CMD}" &
 else
     xautolock -resetsaver -detectsleep -time 5 -locker "${LOCKER}" &
 fi
