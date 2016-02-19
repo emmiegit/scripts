@@ -17,25 +17,9 @@ on_exit() {
 trap on_exit EXIT SIGTERM SIGINT SIGHUP SIGSEGV
 
 single_screen_lock() {
-    maim --opengl --format png /dev/stdout \
-        | convert /dev/stdin -scale 10% -scale 1000% /dev/stdout \
-        | composite -gravity Center $lock /dev/stdin /dev/stdout \
-        | i3lock -i /dev/stdin
 }
 
 dual_screen_lock() {
-    left=$(mktemp /tmp/lockscreen-XXXXXX.png)
-    right=$(mktemp /tmp/lockscreen-XXXXXX.png)
-    maim --opengl --format png --geometry=${x_res}x${y_res}+0+0 /dev/stdout \
-        | convert /dev/stdin -scale 10% -scale 1000% /dev/stdout \
-        | composite -gravity Center $lock /dev/stdin $left &
-    maim --opengl --format png --geometry=${x_res}x${y_res}+${x_res}+0 /dev/stdout \
-        | convert /dev/stdin -scale 10% -scale 1000% /dev/stdout \
-        | composite -gravity Center $lock /dev/stdin $right &
-    wait
-    convert +append $left $right /dev/stdout \
-        | i3lock -i /dev/stdin
-    rm -f $left $right
 }
 
 touch $lockfile
@@ -43,14 +27,25 @@ killall -SIGUSR1 dunst
 
 # Detect number of monitors
 case $(xrandr --query | grep -c ' connected') in
-    0)
-        single_screen_lock
-        ;;
     1)
-        single_screen_lock
+        maim --opengl --format png /dev/stdout \
+            | convert /dev/stdin -scale 10% -scale 1000% /dev/stdout \
+            | composite -gravity Center $lock /dev/stdin /dev/stdout \
+            | i3lock -i /dev/stdin
         ;;
     2)
-        dual_screen_lock
+        left=$(mktemp /tmp/lockscreen-XXXXXX.png)
+        right=$(mktemp /tmp/lockscreen-XXXXXX.png)
+        maim --opengl --format png --geometry=${x_res}x${y_res}+0+0 /dev/stdout \
+            | convert /dev/stdin -scale 10% -scale 1000% /dev/stdout \
+            | composite -gravity Center $lock /dev/stdin $left &
+        maim --opengl --format png --geometry=${x_res}x${y_res}+${x_res}+0 /dev/stdout \
+            | convert /dev/stdin -scale 10% -scale 1000% /dev/stdout \
+            | composite -gravity Center $lock /dev/stdin $right &
+        wait
+        convert +append $left $right /dev/stdout \
+            | i3lock -i /dev/stdin
+        rm -f $left $right
         ;;
     *)
         maim --opengl /dev/stdout \
