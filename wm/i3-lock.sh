@@ -16,12 +16,6 @@ on_exit() {
 
 trap on_exit EXIT SIGTERM SIGINT SIGHUP SIGSEGV
 
-single_screen_lock() {
-}
-
-dual_screen_lock() {
-}
-
 touch $lockfile
 killall -SIGUSR1 dunst
 
