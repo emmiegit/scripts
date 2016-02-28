@@ -6,7 +6,9 @@ x_res=1920                              # The resolution of your monitor(s). Thi
 y_res=1200                              # are the same size.
 
 if [ -f $lockfile ]; then
-    exit 1
+    return 1
+else
+    touch $lockfile
 fi
 
 on_exit() {
@@ -16,7 +18,6 @@ on_exit() {
 
 trap on_exit EXIT SIGTERM SIGINT SIGHUP SIGSEGV
 
-touch $lockfile
 killall -SIGUSR1 dunst
 
 # Detect number of monitors

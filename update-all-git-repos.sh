@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-[[ $# -gt 0 ]] && cd "$1"
+[ $# -gt 0 ] && cd "$1"
 
 GREEN='\e[32m'
 YELLOW='\e[33;1m'
@@ -18,8 +18,6 @@ check_repo() {
         printf "[${GREEN}UP-TO-DATE${RESET}]${CHANGES} %s\n" "$REPO"
     elif [[ $LOCAL == $BASE ]]; then
         printf "[${YELLOW}NEEDS PULL${RESET}]${CHANGES} %s\n" "$REPO"
-        git pull --all
-        git gc --aggressive
     elif [[ $REMOTE == $BASE ]]; then
         printf "[${YELLOW}NEEDS PUSH${RESET}]${CHANGES} %s\n" "$REPO"
         return 1

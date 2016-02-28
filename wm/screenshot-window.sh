@@ -1,4 +1,4 @@
 #!/bin/sh
-cd ~/Temporary
-maim -i $(xdotool getactivewindow)
+cd ~/Incoming
+maim -i "$(xdotool getactivewindow)"
 

@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -e
 
-DEST=~/Relic
+DEST=~/Documents/Relic
 HASH_SCRIPT=~/Scripts/arch/hash-media.py
 PASSWD=~/Scripts/dat/archpasswd
 CLEAR_RECENT=false
@@ -59,7 +59,7 @@ elif [[ ! -f $PASSWD ]]; then
 fi
 
 varch() {
-    LOCK=~/Relic/.$1
+    LOCK=~/Documents/Relic/.$1
     cd $DEST
     touch $LOCK
 

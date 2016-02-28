@@ -1,4 +1,4 @@
 #!/bin/sh
-cd ~/Temporary
+cd ~/Incoming
 maim --opengl
 

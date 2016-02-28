@@ -2,7 +2,7 @@
 set -e
 
 pack() {
-    dest=~/Relic/"$1".zip
+    dest=~/Documents/Relic/"$1".zip
     [ -f "$dest" ] && mv -f $dest $dest~
     cd $2
     7z a -tzip -mx=2 "$dest" *
