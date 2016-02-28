@@ -3,7 +3,6 @@ set -e
 
 CONFIRM=false
 RECURSIVE=false
-LIST_DIRS=false
 
 confirmation() {
     if $CONFIRM; then
@@ -21,25 +20,27 @@ confirmation() {
 
 movefile() {
     while true; do
-        read -p "To which directory would you like to move $1 to? " dest
+        printf '%s [%s]: ' "$1" "$(identify -format '%[fx:w]x%[fx:h]' "$1" 2> /dev/null || printf 'error')"
+        read dest
         if [[ -z $dest ]] || [ "$dest" == "." ]; then
             return
         elif [[ $dest == '!' ]]; then
             confirmation && trash "$1" && return
         elif [[ $dest == '!!' ]]; then
             confirmation && rm "$1" && return
+        elif [[ $dest == '!!!' ]]; then
+            confirmation && shred -u "$1" && return
         elif [[ $dest == '*' ]]; then
             tree -ld
         elif [[ $dest == '+' ]]; then
-            read -p "What should the directoy be called? " dest
-            mkdir "$dest" && return
+            read -p "What should the new directory be called? " dest
+            mkdir "$dest"
         elif [[ $dest == +* ]]; then
-            mkdir "${dest:1}" && return
+            mkdir "${dest:1}"
         elif [[ $dest == '_' ]]; then
             xdg-open .
         elif [[ -d $dest ]]; then
-            mv "$1" "$dest"
-            return
+            mv "$1" "$dest" && return
         else
             echo "That's not a valid directory."
         fi
@@ -65,28 +66,25 @@ organize() {
     cd "$prev"
 }
 
-main() {
-    if [[ $# -eq 0 ]]; then
-        echo "Usage: $(basename $0) directory-to-organize..."
-        exit 1
-    fi
+if [[ $# -eq 0 ]]; then
+    echo "Usage: $(basename $0) directory-to-organize..."
+    exit 1
+fi
 
-    echo 'For each picture, enter the directory it should be moved to.'
-    echo 'Note that you can specify any directory, such as abc/def or /tmp/pictures.'
-    echo 'Specifying nothing, or . will keep the image where it is.'
-    echo 'In addition, there are special commands you can specify:'
-    echo ' !  - Trash the current image. (This assumes you have a binary called "trash" on your $PATH)'
-    echo ' !! - Delete the current image.'
-    echo ' *  - List all directories in the current working directory.'
-    echo ' +  - Create a directory. You can specify the name directly by using "+dir_name".'
-    echo ' _  - Open the current directory in your file explorer of choice.'
-    echo ''
+echo 'For each picture, enter the directory it should be moved to.'
+echo 'Note that you can specify any directory, such as abc/def or /tmp/pictures.'
+echo 'Specifying nothing, or . will keep the image where it is.'
+echo 'In addition, there some other special commands you can specify:'
+echo ' !   - Trash the current image. (This assumes you have a binary called "trash" on your $PATH)'
+echo ' !!  - Delete the current image.'
+echo ' !!! - Shreds and deletes the current image.'
+echo ' *   - List all directories in the current working directory.'
+echo ' +   - Create a directory. You can specify the name directly by using "+dir_name".'
+echo ' _   - Open the current directory in your file explorer of choice.'
+echo ''
 
-    while [[ $# -gt 0 ]]; do
-        organize "$1"
-        shift
-    done
-}
-
-main $@
+while [[ $# -gt 0 ]]; do
+    organize "$1"
+    shift
+done
 
