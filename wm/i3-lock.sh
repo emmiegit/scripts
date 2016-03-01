@@ -24,7 +24,7 @@ killall -SIGUSR1 dunst
 case $(xrandr --query | grep -c ' connected') in
     1)
         maim --opengl --format png /dev/stdout \
-            | convert /dev/stdin -scale 10% -scale 1000% /dev/stdout \
+            | convert /dev/stdin -scale 5% -scale 2000% /dev/stdout \
             | composite -gravity Center $lock /dev/stdin /dev/stdout \
             | i3lock -i /dev/stdin
         ;;
@@ -32,10 +32,10 @@ case $(xrandr --query | grep -c ' connected') in
         left=$(mktemp /tmp/lockscreen-XXXXXX.png)
         right=$(mktemp /tmp/lockscreen-XXXXXX.png)
         maim --opengl --format png --geometry=${x_res}x${y_res}+0+0 /dev/stdout \
-            | convert /dev/stdin -scale 10% -scale 1000% /dev/stdout \
+            | convert /dev/stdin -scale 5% -scale 2000% /dev/stdout \
             | composite -gravity Center $lock /dev/stdin $left &
         maim --opengl --format png --geometry=${x_res}x${y_res}+${x_res}+0 /dev/stdout \
-            | convert /dev/stdin -scale 10% -scale 1000% /dev/stdout \
+            | convert /dev/stdin -scale 5% -scale 2000% /dev/stdout \
             | composite -gravity Center $lock /dev/stdin $right &
         wait
         convert +append $left $right /dev/stdout \
