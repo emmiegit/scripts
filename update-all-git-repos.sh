@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-[ $# -gt 0 ] && cd "$1"
-
 GREEN='\e[32m'
 YELLOW='\e[33;1m'
 BOLD_RED='\e[31;1m'
@@ -9,10 +7,20 @@ RED='\e[31m'
 BLUE='\e[34m'
 RESET='\e[0m'
 
+PULL_REPOS=false
+
+# Declare functions
+help_and_exit() {
+    echo 'Usage: %s [-p | --pull] [directory-to-check]\n' "$(basename "$0")"
+    echo ' -p, --pull: Attempt to pull all up-to-date and behind repositories.\n'
+    echo ' -h, --help: Print this help message and quit.\n'
+    exit 0
+}
+
 check_repo() {
-    local LOCAL=$(git rev-parse @)
-    local REMOTE=$(git rev-parse @{u})
-    local BASE=$(git merge-base @ @{u})
+    local LOCAL="$(git rev-parse @)"
+    local REMOTE="$(git rev-parse @{u})"
+    local BASE="$(git merge-base @ @{u})"
 
     if [[ $LOCAL == $REMOTE ]]; then
         printf "[${GREEN}UP-TO-DATE${RESET}]${CHANGES} %s\n" "$REPO"
@@ -32,11 +40,12 @@ main() {
     local TO_COMMIT=false
     local RET=0
     local lines=()
+    local to_pull=()
 
     for dir in *; do
         [[ ! -d $dir ]] && continue
         cd "$dir"
-        REPO=$(basename $(pwd))
+        REPO="$(basename $(pwd))"
         if [[ ! -d .git ]]; then
             printf '[NOT A REPO] %s\n' "$REPO"
             continue
@@ -53,7 +62,11 @@ main() {
         fi
 
         lines+=("$(check_repo)")
-        [ $? -gt 0 ] && ((RET++))
+        if [ $? -gt 0 ]; then
+            ((RET++))
+        else
+            to_pull+=("$REPO")
+        fi
 
         cd ..
     done
@@ -61,8 +74,40 @@ main() {
     $UNTRACKED && printf "'${RED}!${RESET}' means that untracked or unstaged files are present.\n"
     $TO_COMMIT && printf "'${BLUE}!${RESET}' means that changes have been added but not commited.\n"
     printf "%s\n" "${lines[@]}"
+
+    if $PULL_REPOS && [ ${#to_pull[@]} -gt 0 ]; then
+        for repo in "${to_pull[@]}"; do
+            cd "$repo"
+            printf 'Pulling %s...\n' "$repo"
+            git pull
+            cd ..
+        done
+    fi
+
     return $RET
 }
 
+# Process arguments
+argno=1
+for arg in $@; do
+    if [ $argno -eq $# -a -d "$arg" ]; then
+        cd "$arg"
+        break
+    fi
+
+    case "$arg" in
+        -p) PULL_REPOS=true ;;
+        --pull) PULL_REPOS=true ;;
+        -h) help_and_exit ;;
+        --help) help_and_exit ;;
+        *)
+            printf 'Unknown argument: %s. See --help for help.\n' "$arg"
+            exit 1
+            ;;
+    esac
+    ((argno++))
+done
+
+# Run program
 main
 
