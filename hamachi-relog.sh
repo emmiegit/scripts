@@ -1,6 +1,6 @@
 #!/bin/sh
 
 hamachi logout
-sleep 0.5
+sleep 1
 hamachi login
 
