@@ -22,16 +22,16 @@ rclone_sync() {
 uid="$(date +%j%Y)"
 
 printf 'Mounting encrypted filesystems...\n'
-encmount /media/archive/Backup/Nexus\ One
-encmount /media/archive/Backup/Nexus\ Five
-encmount /media/archive/Backup/Novus\ USB
+#encmount /media/archive/Backup/Nexus\ One
+#encmount /media/archive/Backup/Nexus\ Five
+#encmount /media/archive/Backup/Novus\ USB
 encmount /media/archive/Backup/Tomboy\ Notes
 
 printf '\nStarting backup...\n'
-#rclone_sync 'Titus'
-#rclone_sync 'Archive Disk'
-rclone_sync 'Nexus One.crypt'
-rclone_sync 'Nexus Five.crypt'
-rclone_sync 'Novus USB.crypt'
+rclone_sync 'Titus'
+rclone_sync 'Archive Disk'
+#rclone_sync 'Nexus One.crypt'
+#rclone_sync 'Nexus Five.crypt'
+#rclone_sync 'Novus USB.crypt'
 rclone_sync 'Tomboy Notes.crypt'
 
