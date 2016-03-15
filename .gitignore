@@ -1,8 +1,10 @@
 sync-*.sh
-levyx-vpn.sh
-ssh-titus.sh
+
+local/
+
 dat/levyx_vpn
 dat/autolock_delay
 dat/autolock_killer_cmd
+
 *.pyc
 
