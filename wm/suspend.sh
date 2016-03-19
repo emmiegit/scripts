@@ -8,5 +8,6 @@ else
 fi
 
 /usr/local/scripts/wm/lock.sh
+xset dpms force suspend
 $SUSPEND && systemctl suspend
 
