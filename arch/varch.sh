@@ -60,32 +60,39 @@ fi
 
 varch() {
     LOCK=~/Documents/Relic/.$1
-    cd $DEST
-    touch $LOCK
+    ARCHIVE=$1.7z
+    cd "$DEST"
+    touch "$LOCK"
 
     if [[ -d $1 ]]; then
         echo "[Compressing]"
         read_password
         printf "Hashing images...\n"
         $HASH_SCRIPT "$DEST/$1"
-        printf "Moving up old archive...\n"
-        [ -f $1.7z ] && mv -u $1.7z $1.7z~
-        printf "Creating new archive...\n"
-        7z a -p"$password" -t7z -m0=lzma -mx=8 -ms=on -mhe=on $1.7z $1
-        $TEST_ARCHIVE && 7z t -p"$password" $1.7z
+        printf "Backing up old archive...\n"
+        [ -f $ARCHIVE ] && cp -u $ARCHIVE $ARCHIVE~
+        printf "Adding files to archive...\n"
+        7z a -p"$password" -t7z -m0=lzma -mx=8 -mhe=on $ARCHIVE $1
+        $TEST_ARCHIVE && 7z t -p"$password" $ARCHIVE
         printf "Removing old files...\n"
-        rm -r $1/
+        #rm -r $1/
         if $CLEAR_RECENT; then
             printf "Clearing recent documents...\n"
-            :> ~/.local/share/recently-used.xbel
+            : > ~/.local/share/recently-used.xbel
             printf "Clearing thumbnails...\n"
-            rm -f ~/.cache/thumbnails/normal/*
-            rm -f ~/.cache/thumbnails/large/*
+
+            if [[ -d ~/.thumbnails ]]; then
+                rm -f ~/.thumbnails/normal/*
+                rm -f ~/.thumbnails/large/*
+            else
+                rm -f ~/.cache/thumbnails/normal/*
+                rm -f ~/.cache/thumbnails/large/*
+            fi
         fi
     else
         echo "[Extracting]"
         read_password
-        7z x -p"$password" $1.7z
+        7z x -p"$password" $ARCHIVE
     fi
 }
 
