@@ -68,7 +68,7 @@ varch() {
         read_password
         printf "Hashing images...\n"
         $HASH_SCRIPT "$DEST/$1"
-        printf "Backing up old archive...\n"
+        printf "Moving up old archive...\n"
         [ -f $1.7z ] && mv -u $1.7z $1.7z~
         printf "Creating new archive...\n"
         7z a -p"$password" -t7z -m0=lzma -mx=8 -ms=on -mhe=on $1.7z $1
