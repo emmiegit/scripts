@@ -1,8 +1,5 @@
-sync-*.sh
-
 local/
 
-dat/levyx_vpn
 dat/autolock_delay
 dat/autolock_killer_cmd
 
