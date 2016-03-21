@@ -75,7 +75,7 @@ varch() {
         7z a -p"$password" -t7z -m0=lzma -mx=8 -mhe=on $ARCHIVE $1
         $TEST_ARCHIVE && 7z t -p"$password" $ARCHIVE
         printf "Removing old files...\n"
-        #rm -r $1/
+        rm -r $1/
         if $CLEAR_RECENT; then
             printf "Clearing recent documents...\n"
             : > ~/.local/share/recently-used.xbel
