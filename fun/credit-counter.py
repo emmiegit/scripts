@@ -14,7 +14,6 @@ CREDIT_REGEX = re.compile(r"([+-][0-9]+)")
 
 def count_credits(text):
     transactions = CREDIT_REGEX.findall(text)
-    print(transactions)
     credits = 0
 
     for transaction in transactions:
