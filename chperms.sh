@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 chperms() {
-    cd "$1"
+    cd "$1" || return 1
     for item in *; do
         if [[ -d $item ]]; then
             chperms "$item"

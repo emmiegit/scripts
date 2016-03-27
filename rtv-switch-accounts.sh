@@ -8,7 +8,7 @@ get_rtv_dir() {
     fi
 
     if [[ ! -d $RTV_DIR ]]; then
-        echo >&2 'Cannot find rtv config directory.'
+        printf >&2 'Cannot find rtv config directory.\n'
         exit 1
     fi
 
@@ -16,9 +16,9 @@ get_rtv_dir() {
 }
 
 main() {
-    cd $(get_rtv_dir)
+    cd "$(get_rtv_dir)" || return 1
 
-    echo 'Available accounts:'
+    printf 'Available accounts:\n'
     local accounts=()
     local index=0
     for acct in *.token; do
@@ -27,9 +27,9 @@ main() {
         ((index++))
     done
 
-    read -p 'Enter a number to switch to: ' choice
+    read -rp 'Enter a number to switch to: ' choice
 
-    if [[ $((choice)) != $choice ]]; then
+    if [[ "$((choice))" != "$choice" ]]; then
         echo >&2 "Invalid index: $choice"
         exit 1
     fi

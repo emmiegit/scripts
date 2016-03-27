@@ -1,12 +1,15 @@
 #!/usr/bin/env bash
 
+RED="\e[31m\e[1m"
+GREEN="\e[32m"
+RESET="\e[0m"
 missing=0
 
-for dep in $@; do
+for dep in "$@"; do
     if pacman -Qs "^$dep$" > /dev/null; then
-        printf "$dep: \e[32m\e[1mok\e[0m\n"
+        printf "%s: ${GREEN}ok${RESET}\n" "$dep"
     else
-        printf "$dep: \e[31m\e[1mfail\e[0m\n"
+        printf "%s: ${RED}fail${RESET}\n" "$dep"
         ((missing++))
     fi
 done

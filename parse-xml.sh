@@ -2,13 +2,13 @@
 
 read_tag() {
     local IFS='>'
-    read -d '<' ENTITY CONTENT
+    read -rd '<' ENTITY CONTENT
 }
 
 if [[ $# -gt 0 ]]; then
     while read_tag; do
-        for arg in $@; do
-            if [[ $ENTITY == $arg ]]; then
+        for arg in "$@"; do
+            if [[ "$ENTITY" == "$arg" ]]; then
                 printf '%s:%s\n' "$ENTITY" "$CONTENT"
             fi
         done
