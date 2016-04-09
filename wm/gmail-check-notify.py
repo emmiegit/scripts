@@ -78,23 +78,31 @@ if __name__ == "__main__":
         notify("Unable to extract gmail credentials.")
         exit(1)
 
-    # Set up authentication for gmail
-    auth_handler = urllib.request.HTTPBasicAuthHandler()
-    auth_handler.add_password(realm="mail.google.com",
-                              uri="https://mail.google.com/",
-                              user=user,
-                              passwd=passwd)
-    opener = urllib.request.build_opener(auth_handler)
-    # ...and install it globally so it can be used with urlopen.
-    urllib.request.install_opener(opener)
-
-    del cred, user, passwd
+    try:
+        # Set up authentication for gmail
+        auth_handler = urllib.request.HTTPBasicAuthHandler()
+        auth_handler.add_password(realm="mail.google.com",
+                                  uri="https://mail.google.com/",
+                                  user=user,
+                                  passwd=passwd)
+        opener = urllib.request.build_opener(auth_handler)
+        # ...and install it globally so it can be used with urlopen.
+        urllib.request.install_opener(opener)
+        del cred, user, passwd
+    except:
+        notify("Unable to authenticate with gmail.")
+        exit(1)
 
     # Number of unread emails we've already told the user about
     unread = 0
     while True:
-        with urllib.request.urlopen(GMAIL_FEED) as source:
-            tree = etree.parse(source)
+        try:
+            with urllib.request.urlopen(GMAIL_FEED) as source:
+                tree = etree.parse(source)
+        except:
+            notify("Authentication failed.")
+            time.sleep(DELAY)
+            continue
 
         rawcount = tree.find(NS + "fullcount").text
         try:
