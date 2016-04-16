@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
-set -e
+set -eu
 
-DEST=~/Documents/Relic
-HASH_SCRIPT=~/Scripts/arch/hash-media.py
+DEST=~/Documents/Relic/Private
+HASH_SCRIPT=~/Programming/Git/mhash/hash-media.py
 PASSWD=~/Scripts/dat/archpasswd
 CLEAR_RECENT=false
 TEST_ARCHIVE=false
