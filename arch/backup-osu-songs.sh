@@ -12,9 +12,11 @@ main() {
         fi
     done
 
-    [ -f 'songs.txt' ] && cp -f songs.txt songs.txt.old
+    [[ -f 'songs.txt' ]] && cp -f songs.txt songs.txt.old
     printf '%s\n' "${songs[@]}" > songs.txt
 }
 
-[ $# -eq 0 ] && main || main $@
+[[ $# -eq 0 ]] \
+    && main \
+    || main $@
 
