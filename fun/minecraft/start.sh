@@ -11,7 +11,7 @@ backup() {
     sleep 30
     while true; do
         sleep 3000
-        dest="world.bak/$(date +%s)"
+        dest="backups/$(date +%s)"
         printf 'Making backup world at "%s"...' "$(basename "$dest")"
         mkdir -p "$dest"
         cp -at "$dest" world/*
@@ -27,8 +27,13 @@ main() {
         touch lock
     fi
 
-    [[ -f make_backups ]] && backup &
-    java -jar -Xms2G -Xmx12G -jar minecraft_server.jar nogui
+    if [[ -f make_backups ]]; then
+        backup &
+        BACKUP_PID=$!
+    fi
+
+    java -Xms2G -Xmx12G -jar minecraft_server.jar nogui
+    [[ -f make_backups ]] && kill $BACKUP_PID
 }
 
 trap finish SIGINT SIGTERM EXIT

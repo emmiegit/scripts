@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-HASH_SCRIPT='/usr/local/scripts/arch/hash-media.py'
+HASH_SCRIPT="${HOME}/Programming/mhash/media-hash.py"
 LOCATIONS=("${HOME}/Pictures/Anime" "${HOME}/Pictures/Wallpapers")
 
 on_exit() {

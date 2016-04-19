@@ -2,7 +2,9 @@
 set -eu
 
 DEST=~/Documents/Relic/Private
-HASH_SCRIPT=~/Programming/Git/mhash/hash-media.py
+LOCK=$DEST/.$1
+EXT=7z
+HASH_SCRIPT=~/Programming/mhash/media-hash.py
 PASSWD=~/Scripts/dat/archpasswd
 CLEAR_RECENT=false
 TEST_ARCHIVE=false
@@ -58,8 +60,7 @@ elif [[ ! -f $PASSWD ]]; then
 fi
 
 varch() {
-    LOCK=~/Documents/Relic/.$1
-    ARCHIVE=$1.7z
+    ARCHIVE=$1.$EXT
     cd "$DEST"
     touch "$LOCK"
 
