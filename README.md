@@ -13,9 +13,6 @@ A collection of scripts and other utilities I have written for my personal usage
 ## Script summaries
 ## Top level
 
-#### charge-shutdown.py
-A Windows script (for Cygwin) to predict the time needed to charge my phone, and turn off my computer then to prevent overcharging.
-
 #### check-args.sh [<i>anything you want here</i>...]
 Prints out all the arguments recieved by the script. Used for making debugging scripts by making sure you're passing arguments the way you think you are.
 
