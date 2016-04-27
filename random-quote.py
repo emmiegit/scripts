@@ -3,8 +3,11 @@ from __future__ import print_function, with_statement
 import glob
 import os
 import random
+import re
 import sys
 import time
+
+DAILY_QUOTE_FILE_NAME_REGEX = re.compile(r"daily.quotes?\.py", re.IGNORECASE)
 
 
 def aggregate_quotes(files):
@@ -37,13 +40,13 @@ if __name__ == "__main__":
         files = sys.argv[1:]
 
     quotes = aggregate_quotes(files)
-    this_file = sys.argv[0].lower()
 
     if not quotes:
         print("No quotes found.")
         sys.exit(0)
 
-    daily_quotes = os.path.basename(this_file) == "daily_quote.py"
+    this_file = os.path.basename(sys.argv[0])
+    daily_quotes = bool(DAILY_QUOTE_FILE_NAME_REGEX.match(this_file))
 
     if daily_quotes:
         loc = time.localtime()

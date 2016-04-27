@@ -1,11 +1,12 @@
 #!/usr/bin/env bash
+set -eu
 
 SPREAD=bg-fill              # Strategy for displaying wallpapers. See "man feh".
 DIR=~/Pictures/Wallpapers   # Wallpaper directory. Section refers to the subdirectory.
-SECTION=
+SECTION="$(cat /usr/local/scripts/dat/wallpaper_section)"
 
 [[ -n $1 ]] && SECTION="$1"
 
-export DISPLAY=:0
+[[ -n $DISPLAY ]] && export DISPLAY=:0
 feh --recursive --randomize --"$SPREAD" "$DIR/$SECTION"
 

@@ -2,6 +2,7 @@ local/
 
 dat/autolock_delay
 dat/autolock_killer_cmd
+dat/wallpaper_section
 
 *.pyc
 
