@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
+set -euv
 
-interactive-replace() {
-    grep -e "$1" /usr/share/mime/types | \
+interactive_replace() {
+    grep -e "$1" /etc/mime.types | \
     while read -r mime_type; do
         read -rp "$mime_type: " desktop_file
 
@@ -21,6 +22,6 @@ if [[ $# -eq 0 ]]; then
 fi
 
 for regex in "$@"; do
-    interactive-replace "$regex"
+    interactive_replace "$regex"
 done
 
