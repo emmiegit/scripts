@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-OSU_SONG_DIR='/media/archive/Games/osu!/Songs'
+OSU_SONG_DIR='/media/media/Games/osu!/Songs'
 
 main() {
     local songs=()

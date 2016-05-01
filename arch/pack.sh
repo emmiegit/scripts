@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
-set -e
+set -eu
 
 pack() {
-    dest=~/Documents/Relic/"$1".zip
-    [ -f "$dest" ] && mv -f $dest $dest~
+    dest="$HOME/Documents/Relic/$1.zip"
+    [[ -f "$dest" ]] && mv -f "$dest" "$dest~"
     cd $2
     7z a -tzip -mx=2 "$dest" *
-    echo "Archive created at $dest composed of files in $2."
+    printf 'Archive created at %s composed of files in %s.\n' "$dest" "$2"
     cd - > /dev/null
 }
 
@@ -17,9 +17,8 @@ main() {
     pack co.smbc    ~/Pictures/Comics/smbc        &&
     pack co.xkcd    ~/Pictures/Comics/xkcd        &&
     pack mus        ~/Music                       &&
-    printf "Finished. "
-    read
+    read -p 'Finished. '
 }
 
-[[ $(basename $0) == package.sh ]] && main
+[[ $(basename "$0") == pack.sh ]] && main
 
