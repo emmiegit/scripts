@@ -1,8 +1,13 @@
 #!/usr/bin/env bash
 set -eu
 
-SPREAD=bg-fill              # Strategy for displaying wallpapers. See "man feh".
-DIR=~/Pictures/Wallpapers   # Wallpaper directory. Section refers to the subdirectory.
+# Strategy for displaying wallpapers. See "man feh".
+SPREAD=bg-fill
+
+# Wallpaper directory.
+DIR=~/Pictures/Wallpapers/all
+
+# The wallpaper subdirectory.
 SECTION="$(cat /usr/local/scripts/dat/wallpaper_section)"
 
 [[ $# -gt 0 ]] && SECTION="$1"
