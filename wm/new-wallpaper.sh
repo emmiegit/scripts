@@ -2,7 +2,7 @@
 set -eu
 
 # Strategy for displaying wallpapers. See "man feh".
-SPREAD=bg-center
+SPREAD=bg-fill
 
 # Wallpaper directory.
 DIR=~/Pictures/Wallpapers/all
