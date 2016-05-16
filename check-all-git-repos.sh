@@ -45,9 +45,9 @@ main() {
     for dir in *; do
         [[ ! -d $dir ]] && continue
         cd "$dir"
-        REPO="$(basename $(pwd))"
+        REPO="$(basename "$(pwd)")"
         if [[ ! -d .git ]]; then
-            printf '[NOT A REPO] %s\n' "$REPO"
+            printf '[NOT A REPO]  %s\n' "$REPO"
             cd ..
             continue
         fi
