@@ -23,7 +23,19 @@ else
     touch "$lockfile"
 fi
 
+monitors="$(xrandr --query | grep -c ' connected')"
+
+if [[ "$monitors" == 2 ]]; then
+    left="$(mktemp /tmp/lockscreen-XXXXXXXX.png)"
+    right="$(mktemp /tmp/lockscreen-XXXXXXXX.png)"
+else
+    left=
+    right=
+fi
+
 on_exit() {
+    [[ "$monitors" == 2 ]] && rm -f "$left" "$right"
+
     rm -f "$lockfile"
     killall -SIGUSR2 dunst
 }
@@ -41,8 +53,6 @@ case "$(xrandr --query | grep -c ' connected')" in
             | i3lock -i /dev/stdin
         ;;
     2)
-        left="$(mktemp /tmp/lockscreen-XXXXXX.png)"
-        right="$(mktemp /tmp/lockscreen-XXXXXX.png)"
         maim --opengl --format png --geometry="${x_res}x${y_res}+0+0" /dev/stdout \
             | convert /dev/stdin -scale "$small_scale%" -scale "$large_scale%" /dev/stdout \
             | composite -gravity Center "$lockimage" /dev/stdin "$left" &
@@ -52,7 +62,6 @@ case "$(xrandr --query | grep -c ' connected')" in
         wait
         convert +append "$left" "$right" /dev/stdout \
             | i3lock -i /dev/stdin
-        rm -f "$left" "$right"
         ;;
     *)
         maim --opengl /dev/stdout \

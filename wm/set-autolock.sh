@@ -13,11 +13,9 @@ restart_autolock() {
         case "$1" in
             on)
                 xautolock -enable
-                notify-send 'Restarted autolock process. Autolock enabled.'
+                notify-send 'Started autolock process. Autolock enabled.'
                 ;;
             off)
-                #xautolock -disable
-                #notify-send 'Restarted autolock process. Autolock disabled.'
                 pkill -U "${USER}" xautolock
                 notify-send 'Killed autolock process. Autolock disabled.'
                 ;;
