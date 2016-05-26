@@ -47,7 +47,7 @@ main() {
         cd "$dir"
         REPO="$(basename "$(pwd)")"
         if [[ ! -d .git ]]; then
-            printf '[NOT A REPO]  %s\n' "$REPO"
+            lines+=("[NOT A REPO]  $REPO")
             cd ..
             continue
         fi
