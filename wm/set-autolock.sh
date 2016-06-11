@@ -26,11 +26,13 @@ restart_autolock() {
 main() {
     case "$1" in
         on)
+            xset +dpms
             xautolock -enable \
                 && notify-send 'Computer autolock enabled.' \
                 || restart_autolock "$1"
             ;;
         off)
+            xset s -dpms
             xautolock -disable \
                 && notify-send 'Computer autolock disabled.' \
                 || restart_autolock "$1"
