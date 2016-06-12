@@ -43,7 +43,7 @@ if __name__ == "__main__":
 
     if not quotes:
         print("No quotes found.")
-        sys.exit(0)
+        sys.exit(1)
 
     this_file = os.path.basename(sys.argv[0])
     daily_quotes = bool(DAILY_QUOTE_FILE_NAME_REGEX.match(this_file))
@@ -58,4 +58,6 @@ if __name__ == "__main__":
         print("Today's quote is from %s:\n\n%s" % (source, quote))
     else:
         print("Here is a quote from %s:\n\n%s" % (source, quote))
+
+    sys.exit(0)
 

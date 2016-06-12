@@ -13,10 +13,12 @@ def get_file_tree():
     filetree = {}
     for root, dirs, files in os.walk(sys.argv[1], followlinks=True):
         for fn in files:
+            path = os.path.join(root, fn)
+
             try:
-                with open(fn, "rb") as fh:
+                with open(path, "rb") as fh:
                     hashsum = hashlib.md5(codecs.encode(fh.read(), "hex_codec")).digest()
-                filetree[os.path.join(root, fn)] = hashsum
+                filetree[path] = hashsum
             except IOError as err:
                 print("Unable to get checksum of \"%s\": %s." % (fn, err))
 
@@ -52,15 +54,17 @@ if __name__ == "__main__":
     if os.path.exists(FILE_TREE_FILE_NAME):
         with open(FILE_TREE_FILE_NAME, "rb") as fh:
             oldfiletree = pickle.load(fh)
+    else:
+        oldfiletree = {}
 
-        created, removed, changed = compare_file_trees(oldfiletree, filetree)
+    created, removed, changed = compare_file_trees(oldfiletree, filetree)
 
-        for fn in created:
-            print("+ %s" % fn)
-        for fn in removed:
-            print("- %s" % fn)
-        for fn in changed:
-            print("~ %s" % fn)
+    for fn in created:
+        print("+ %s" % fn)
+    for fn in removed:
+        print("- %s" % fn)
+    for fn in changed:
+        print("~ %s" % fn)
 
     with open(FILE_TREE_FILE_NAME, "wb") as fh:
         pickle.dump(filetree, fh)
