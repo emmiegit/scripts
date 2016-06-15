@@ -11,7 +11,7 @@ import sys
 try:
     import ft_diff
 except ImporError:
-    print("Cannot find file tree difference library ft_diff.", file=sys.stderr)
+    print("Cannot find file tree difference library \"ft_diff\".", file=sys.stderr)
     exit(1)
 
 
@@ -87,7 +87,7 @@ def add_files(name, archive_dir, created, config, passwd, icon="+"):
         created_list.append(os.path.join(name, os.path.basename(fn)))
 
     if not created_list:
-        print("Warn: files to add is empty")
+        print("Warn: list of files to add is empty")
         return
 
     arguments = ["7z", "a", "-t7z", "-p%s" % passwd, "-mhe=on", "-mx=9", "-m0=lzma", config["archive-file"]]
@@ -103,7 +103,7 @@ def remove_files(name, archive_dir, removed, config, passwd):
         removed_list.append(os.path.join(name, os.path.basename(fn)))
 
     if not removed_list:
-        print("Warn: files to remove is empty")
+        print("Warn: list of files to remove is empty")
         return
 
     arguments = ["7z", "d", "-t7z", "-p%s" % passwd, "-mhe=on", "-mx=9", "-m0=lzma", config["archive-file"]]
@@ -138,7 +138,7 @@ def compress_archive(name, archive_dir, config):
     print("Hashing images...")
     subprocess.run([config["hash-script"], archive_dir])
     print("Checking file diff...")
-    created, removed, changed = ft_diff.get_changed_files(archive_dir)
+    created, removed, changed, ignored = ft_diff.get_changed_files(archive_dir)
     print("Backing up old archive...")
     shutil.copy2(config["archive-file"], config["archive-file"] + "~")
     if created:
@@ -150,6 +150,8 @@ def compress_archive(name, archive_dir, config):
     if changed:
         print("Changing modified files...")
         add_files(name, archive_dir, changed, config, passwd, icon="~")
+    print("Adding untracked files...")
+    add_files(name, archive_dir, ignored, config, passwd, icon=">")
     if not (created or removed or changed):
         print("Note: no changes to archive.")
     if config["test-archive"]:
@@ -197,6 +199,7 @@ if __name__ == "__main__":
 
     if os.path.exists(lock_file):
         print("This archive is being processed by another process.")
+        lock_file = None
         exit(1)
 
     with open(lock_file, "w") as fh:
@@ -212,7 +215,6 @@ if __name__ == "__main__":
     elif not os.path.isfile(config["archive-file"]):
         print("[Error]")
         print("Cannot find archive at \"%s\".", config["archive_file"])
-        clean_up()
         exit(1)
     else:
         extract_archive(name, archive_extracted_dir, config)

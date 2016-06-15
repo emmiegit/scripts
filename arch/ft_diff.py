@@ -41,13 +41,13 @@ def get_file_tree(directory, ignore):
     return filetree
 
 
-def compare_file_trees(old_tree, new_tree, ignore):
+def compare_file_trees(old_tree, new_tree, ignored):
     created_files = set()
     removed_files = set()
     changed_files = set()
 
     for fn in set(itertools.chain(old_tree.keys(), new_tree.keys())):
-        if fn in ignore:
+        if fn in ignored:
             continue
 
         was_present = fn in old_tree.keys()
@@ -60,7 +60,7 @@ def compare_file_trees(old_tree, new_tree, ignore):
         elif old_tree[fn] != new_tree[fn]:
             changed_files.add(fn)
 
-    return created_files, removed_files, changed_files
+    return created_files, removed_files, changed_files, ignored
 
 
 def get_changed_files(directory,
@@ -69,28 +69,35 @@ def get_changed_files(directory,
 
     if os.path.exists(tree_ignore_file):
         ignore = []
-        with open(tree_ignore_file, "r") as fh:
-            line = fh.readline()
-
-            while line:
-                ignore.append(line.rstrip())
+        try:
+            with open(tree_ignore_file, "r") as fh:
                 line = fh.readline()
+
+                while line:
+                    ignore.append(line.rstrip())
+                    line = fh.readline()
+        except:
+            print("Unable to read ignore file \"%s\"." % tree_ignore_file)
+            exit(1)
     else:
         ignore = DEFAULT_IGNORE_TARGETS
-        with open(tree_ignore_file, "w") as fh:
-            for ignore_file in DEFAULT_IGNORE_TARGETS:
-                fh.write(ignore_file)
-                fh.write("\n")
+        try:
+            with open(tree_ignore_file, "w") as fh:
+                for ignore_file in DEFAULT_IGNORE_TARGETS:
+                    fh.write(ignore_file)
+                    fh.write("\n")
+        except:
+            print("Unable to write to ignore file \"%s\"." % tree_ignore_file)
 
     filetree = get_file_tree(directory, ignore)
 
     if os.path.exists(tree_storage_file):
-        with open(tree_storage_file, "rb") as fh:
-            try:
+        try:
+            with open(tree_storage_file, "rb") as fh:
                 oldfiletree = pickle.load(fh)
-            except:
-                print("Unable to read old directory tree in \"%s\"." % tree_storage_file)
-                oldfiletree = {}
+        except:
+            print("Unable to read old directory tree in \"%s\"." % tree_storage_file)
+            oldfiletree = {}
     else:
         oldfiletree = {}
 
@@ -106,7 +113,7 @@ if __name__ == "__main__":
         print("Usage: %s directory [tree-storage-filename]" % sys.argv[0])
         exit(1)
 
-    created, removed, changed = get_changed_files(sys.argv[1])
+    created, removed, changed, ignored  = get_changed_files(sys.argv[1])
 
     for fn in created:
         print("+ %s" % fn)

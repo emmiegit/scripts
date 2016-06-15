@@ -5,8 +5,7 @@ DEST="$HOME/Documents/Relic/Private"
 LOCK="$DEST/.$1"
 EXT=7z
 HASH_SCRIPT="$HOME/Programming/mhash/media-hash.py"
-FILE_TREE_SCRIPT='/usr/local/scripts/arch/diff-file-tree.py'
-PASSWD='/usr/local/scripts/dat/archpasswd'
+FILE_TREE_SCRIPT='/usr/local/scripts/arch/ft_diff.py'
 CLEAR_RECENT=false
 TEST_ARCHIVE=false
 _remove_lock=true
@@ -34,15 +33,6 @@ on_exit() {
 trap on_sigterm SIGTERM SIGINT
 trap on_exit EXIT
 
-read_password() {
-    read -rsp 'Password: ' password
-    printf "\n"
-    if [[ "$(echo "$password" | sha256sum)" != "$(cat "$PASSWD")" ]]; then
-        echo "Incorrect password."
-        exit 1
-    fi
-}
-
 # Lock check
 if [[ -f $LOCK ]]; then
     printf >&2 'This script is already running.\n'
@@ -55,9 +45,6 @@ fi
 if [[ ! -d $DEST ]]; then
     printf >&2 'Destination directory does not exist.\n'
     exit 1
-elif [[ ! -f $PASSWD ]]; then
-    printf >&2 'Cannot find archive password.\n'
-    exit 1
 fi
 
 varch() {
@@ -67,12 +54,11 @@ varch() {
 
     if [[ -d $1 ]]; then
         printf '[Compressing]\n'
-        read_password
+        read -rsp 'Password: ' password
         printf 'Hashing images...\n'
         "$HASH_SCRIPT" "$DEST/$1"
         printf 'Checking file diff...\n'
         "$FILE_TREE_SCRIPT" "$DEST/$1"
-        [[ -d $1/.git ]] && git_update "$1"
         printf 'Backing up old archive...\n'
         [[ -f $ARCHIVE ]] && mv -u "$ARCHIVE" "$ARCHIVE~"
         printf 'Adding files to archive...\n'
@@ -98,7 +84,7 @@ varch() {
         printf 'Cannot find archive at %s!\n' "$ARCHIVE"
     else
         printf '[Extracting]\n'
-        read_password
+        read -rsp 'Password: ' password
         7z x -p"$password" "$ARCHIVE"
     fi
 }
