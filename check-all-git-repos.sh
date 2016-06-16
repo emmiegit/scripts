@@ -11,102 +11,102 @@ PULL_REPOS=false
 
 # Declare functions
 help_and_exit() {
-    echo 'Usage: %s [-p | --pull] [directory-to-check]\n' "$(basename "$0")"
-    echo ' -p, --pull: Attempt to pull all up-to-date and behind repositories.\n'
-    echo ' -h, --help: Print this help message and quit.\n'
-    exit 0
+	echo 'Usage: %s [-p | --pull] [directory-to-check]\n' "$(basename "$0")"
+	echo ' -p, --pull: Attempt to pull all up-to-date and behind repositories.\n'
+	echo ' -h, --help: Print this help message and quit.\n'
+	exit 0
 }
 
 check_repo() {
-    local LOCAL="$(git rev-parse @)"
-    local REMOTE="$(git rev-parse @{u})"
-    local BASE="$(git merge-base @ @{u})"
+	local LOCAL="$(git rev-parse @)"
+	local REMOTE="$(git rev-parse @{u})"
+	local BASE="$(git merge-base @ @{u})"
 
-    if [[ $LOCAL == $REMOTE ]]; then
-        printf "[${GREEN}UP-TO-DATE${RESET}]${CHANGES} %s\n" "$REPO"
-    elif [[ $LOCAL == $BASE ]]; then
-        printf "[${YELLOW}NEEDS PULL${RESET}]${CHANGES} %s\n" "$REPO"
-    elif [[ $REMOTE == $BASE ]]; then
-        printf "[${YELLOW}NEEDS PUSH${RESET}]${CHANGES} %s\n" "$REPO"
-        return 1
-    else
-        printf "[${BOLD_RED}DIVERGED${RESET}]${CHANGES}   %s\n" "$REPO"
-        return 1
-    fi
+	if [[ $LOCAL == $REMOTE ]]; then
+		printf "[${GREEN}UP-TO-DATE${RESET}]${CHANGES} %s\n" "$REPO"
+	elif [[ $LOCAL == $BASE ]]; then
+		printf "[${YELLOW}NEEDS PULL${RESET}]${CHANGES} %s\n" "$REPO"
+	elif [[ $REMOTE == $BASE ]]; then
+		printf "[${YELLOW}NEEDS PUSH${RESET}]${CHANGES} %s\n" "$REPO"
+		return 1
+	else
+		printf "[${BOLD_RED}DIVERGED${RESET}]${CHANGES}   %s\n" "$REPO"
+		return 1
+	fi
 }
 
 main() {
-    local UNTRACKED=false
-    local TO_COMMIT=false
-    local RET=0
-    local lines=()
-    local to_pull=()
+	local UNTRACKED=false
+	local TO_COMMIT=false
+	local RET=0
+	local lines=()
+	local to_pull=()
 
-    for dir in *; do
-        [[ ! -d $dir ]] && continue
-        cd "$dir"
-        REPO="$(basename "$(pwd)")"
-        if [[ ! -d .git ]]; then
-            lines+=("[NOT A REPO]  $REPO")
-            cd ..
-            continue
-        fi
+	for dir in *; do
+		[[ ! -d $dir ]] && continue
+		cd "$dir"
+		REPO="$(basename "$(pwd)")"
+		if [[ ! -d .git ]]; then
+			lines+=("[NOT A REPO]  $REPO")
+			cd ..
+			continue
+		fi
 
-        if git status | grep -Eq '(Untracked files|Changes not staged for commit)'; then
-            CHANGES="${RED}!${RESET}"
-            UNTRACKED=true
-        elif git status | grep -q 'Changes to be committed'; then
-            CHANGES="${BLUE}!${RESET}"
-            TO_COMMIT=true
-        else
-            CHANGES=' '
-        fi
+		if git status | grep -Eq '(Untracked files|Changes not staged for commit)'; then
+			CHANGES="${RED}!${RESET}"
+			UNTRACKED=true
+		elif git status | grep -q 'Changes to be committed'; then
+			CHANGES="${BLUE}!${RESET}"
+			TO_COMMIT=true
+		else
+			CHANGES=' '
+		fi
 
-        lines+=("$(check_repo)")
-        if [ $? -gt 0 ]; then
-            ((RET++))
-        else
-            to_pull+=("$REPO")
-        fi
+		lines+=("$(check_repo)")
+		if [ $? -gt 0 ]; then
+			((RET++))
+		else
+			to_pull+=("$REPO")
+		fi
 
-        cd ..
-    done
+		cd ..
+	done
 
-    $UNTRACKED && printf "'${RED}!${RESET}' means that untracked or unstaged files are present.\n"
-    $TO_COMMIT && printf "'${BLUE}!${RESET}' means that changes have been added but not commited.\n"
-    printf "%s\n" "${lines[@]}"
+	$UNTRACKED && printf "'${RED}!${RESET}' means that untracked or unstaged files are present.\n"
+	$TO_COMMIT && printf "'${BLUE}!${RESET}' means that changes have been added but not commited.\n"
+	printf "%s\n" "${lines[@]}"
 
-    if $PULL_REPOS && [ ${#to_pull[@]} -gt 0 ]; then
-        for repo in "${to_pull[@]}"; do
-            cd "$repo"
-            printf 'Pulling %s...\n' "$repo"
-            git pull
-            cd ..
-        done
-    fi
+	if $PULL_REPOS && [ ${#to_pull[@]} -gt 0 ]; then
+		for repo in "${to_pull[@]}"; do
+			cd "$repo"
+			printf 'Pulling %s...\n' "$repo"
+			git pull
+			cd ..
+		done
+	fi
 
-    return $RET
+	return $RET
 }
 
 # Process arguments
 argno=1
 for arg in $@; do
-    if [ $argno -eq $# -a -d "$arg" ]; then
-        cd "$arg"
-        break
-    fi
+	if [ $argno -eq $# -a -d "$arg" ]; then
+		cd "$arg"
+		break
+	fi
 
-    case "$arg" in
-        -p) PULL_REPOS=true ;;
-        --pull) PULL_REPOS=true ;;
-        -h) help_and_exit ;;
-        --help) help_and_exit ;;
-        *)
-            printf 'Unknown argument: %s. See --help for help.\n' "$arg"
-            exit 1
-            ;;
-    esac
-    ((argno++))
+	case "$arg" in
+		-p) PULL_REPOS=true ;;
+		--pull) PULL_REPOS=true ;;
+		-h) help_and_exit ;;
+		--help) help_and_exit ;;
+		*)
+			printf 'Unknown argument: %s. See --help for help.\n' "$arg"
+			exit 1
+			;;
+	esac
+	((argno++))
 done
 
 # Run program

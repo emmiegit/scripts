@@ -11,7 +11,7 @@ write_makefile() {
 # Note for OBJECTS: list all *.o files necessary for compilation in the
 # given variable. They must be listed like this:
 # OBJECTS=abc.cpp.o \\
-#		def.cpp.o   \\
+#		def.cpp.o	\\
 #		main.cpp.o
 # You *must* use tabs in front of each object name, you must escape each line
 # with a backslash, like shown.

@@ -18,26 +18,26 @@ small_scale=5
 large_scale=2000
 
 if [[ -f "$lockfile" ]]; then
-    exit 1
+	exit 1
 else
-    touch "$lockfile"
+	touch "$lockfile"
 fi
 
 monitors="$(xrandr --query | grep -c ' connected')"
 
 if [[ "$monitors" == 2 ]]; then
-    left="$(mktemp /tmp/lockscreen-XXXXXXXX.png)"
-    right="$(mktemp /tmp/lockscreen-XXXXXXXX.png)"
+	left="$(mktemp /tmp/lockscreen-XXXXXXXX.png)"
+	right="$(mktemp /tmp/lockscreen-XXXXXXXX.png)"
 else
-    left=
-    right=
+	left=
+	right=
 fi
 
 on_exit() {
-    [[ "$monitors" == 2 ]] && rm -f "$left" "$right"
+	[[ "$monitors" == 2 ]] && rm -f "$left" "$right"
 
-    rm -f "$lockfile"
-    killall -SIGUSR2 dunst
+	rm -f "$lockfile"
+	killall -SIGUSR2 dunst
 }
 
 trap on_exit EXIT SIGTERM SIGINT SIGHUP SIGSEGV
@@ -46,26 +46,26 @@ killall -SIGUSR1 dunst
 
 # Detect number of monitors
 case "$(xrandr --query | grep -c ' connected')" in
-    1)
-        maim --opengl --format png /dev/stdout \
-            | convert /dev/stdin -scale "$small_scale%" -scale "$large_scale%" /dev/stdout \
-            | composite -gravity Center "$lockimage" /dev/stdin /dev/stdout \
-            | i3lock -i /dev/stdin
-        ;;
-    2)
-        maim --opengl --format png --geometry="${x_res}x${y_res}+0+0" /dev/stdout \
-            | convert /dev/stdin -scale "$small_scale%" -scale "$large_scale%" /dev/stdout \
-            | composite -gravity Center "$lockimage" /dev/stdin "$left" &
-        maim --opengl --format png --geometry="${x_res}x${y_res}+${x_res}+0" /dev/stdout \
-            | convert /dev/stdin -scale "$small_scale%" -scale "$large_scale%" /dev/stdout \
-            | composite -gravity Center "$lockimage" /dev/stdin "$right" &
-        wait
-        convert +append "$left" "$right" /dev/stdout \
-            | i3lock -i /dev/stdin
-        ;;
-    *)
-        maim --opengl /dev/stdout \
-            | i3lock -i /dev/stdin
-        ;;
+	1)
+		maim --opengl --format png /dev/stdout \
+			| convert /dev/stdin -scale "$small_scale%" -scale "$large_scale%" /dev/stdout \
+			| composite -gravity Center "$lockimage" /dev/stdin /dev/stdout \
+			| i3lock -i /dev/stdin
+		;;
+	2)
+		maim --opengl --format png --geometry="${x_res}x${y_res}+0+0" /dev/stdout \
+			| convert /dev/stdin -scale "$small_scale%" -scale "$large_scale%" /dev/stdout \
+			| composite -gravity Center "$lockimage" /dev/stdin "$left" &
+		maim --opengl --format png --geometry="${x_res}x${y_res}+${x_res}+0" /dev/stdout \
+			| convert /dev/stdin -scale "$small_scale%" -scale "$large_scale%" /dev/stdout \
+			| composite -gravity Center "$lockimage" /dev/stdin "$right" &
+		wait
+		convert +append "$left" "$right" /dev/stdout \
+			| i3lock -i /dev/stdin
+		;;
+	*)
+		maim --opengl /dev/stdout \
+			| i3lock -i /dev/stdin
+		;;
 esac
 

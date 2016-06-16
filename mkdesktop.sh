@@ -2,30 +2,30 @@
 
 case $# in
 0)
-    read -rp 'Enter the name of the desktop file: ' fn
-    dest=~/Desktop
-    ;;
+	read -rp 'Enter the name of the desktop file: ' fn
+	dest=~/Desktop
+	;;
 1)
-    fn=$1
-    dest=~/Desktop
-    ;;
+	fn=$1
+	dest=~/Desktop
+	;;
 2)
-    fn=$1
-    dest=$2
-    ;;
+	fn=$1
+	dest=$2
+	;;
 *)
-    printf 'Usage: %s [desktop-file-name] [destination-dir]\n' "$(basename "$0")"
-    exit 1
-    ;;
+	printf 'Usage: %s [desktop-file-name] [destination-dir]\n' "$(basename "$0")"
+	exit 1
+	;;
 esac
 
 # Determine the user's default choice of editor
 if [[ "x$VISUAL" == "x" ]]; then
-    if [[ "x$EDITOR" == "x" ]]; then
-        EDITOR=vi
-    fi
+	if [[ "x$EDITOR" == "x" ]]; then
+		EDITOR=vi
+	fi
 else
-    EDITOR=$VISUAL
+	EDITOR=$VISUAL
 fi
 
 dest="${dest}/${fn}.desktop"

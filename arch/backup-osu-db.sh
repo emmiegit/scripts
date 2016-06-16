@@ -6,6 +6,6 @@ BACKUP_DIRECTORY='/media/archive/Games/osu!/bak'
 
 cd "$OSU_DIRECTORY"
 for fn in "${OSU_FILES[@]}"; do
-    cp -fv "$fn" -t "$BACKUP_DIRECTORY"
+	cp -fv "$fn" -t "$BACKUP_DIRECTORY"
 done
 

@@ -1,9 +1,8 @@
 #!/bin/bash
-
-# AUTHOR:   (c) Rob W 2012, modified by MHC (http://askubuntu.com/users/81372/mhc)
-# NAME:     GIFRecord 0.1
-# DESCRIPTION:  A script to record GIF screencasts.
-# LICENSE:  GNU GPL v3 (http://www.gnu.org/licenses/gpl.html)
+# AUTHOR:	(c) Rob W 2012, modified by MHC (http://askubuntu.com/users/81372/mhc)
+# NAME:		GIFRecord 0.1
+# DESCRIPTION:	A script to record GIF screencasts.
+# LICENSE:	GNU GPL v3 (http://www.gnu.org/licenses/gpl.html)
 # DEPENDENCIES:   byzanz,gdialog,notify-send (install via sudo add-apt-repository ppa:fossfreedom/byzanz; sudo apt-get update && sudo apt-get install byzanz gdialog notify-osd)
 
 # Time and date
@@ -20,7 +19,7 @@ DEFDUR=5
 
 # Sound notification to let one know when recording is about to start (and ends)
 beep() {
-    paplay /usr/share/sounds/freedesktop/stereo/message-new-instant.oga &
+	paplay /usr/share/sounds/freedesktop/stereo/message-new-instant.oga &
 }
 
 # Custom recording duration as set by user
@@ -28,9 +27,9 @@ USERDUR=$(gdialog --title "Duration?" --inputbox "Please enter the screencast du
 
 # Duration and output file
 if [ $USERDUR -gt 0 ]; then
-    D=$USERDUR
+	D=$USERDUR
 else
-    D=$DEFDUR
+	D=$DEFDUR
 fi
 
 # Window geometry

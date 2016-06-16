@@ -5,70 +5,70 @@ CONFIRM=false
 RECURSIVE=false
 
 confirmation() {
-    if $CONFIRM; then
-        read -p "Are you sure you want to do this? [y/N] " response
-        case $response in
-            yes) return 0 ;;
-            y) return 0 ;;
-            Y) return 0 ;;
-            *) return 1 ;;
-        esac
-    else
-        return 0
-    fi
+	if $CONFIRM; then
+		read -p "Are you sure you want to do this? [y/N] " response
+		case $response in
+			yes) return 0 ;;
+			y) return 0 ;;
+			Y) return 0 ;;
+			*) return 1 ;;
+		esac
+	else
+		return 0
+	fi
 }
 
 movefile() {
-    while true; do
-        printf '%s [%s]: ' "$1" "$(identify -format '%[fx:w]x%[fx:h]' "$1" 2> /dev/null || printf 'error')"
-        read dest
-        if [[ -z $dest ]] || [ "$dest" == "." ]; then
-            return
-        elif [[ $dest == '!' ]]; then
-            confirmation && trash "$1" && return
-        elif [[ $dest == '!!' ]]; then
-            confirmation && rm "$1" && return
-        elif [[ $dest == '!!!' ]]; then
-            confirmation && shred -u "$1" && return
-        elif [[ $dest == '*' ]]; then
-            tree -ld
-        elif [[ $dest == '+' ]]; then
-            read -p "What should the new directory be called? " dest
-            mkdir "$dest"
-        elif [[ $dest == +* ]]; then
-            mkdir "${dest:1}"
-        elif [[ $dest == '_' ]]; then
-            xdg-open .
-        elif [[ -d $dest ]]; then
-            mv "$1" "$dest" && return
-        else
-            echo "That's not a valid directory."
-        fi
-    done
+	while true; do
+		printf '%s [%s]: ' "$1" "$(identify -format '%[fx:w]x%[fx:h]' "$1" 2> /dev/null || printf 'error')"
+		read dest
+		if [[ -z $dest ]] || [ "$dest" == "." ]; then
+			return
+		elif [[ $dest == '!' ]]; then
+			confirmation && trash "$1" && return
+		elif [[ $dest == '!!' ]]; then
+			confirmation && rm "$1" && return
+		elif [[ $dest == '!!!' ]]; then
+			confirmation && shred -u "$1" && return
+		elif [[ $dest == '*' ]]; then
+			tree -ld
+		elif [[ $dest == '+' ]]; then
+			read -p "What should the new directory be called? " dest
+			mkdir "$dest"
+		elif [[ $dest == +* ]]; then
+			mkdir "${dest:1}"
+		elif [[ $dest == '_' ]]; then
+			xdg-open .
+		elif [[ -d $dest ]]; then
+			mv "$1" "$dest" && return
+		else
+			echo "That's not a valid directory."
+		fi
+	done
 }
 
 organize() {
-    prev=$(pwd)
-    cd "$1"
-    for fn in *; do
-        if [[ -d $fn ]] && $RECURSIVE; then
-            echo "Recursively organizing $fn..."
-            organize "$fn"
-        elif file "$fn" | grep -q 'image'; then
-            feh -g 960x600 "$fn" 2> /dev/null &
-            movefile "$fn"
-            kill $! ||:
-        else
-            echo "Skipping $fn..."
-        fi
-    done
+	prev=$(pwd)
+	cd "$1"
+	for fn in *; do
+		if [[ -d $fn ]] && $RECURSIVE; then
+			echo "Recursively organizing $fn..."
+			organize "$fn"
+		elif file "$fn" | grep -q 'image'; then
+			feh -g 960x600 "$fn" 2> /dev/null &
+			movefile "$fn"
+			kill $! ||:
+		else
+			echo "Skipping $fn..."
+		fi
+	done
 
-    cd "$prev"
+	cd "$prev"
 }
 
 if [[ $# -eq 0 ]]; then
-    echo "Usage: $(basename $0) directory-to-organize..."
-    exit 1
+	echo "Usage: $(basename $0) directory-to-organize..."
+	exit 1
 fi
 
 echo 'For each picture, enter the directory it should be moved to.'
@@ -84,7 +84,7 @@ echo ' _   - Open the current directory in your file explorer of choice.'
 echo ''
 
 while [[ $# -gt 0 ]]; do
-    organize "$1"
-    shift
+	organize "$1"
+	shift
 done
 

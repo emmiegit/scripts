@@ -6,21 +6,21 @@ set -eu
 DEVICE='/dev/sdc'
 
 get_health() {
-    sudo smartctl -a "$DEVICE" | grep 'Wear_Leveling_Count' | awk '{print $4}'
+	sudo smartctl -a "$DEVICE" | grep 'Wear_Leveling_Count' | awk '{print $4}'
 }
 
 printf 'Check health of device "%s"? [Y/n] ' "$DEVICE"
 
 read -r response
 case "$response" in
-    n*)
-        printf 'Not checking device.\n'
-        exit 1
-        ;;
-    N*)
-        printf 'Not checking device.\n'
-        exit 1
-        ;;
+	n*)
+		printf 'Not checking device.\n'
+		exit 1
+		;;
+	N*)
+		printf 'Not checking device.\n'
+		exit 1
+		;;
 esac
 
 printf 'Life remaining for "%s": %s%%\n' "$DEVICE" "$(get_health | perl -pe 'chomp')"
