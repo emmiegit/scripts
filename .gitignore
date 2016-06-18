@@ -7,4 +7,5 @@ dat/wallpaper_section
 dat/varch.json
 
 *.pyc
+.*.swp
 
