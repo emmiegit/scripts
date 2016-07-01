@@ -4,7 +4,7 @@ set -eu
 DEST="$HOME/Documents/Relic/Private"
 LOCK="$DEST/.$1"
 EXT=7z
-HASH_SCRIPT="$HOME/Programming/mhash/media-hash.py"
+HASH_SCRIPT='/usr/local/scripts/arch/media-hash.py'
 FILE_TREE_SCRIPT='/usr/local/scripts/arch/ft_diff.py'
 CLEAR_RECENT=false
 TEST_ARCHIVE=false
@@ -57,8 +57,8 @@ varch() {
 		read -rsp 'Password: ' password
 		printf 'Hashing images...\n'
 		"$HASH_SCRIPT" "$DEST/$1"
-		printf 'Checking file diff...\n'
-		"$FILE_TREE_SCRIPT" "$DEST/$1"
+		#printf 'Checking file diff...\n'
+		#"$FILE_TREE_SCRIPT" "$DEST/$1"
 		printf 'Backing up old archive...\n'
 		[[ -f $ARCHIVE ]] && mv -u "$ARCHIVE" "$ARCHIVE~"
 		printf 'Adding files to archive...\n'
