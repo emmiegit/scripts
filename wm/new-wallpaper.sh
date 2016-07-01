@@ -8,7 +8,7 @@ SPREAD=bg-fill
 DIR=~/Pictures/Wallpapers/all
 
 # The wallpaper subdirectory.
-SECTION="$(cat /usr/local/scripts/dat/wallpaper_section)"
+SECTION="$(cat '/usr/local/scripts/dat/wallpaper_section')"
 
 [[ $# -gt 0 ]] && SECTION="$1"
 ${DISPLAY+"false"} && export DISPLAY=:0
