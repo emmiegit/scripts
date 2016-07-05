@@ -52,12 +52,13 @@ main() {
 			continue
 		fi
 
-		if git status | grep -Eq '(Untracked files|Changes not staged for commit)'; then
-			CHANGES="${RED}!${RESET}"
-			UNTRACKED=true
-		elif git status | grep -q 'Changes to be committed'; then
+		local status="$(git status --porcelain)"
+		if echo "$status" | grep -q '^[^ ?]'; then
 			CHANGES="${BLUE}!${RESET}"
 			TO_COMMIT=true
+		elif echo "$status" | grep -q '^ .'; then
+			CHANGES="${RED}!${RESET}"
+			UNTRACKED=true
 		else
 			CHANGES=' '
 		fi
@@ -73,7 +74,7 @@ main() {
 	done
 
 	$UNTRACKED && printf "'${RED}!${RESET}' means that untracked or unstaged files are present.\n"
-	$TO_COMMIT && printf "'${BLUE}!${RESET}' means that changes have been added but not commited.\n"
+	$TO_COMMIT && printf "'${BLUE}!${RESET}' means that changes have been staged but not commited.\n"
 	printf "%s\n" "${lines[@]}"
 
 	if $PULL_REPOS && [ ${#to_pull[@]} -gt 0 ]; then
