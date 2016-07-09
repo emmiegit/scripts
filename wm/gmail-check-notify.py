@@ -1,8 +1,13 @@
 #!/usr/bin/env python3
 
-import urllib.request
 from xml.etree import ElementTree as etree
-import atexit, os, subprocess, time
+import atexit
+import os
+import signal
+import subprocess
+import time
+import traceback
+import urllib.request
 
 PID_FILE = "/run/user/%d/gmail-notify.pid" % os.geteuid()
 
@@ -14,6 +19,7 @@ NS = "{http://purl.org/atom/ns#}"
 GMAIL_CREDENTIALS = "/usr/local/scripts/dat/gmail.gpg"
 DELAY = 60
 
+
 def pid_exists(pid):
     try:
         os.kill(pid, 0)
@@ -22,17 +28,19 @@ def pid_exists(pid):
     else:
         return True
 
+
 def notify(summary, text=None):
     if text:
         os.system("notify-send '%s' '%s'" % (summary, text))
     else:
         os.system("notify-send '%s'" % (summary))
 
+
 def create_pidfile():
     if os.path.exists(PID_FILE):
         try:
-            with open(PID_FILE, 'r') as fh:
-                pid = int(fh.read())
+            with open(PID_FILE, "r") as fh:
+                pid = int(fh.read().rstrip())
 
             if pid_exists(pid):
                 notify("Gmail notifier already running.")
@@ -40,31 +48,39 @@ def create_pidfile():
                 notify("Gmail notifier has died, but pid file remains.")
             exit(1)
         except:
+            traceback.print_exc()
             notify("Unable to get pid from pidfile. Quitting gmail notifier.")
             exit(1)
     else:
         try:
-            with open(PID_FILE, 'w+') as fh:
-                fh.write(str(os.getpid()))
+            with open(PID_FILE, "w") as fh:
+                fh.write("%d\n" % os.getpid())
         except:
+            traceback.print_exc()
             notify("Unable to write to pidfile. Quitting gmail notifier.")
             exit(1)
+
 
 def remove_pidfile():
     if os.path.exists(PID_FILE):
         try:
             with open(PID_FILE, 'r') as fh:
-                pid = int(fh.read())
+                pid = int(fh.read().rstrip())
 
             if os.getpid() == pid:
                 os.unlink(PID_FILE)
         except:
+            traceback.print_exc()
             notify("Error reading gmail notifier pid file.")
 
 
 if __name__ == "__main__":
     create_pidfile()
+
     atexit.register(remove_pidfile)
+    signal.signal(signal.SIGTERM, remove_pidfile)
+    signal.signal(signal.SIGINT, remove_pidfile)
+    signal.signal(signal.SIGHUP, remove_pidfile)
 
     if not os.path.exists(GMAIL_CREDENTIALS):
         notify("Can't find gmail credentials file.", GMAIL_CREDENTIALS);
@@ -75,6 +91,7 @@ if __name__ == "__main__":
         user = cred[0].decode()
         passwd = cred[1].decode()
     except:
+        traceback.print_exc()
         notify("Unable to extract gmail credentials.")
         exit(1)
 
@@ -90,6 +107,7 @@ if __name__ == "__main__":
         urllib.request.install_opener(opener)
         del cred, user, passwd
     except:
+        traceback.print_exc()
         notify("Unable to authenticate with gmail.")
         exit(1)
 
@@ -100,6 +118,7 @@ if __name__ == "__main__":
             with urllib.request.urlopen(GMAIL_FEED) as source:
                 tree = etree.parse(source)
         except:
+            traceback.print_exc()
             notify("Authentication failed.")
             time.sleep(DELAY)
             continue
@@ -108,6 +127,7 @@ if __name__ == "__main__":
         try:
             count = int(rawcount)
         except ValueError:
+            traceback.print_exc()
             notify("Got a rawcount that's not an integer: \"%s\"" % (rawcount,))
             count = 0
 
@@ -116,5 +136,8 @@ if __name__ == "__main__":
             notify("%d new email%s" % (count, "" if count == 1 else "s"))
             unread += count
 
-        time.sleep(DELAY)
+        try:
+            time.sleep(DELAY)
+        except:
+            remove_pidfile()
 
