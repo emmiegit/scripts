@@ -3,7 +3,7 @@ set -eu
 
 cd "$(dirname "$0")"
 
-if [[ ! -f /usr/local/scripts/wm/lock.sh ]]; then
+if [[ ! -f /usr/local/scripts/wm/lock-screen-sleep.sh ]]; then
     echo >&2 'Cannot find lock script.'
     notify-send 'Cannot find lock script.'
     exit 1

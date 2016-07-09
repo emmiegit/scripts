@@ -44,7 +44,7 @@ trap on_exit EXIT SIGTERM SIGINT SIGHUP SIGSEGV
 
 killall -SIGUSR1 dunst
 
-# Detect number of monitors
+# Display lock screen depending on number of monitors
 case "$(xrandr --query | grep -c ' connected')" in
 	1)
 		maim --opengl --format png /dev/stdout \
