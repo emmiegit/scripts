@@ -19,9 +19,9 @@ help_and_exit() {
 	  -t, --template      TEMPLATE_NAME          Choose default options based on the specified
 	                                             templates. You can use --list-templates to get
 	                                             a list of in-built template names.
-      -o, --output        OUTPUT_FILE            Write the data to a file other than "Makefile".
-      -f, --force                                Overwrite an existing Makefile.
-      -q, --quiet                                Suppress warning output.
+	  -o, --output        OUTPUT_FILE            Write the data to a file other than "Makefile".
+	  -f, --force                                Overwrite an existing Makefile.
+	  -q, --quiet                                Suppress warning output.
 	      --strict                               Do not use default options, but instead quit if
 	                                             if a value is not specified.
 
