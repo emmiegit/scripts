@@ -1,0 +1,27 @@
+#!/usr/bin/env bash
+set -eu
+
+USE_WALL=false
+USE_WERROR=false
+
+for arg in "$@"; do
+	if [[ $arg == -Wall ]]; then
+		USE_WALL=true
+	elif [[ $arg == -Werror ]]; then
+		USE_WERROR=true;
+	elif [[ ! -f $arg ]]; then
+		continue
+	fi
+
+
+	if ! grep -q 'using namespace std' "$arg"; then
+		printf 'Warning: %s: not using '\''std'\'' namespace.\n' "$arg"
+	fi
+done
+
+"$USE_WALL" || printf 'Warning: not using -Wall.\n'
+"$USE_WERROR" || printf 'Warning: not using -Werror.\n'
+
+g++ "$@"
+
+# vim: set ft=sh sw=4 ts=4 noet:
