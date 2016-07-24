@@ -5,7 +5,6 @@ DEST="$HOME/Documents/Relic/Private"
 LOCK="$DEST/.$1"
 EXT=7z
 HASH_SCRIPT='/usr/local/scripts/arch/media-hash.py'
-FILE_TREE_SCRIPT='/usr/local/scripts/arch/ft_diff.py'
 CLEAR_RECENT=false
 TEST_ARCHIVE=false
 _remove_lock=true
@@ -57,15 +56,13 @@ varch() {
 		read -rsp 'Password: ' password
 		printf 'Hashing images...\n'
 		"$HASH_SCRIPT" "$DEST/$1"
-		#printf 'Checking file diff...\n'
-		#"$FILE_TREE_SCRIPT" "$DEST/$1"
 		printf 'Backing up old archive...\n'
 		[[ -f $ARCHIVE ]] && mv -u "$ARCHIVE" "$ARCHIVE~"
 		printf 'Adding files to archive...\n'
 		7z a -p"$password" -t7z -ms=on -mhe=on -m0=lzma -mx=3 "$ARCHIVE" "$1"
 		"$TEST_ARCHIVE" && 7z t -p"$password" "$ARCHIVE"
 		printf 'Removing old files...\n'
-		rm -r "${1:?}/"
+		rm -r "${1:?}"
 		if "$CLEAR_RECENT"; then
 			printf 'Clearing recent documents...\n'
 			: > ~/.local/share/recently-used.xbel

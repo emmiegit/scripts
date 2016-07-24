@@ -1,3 +1,4 @@
 #!/usr/bin/env bash
-/usr/share/playonlinux/playonlinux --run "League of Legends" %F
+/usr/share/playonlinux/playonlinux --run "League of Legends" %F &
+echo "$$" | "$(dirname "$0")/league-loop"
 

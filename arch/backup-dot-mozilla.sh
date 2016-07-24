@@ -7,6 +7,6 @@ ARCHIVE="$ARCHIVE_LOCATION/$ARCHIVE_NAME"
 GPG_KEY='2C3CF0C7'
 
 tar -cJf "$ARCHIVE" ~/.mozilla
-gpg --yes -evr "$GPG_KEY" "$ARCHIVE"
+gpg --yes -er "$GPG_KEY" "$ARCHIVE"
 rm "$ARCHIVE"
 
