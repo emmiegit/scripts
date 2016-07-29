@@ -37,12 +37,12 @@ on_exit() {
 	[[ "$monitors" == 2 ]] && rm -f "$left" "$right"
 
 	rm -f "$lockfile"
-	killall -SIGUSR2 dunst
+	killall -SIGUSR2 dunst || true
 }
 
 trap on_exit EXIT SIGTERM SIGINT SIGHUP SIGSEGV
 
-killall -SIGUSR1 dunst
+killall -SIGUSR1 dunst || true
 
 # Display lock screen depending on number of monitors
 case "$(xrandr --query | grep -c ' connected')" in
