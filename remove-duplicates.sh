@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 HASH_SCRIPT='/usr/local/scripts/arch/media-hash.py'
-LOCATIONS=("${HOME}/Pictures/Anime" "${HOME}/Pictures/Pets" "${HOME}/Pictures/Comics/smbc" "${HOME}/Pictures/Wallpapers/all")
+LOCATIONS=("${HOME}/Pictures/Anime" "${HOME}/Pictures/Pets" "${HOME}/Pictures/Comics/smbc" "${HOME}/Pictures/Wallpapers/desktop" "${HOME}/Pictures/Wallpapers/phone")
 
 on_exit() {
     echo 'Done.'

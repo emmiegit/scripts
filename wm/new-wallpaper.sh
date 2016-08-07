@@ -5,7 +5,7 @@ set -eu
 SPREAD=bg-fill
 
 # Wallpaper directory.
-DIR=~/Pictures/Wallpapers/all
+DIR=~/Pictures/Wallpapers/dekstop
 
 # The wallpaper subdirectory.
 SECTION="$(cat '/usr/local/scripts/dat/wallpaper_section')"
