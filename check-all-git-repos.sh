@@ -18,6 +18,11 @@ help_and_exit() {
 }
 
 check_repo() {
+	if [[ -z $(git remote) ]]; then
+		printf "[${GREEN}UP-TO-DATE${RESET}]${CHANGES} %s\n" "$REPO"
+		return
+	fi
+
 	local LOCAL="$(git rev-parse @)"
 	local REMOTE="$(git rev-parse @{u})"
 	local BASE="$(git merge-base @ @{u})"
