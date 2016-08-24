@@ -39,3 +39,4 @@ def shlist(r):
             l += [i, 0]
     return l
 
+# vim: set ft=python:

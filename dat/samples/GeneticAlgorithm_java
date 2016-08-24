@@ -136,3 +136,4 @@ public abstract class GeneticAlgorithm<C extends Chromosome<C>> implements Runna
     protected abstract C execute();
 }
 
+// vim: set ft=java:

@@ -54,3 +54,4 @@ while true; do
     )
 done
 
+# vim: set ft=sh:

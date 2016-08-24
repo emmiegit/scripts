@@ -2,7 +2,7 @@
 set -eu
 
 [[ $EUID == 0 ]] && exec sudo -u ammon "$0"
-[[ -z $DISPLAY ]] && export DISPLAY=:0
+[[ -z $DISPLAY ]] && DISPLAY=:0
 
 if [[ $# -eq 0 ]]; then
     printf >&2 'Usage: %s (draw | osu)\n' "$(basename "$0")"
