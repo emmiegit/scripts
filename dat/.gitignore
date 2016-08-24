@@ -1,4 +1,9 @@
+autolock_delay
+autolock_killer_cmd
 autolock_state
+varch.json
+wallpaper_section
+
 *.gpg
 *.pgp
 *passwd*

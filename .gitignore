@@ -1,11 +1,6 @@
 local/
 shreddit/
 
-dat/autolock_delay
-dat/autolock_killer_cmd
-dat/wallpaper_section
-dat/varch.json
-
 *.pyc
 .*.swp
 
