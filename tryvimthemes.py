@@ -3,6 +3,7 @@ from __future__ import with_statement
 from glob import glob
 import os
 import subprocess
+import sys
 import tarfile
 import tempfile
 
@@ -16,6 +17,11 @@ SAMPLE_DIR_NAME = "samples"
 THEME_LIST_NAME = "themes.txt"
 
 if __name__ == "__main__":
+    if len(sys.argv) < 2:
+        commands = ["vim", "-p"]
+    else:
+        commands = sys.argv[1:]
+
     themes = set()
 
     for path in THEME_PATHS:
@@ -45,6 +51,7 @@ if __name__ == "__main__":
 
                 tar_fh.extract(name, path=SAMPLE_DIR_NAME)
 
-        commands = ["vim", "-p", THEME_LIST_NAME]
-        subprocess.call(commands + glob(os.path.join(SAMPLE_DIR_NAME, "*")))
+        commands.append(THEME_LIST_NAME)
+        commands += glob(os.path.join(SAMPLE_DIR_NAME, "*"))
+        subprocess.call(commands)
 
