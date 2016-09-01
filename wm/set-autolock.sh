@@ -13,11 +13,11 @@ restart_autolock() {
         case "$1" in
             on)
                 xautolock -enable
-                notify-send 'Started autolock process. Autolock enabled.'
+                notify-send 'Started autolock process.'
                 ;;
             off)
                 pkill -U "${USER}" xautolock
-                notify-send 'Killed autolock process. Autolock disabled.'
+                notify-send 'Killed autolock process.'
                 ;;
         esac
     fi
