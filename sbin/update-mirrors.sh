@@ -1,11 +1,16 @@
 #!/bin/sh
-set -e
+set -eu
 
-cd /etc/pacman.d
+echodo() {
+	echo "$@"
+	"$@"
+}
 
 if [ $EUID != 0 ]; then
-	echo 'Warning: not root.'
+	sudo "$0"
 fi
+
+cd /etc/pacman.d
 
 if [ ! -f mirrorlist.pacnew ]; then
 	echo 'No mirrorlist.pacnew!'
@@ -13,12 +18,12 @@ if [ ! -f mirrorlist.pacnew ]; then
 fi
 
 echo 'Backing up old mirror list...'
-mv -f mirrorlist mirrorlist.old
-cp -f mirrorlist.pacnew mirrorlist.bak
+echodo mv -f mirrorlist mirrorlist.old
+echodo cp -f mirrorlist.pacnew mirrorlist.bak
 
 echo 'Please uncomment any mirrors you would like to use:'
-"$EDITOR" mirrorlist.bak
+vim mirrorlist.bak
 
 echo 'Ranking mirrors...'
-rankmirrors mirrolist.bak > mirrorlist
+rankmirrors mirrorlist.bak > mirrorlist
 
