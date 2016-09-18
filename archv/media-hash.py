@@ -4,7 +4,26 @@ import hashlib, os, re, sys, traceback, time
 
 ASK_FOR_CONFIRMATION = True
 DRY_RUN = False
-MEDIA_TYPES = ("png", "jpg", "jpeg", "gif", "tif", "tiff", "bmp", "svg", "webm", "wmv", "mp4", "mkv", "m4a", "mp3", "ogg")
+MEDIA_TYPES = (
+    'png',
+    'jpg',
+    'jpeg',
+    'gif',
+    'tif',
+    'tiff',
+    'bmp',
+    'svg',
+    'webm',
+    'wmv',
+    'mp4',
+    'mkv',
+    'm4a',
+    'mp3',
+    'ogg',
+    'opus',
+    'aac',
+)
+
 
 def confirmation(fn):
     global ASK_FOR_CONFIRMATION
@@ -22,9 +41,11 @@ def confirmation(fn):
     else:
         return True
 
+
 def get_hash(fn):
     with open(fn, 'rb') as fh:
        return hashlib.sha1(fh.read()).hexdigest()
+
 
 def is_media(fn):
     for ext in MEDIA_TYPES:
@@ -32,8 +53,10 @@ def is_media(fn):
             return True
     return False
 
+
 def wildcard_to_regex(pattern):
-    return re.escape(pattern).replace("\\*", ".*").replace("\\?", ".?") + "$"
+    return re.escape(pattern).replace('\\*', '.*').replace('\\?', '.?') + '$'
+
 
 def dirify(folder):
     if not folder.endswith(os.path.sep):
@@ -41,11 +64,33 @@ def dirify(folder):
     else:
         return folder
 
+
 def transform_file_ext(ext):
-    return ext.lower().replace("jpeg", "jpg")
+    return ext.lower().replace('jpeg', 'jpg')
+
 
 def matches(pattern, string):
     return bool(re.search(wildcard_to_regex(pattern), string))
+
+
+def log(string, perm=False):
+    if perm:
+        log.line_length = 0
+        if log.needs_newline:
+            print("\n%s" % string)
+        else:
+            print(string)
+    else:
+        if log.line_length:
+            print("\r%s\r" % (' ' * log.line_length), end='')
+        print(string, end='')
+        log.line_length = len(string)
+        sys.stdout.flush()
+    log.needs_newline = not perm
+
+log.line_length = 0
+log.needs_newline = False
+
 
 def get_ignored_files(path, ignore, ignoredirs):
     global errors
@@ -64,17 +109,18 @@ def get_ignored_files(path, ignore, ignoredirs):
     except SystemExit:
         exit(1)
     except:
-        print("Error reading %s, skipping directory for safety." % path)
+        log("Error reading %s, skipping directory for safety." % path, True)
         errors += 1
         traceback.print_exc(None, err_fh)
         ignoredirs.add(path)
     finally:
-        print("Got %d pattern%s from %s" % (len(ignore) + len(ignoredirs), ('s' if (len(ignore) + len(ignoredirs) - 1) else ''), path))
+        log("Got %d pattern%s from %s" % (len(ignore) + len(ignoredirs), ('s' if (len(ignore) + len(ignoredirs) - 1) else ''), path), True)
+
 
 def hash_media(dir_to_explore, err_fh, pause=False):
     global errors
     start_time = time.time()
-    old_files_fh = open("%s/hash-renamed-files.txt" % dir_to_explore, 'a+')
+    old_files_fh = open("%s/hash-renamed-files.txt" % dir_to_explore, 'a')
 
     changed = 0
     errors = 0
@@ -100,8 +146,7 @@ def hash_media(dir_to_explore, err_fh, pause=False):
             continue
 
         cd = dirify(os.path.abspath(cd))
-        print("Entering \"%s\" (%d files)..." % (_dir, len(files)))
-
+        log("Processing \"%s\" (%d files)..." % (_dir, len(files)))
         del _dir, ignorethis
 
         ignore = set()
@@ -110,7 +155,6 @@ def hash_media(dir_to_explore, err_fh, pause=False):
         for _fn in (".ignore", "_ignore"):
             if _fn in files and os.path.exists(cd + _fn):
                 get_ignored_files(cd + _fn, ignore, ignoredirs)
-
         del _fn
 
         if cd + "*" in ignore:
@@ -133,7 +177,7 @@ def hash_media(dir_to_explore, err_fh, pause=False):
             except SystemExit:
                 exit(1)
             except:
-                print("Unable to calculate hash for \"%s\"." % fn)
+                log("Unable to calculate hash for \"%s\"." % fn, True)
                 errors += 1
                 traceback.print_exc(None, err_fh)
                 continue
@@ -144,7 +188,7 @@ def hash_media(dir_to_explore, err_fh, pause=False):
             if abs_fn != abs_new_fn:
                 try:
                     if os.path.exists(abs_new_fn):
-                        print("Found collision for \"%s\": removing \"%s\"..." % (new_fn, fn))
+                        log("Found collision for \"%s\": removing \"%s\"..." % (new_fn, fn), True)
                         try:
                             if not DRY_RUN and confirmation(abs_fn):
                                 os.remove(abs_fn)
@@ -156,11 +200,11 @@ def hash_media(dir_to_explore, err_fh, pause=False):
                         except SystemExit:
                             exit(1)
                         except:
-                            print("Unable to remove \"%s\"." % (fn,))
+                            log("Unable to remove \"%s\"." % (fn,), True)
                             errors += 1
                             traceback.print_exc(None, err_fh)
                     else:
-                        print("Renaming \"%s\" -> \"%s\"." % (abs_fn, abs_new_fn))
+                        log("Renaming \"%s\" -> \"%s\"." % (abs_fn, abs_new_fn), True)
                         if not DRY_RUN:
                             os.rename(abs_fn, abs_new_fn)
                             old_files_fh.write("\"%s\" -> \"%s\"\n" % (abs_fn, abs_new_fn))
@@ -170,11 +214,11 @@ def hash_media(dir_to_explore, err_fh, pause=False):
                 except SystemExit:
                     exit(1)
                 except:
-                    print("Unable to rename \"%s\"." % fn)
+                    log("Unable to rename \"%s\"." % fn, True)
                     traceback.print_exc(None, err_fh)
                     errors += 1
 
-          # if new_fn in allfiles.viewkeys():
+          # if new_fn in allfiles.keys():
           #     print("Found collision for \"%s\" at \"%s\"..." % (new_fn, cd))
           #     print("(Original at \"%s\")" % (allfiles[new_fn],))
           #     try:
@@ -184,19 +228,20 @@ def hash_media(dir_to_explore, err_fh, pause=False):
           #         changed += 1
           #         continue
           #     except:
-          #         print("Unable to remove \"%s\"." % (fn,))
+          #         log("Unable to remove \"%s\"." % (fn,), True)
           #         errors += 1
           #         traceback.print_exc(None, err_fh)
           # else:
           #     allfiles[new_fn] = cd
 
-    print("Done: %d files changed with %d errors in %.2f seconds." % (changed, errors, time.time() - start_time))
+    log("Done: %d files changed with %d errors in %.2f seconds." % (changed, errors, time.time() - start_time))
 
     if pause:
         raw_input("Press enter to continue: ")
         print("\r                        \r", end='')
 
     return errors
+
 
 if __name__ == "__main__":
     if len(sys.argv) > 1:

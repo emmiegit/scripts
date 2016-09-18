@@ -1,15 +1,15 @@
 #!/usr/bin/env bash
 
-HASH_SCRIPT='/usr/local/scripts/arch/media-hash.py'
+HASH_SCRIPT='/usr/local/scripts/archv/media-hash.py'
 LOCATIONS=("${HOME}/Pictures/Anime" "${HOME}/Pictures/Pets" "${HOME}/Pictures/Comics/smbc" "${HOME}/Pictures/Wallpapers/desktop" "${HOME}/Pictures/Wallpapers/phone")
 
 on_exit() {
-    echo 'Done.'
+    printf "\nDone.\n"
     exit $?
 }
 
 on_cancel() {
-    echo 'Interrupted by user.'
+    echo "\nInterrupted by user.\n"
     exit 1
 }
 
