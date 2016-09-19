@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/bin/bash
 
 OSU_SONG_DIR='/media/media/Games/osu!/Songs'
 

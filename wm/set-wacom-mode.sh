@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/bin/bash
 set -eu
 
 [[ $EUID == 0 ]] && exec sudo -u ammon "$0"

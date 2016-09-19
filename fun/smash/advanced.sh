@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/bin/bash
 source basic.sh
 
 left_aerial() {

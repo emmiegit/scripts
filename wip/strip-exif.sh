@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/bin/bash
 
 strip_exif() {
     local prev=$(pwd)

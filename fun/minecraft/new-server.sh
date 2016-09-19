@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/bin/bash
 
 DEFAULT_JAR='1.8.8'
 MAKE_BACKUPS='false'

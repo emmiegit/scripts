@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/bin/bash
 
 if [ $# -eq 0 ]; then
     COLOR="$((($RANDOM % 7) + 1))"

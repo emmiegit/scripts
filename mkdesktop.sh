@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/bin/bash
 
 case $# in
 0)

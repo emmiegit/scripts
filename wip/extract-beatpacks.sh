@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/bin/bash
 set -e
 
 OSU_SONG_DIR='/opt/osu/game/Songs'

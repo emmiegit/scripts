@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/bin/bash
 set -eu
 
 XMODMAP_FILE='/usr/local/scripts/dat/xmodmap-vim-keyswap'

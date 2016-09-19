@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/bin/bash
 
 if zenity --question \
 		  --title "Permanently delete files." \

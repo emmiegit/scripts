@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/bin/bash
 source buttons.sh
 
 left_special() {

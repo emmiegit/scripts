@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/bin/bash
 set -eu
 
 ARCHIVE_LOCATION='/media/archive/Backup'

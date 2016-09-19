@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/bin/bash
 
 get_rtv_dir() {
     if [[ -n $XDG_CONFIG_HOME ]]; then

@@ -1,3 +1,3 @@
-#!/usr/bin/env bash
+#!/bin/bash
 steam steam://rungameid/8930 & disown
 

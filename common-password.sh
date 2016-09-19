@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/bin/bash
 # Licensed under the MIT License
 
 PASSWORD_LIST="$(dirname "$0")/dat/passwords.txt"

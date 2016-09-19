@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/bin/bash
 
 HASH_SCRIPT='/usr/local/scripts/archv/media-hash.py'
 LOCATIONS=("${HOME}/Pictures/Anime" "${HOME}/Pictures/Pets" "${HOME}/Pictures/Comics/smbc" "${HOME}/Pictures/Wallpapers/desktop" "${HOME}/Pictures/Wallpapers/phone")

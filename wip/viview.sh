@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/bin/bash
 
 # Accept piped input from a file and use vim's "view" on the data.
 #

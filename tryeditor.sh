@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/bin/bash
 set -e
 
 FILE='/usr/local/scripts/dat/hamlet.txt'
