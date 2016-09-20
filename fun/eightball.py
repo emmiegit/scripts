@@ -1,5 +1,7 @@
 #!/bin/python
-import random, sys
+from __future__ import print_function
+import random
+import sys
 
 ###############################
 #          _......._          #
@@ -52,9 +54,8 @@ if interactive_mode:
     print("Ask me your question.")
     input("> ")
 
-print random.choice(answers)
+print(random.choice(answers))
 
 if interactive_mode:
     input()
-
 
