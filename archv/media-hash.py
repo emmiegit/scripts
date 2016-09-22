@@ -118,6 +118,10 @@ def get_ignored_files(path, ignore, ignoredirs):
 
 
 def hash_media(dir_to_explore, err_fh, pause=False):
+    if not os.path.isdir(dir_to_explore):
+        log("\"%s\" is not a directory.", True)
+        return 1
+
     global errors
     start_time = time.time()
     old_files_fh = open("%s/hash-renamed-files.txt" % dir_to_explore, 'a')

@@ -4,7 +4,7 @@ set -eu
 DEST="$HOME/Documents/Relic/Private"
 LOCK="$DEST/.$1"
 EXT=7z
-HASH_SCRIPT='/usr/local/scripts/arch/media-hash.py'
+HASH_SCRIPT='/usr/local/scripts/archv/media-hash.py'
 CLEAR_RECENT=false
 TEST_ARCHIVE=false
 _remove_lock=true
