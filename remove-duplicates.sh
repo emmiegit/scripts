@@ -1,7 +1,13 @@
 #!/bin/bash
 
 HASH_SCRIPT='/usr/local/scripts/archv/media-hash.py'
-LOCATIONS=("${HOME}/Pictures/Anime" "${HOME}/Pictures/Pets" "${HOME}/Pictures/Comics/smbc" "${HOME}/Pictures/Wallpapers/desktop" "${HOME}/Pictures/Wallpapers/phone")
+LOCATIONS=(
+	"${HOME}/Pictures/Anime"
+	"${HOME}/Pictures/Misc/Redraw Reigen"
+	"${HOME}/Pictures/Pets"
+	"${HOME}/Pictures/Comics/smbc"
+	"${HOME}/Pictures/Wallpapers/desktop"
+	"${HOME}/Pictures/Wallpapers/phone")
 
 on_exit() {
     printf "\nDone.\n"
@@ -24,6 +30,7 @@ fi
 for dir in "${LOCATIONS[@]}"; do
     if [[ -d $dir ]]; then
         "$HASH_SCRIPT" "$dir"
+		echo
     fi
 done
 
