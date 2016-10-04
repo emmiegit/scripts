@@ -6,7 +6,7 @@ PIDFILE=/tmp/$USER-caffeine.pid
 NOTIFY=false
 
 is_running() {
-	[ -f $PIDFILE ] && kill -0 `cat $PIDFILE` 2> /dev/null
+	[[ -f $PIDFILE ]] && kill -0 `cat $PIDFILE` 2> /dev/null
 	return $?
 }
 
@@ -26,7 +26,7 @@ notify() {
 }
 
 print_usage() {
-	echo "Usage: $(basename $0) [flags] (start|stop|restart|toggle|status|help)"
+	echo "Usage: $(basename "$0") [flags] (start|stop|restart|toggle|status|help)"
 }
 
 usage_and_exit() {
@@ -41,7 +41,7 @@ help_and_exit() {
 	exit 0
 }
 
-start() {
+do_start() {
 	if is_running; then
 		notify "Caffeine is already running."
 		exit 1
@@ -54,7 +54,7 @@ start() {
 	fi
 }
 
-stop() {
+do_stop() {
 	if ! is_running; then
 		notify "Caffeine is not running."
 		exit 1
@@ -80,19 +80,18 @@ while [[ $# -gt 1 ]]; do
 	shift
 done
 
-echo $@
 case "$1" in
-	start) start ;;
-	stop) stop ;;
+	start) do_start ;;
+	stop) do_stop ;;
 	restart)
-		stop
+		do_stop
 		sleep 1
 		if is_running; then
 			notify "Unable to stop Caffeine."
 			exit 1
 		fi
 
-		start
+		do_start
 		sleep 1
 		if ! is_running; then
 			notify "Unable to start Caffeine."

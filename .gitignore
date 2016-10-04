@@ -1,5 +1,6 @@
 local/
 shreddit/
+wm/lock.sh
 
 *.pyc
 .*.swp
