@@ -21,6 +21,7 @@ case "$(hostname)" in
 				;;
 			osu)
 				notify-send 'Setting tablet to circle-clicking mode.'
+				xsetwacom --set "$TABLET_PART_ID" MapToOutput 'HEAD-0'
 				xsetwacom --set "$TABLET_PART_ID" Area 2000 2000 8220 5500
 				;;
 			*)
@@ -38,6 +39,7 @@ case "$(hostname)" in
 				;;
 			osu)
 				notify-send 'Setting tablet to circle-clicking mode.'
+				xsetwacom --set "$TABLET_PART_ID" MapToOutput 'LVDS-1'
 				xsetwacom --set "$TABLET_PART_ID" Area 2000 2000 8000 5750
 				;;
 			*)
