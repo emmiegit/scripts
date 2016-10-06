@@ -18,13 +18,9 @@ play-ac() {
 }
 
 play-random() {
-	if [[ $((RANDOM % 2)) -eq 0 ]]; then
-		FLAGS='--audio-pitch-correction=no'
-	else
-		FLAGS=
-	fi
-
-	mpv --no-video --speed="$(perl -e 'printf("%1.2f", rand() * 1.5)')" $FLAGS "$@"
+	# 0.5 to 1.8
+	local speed="$(perl -e 'printf("%1.2f", rand() * 1.3 + 0.5)')"
+	mpv --no-video --speed="$speed" --audio-pitch-correction=no "$@"
 }
 
 get-song() {
