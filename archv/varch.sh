@@ -56,6 +56,7 @@ varch() {
 		read -rsp 'Password: ' password
 		printf 'Hashing images...\n'
 		"$HASH_SCRIPT" "$DEST/$1"
+		echo
 		printf 'Backing up old archive...\n'
 		[[ -f $ARCHIVE ]] && mv -u "$ARCHIVE" "$ARCHIVE~"
 		printf 'Adding files to archive...\n'
