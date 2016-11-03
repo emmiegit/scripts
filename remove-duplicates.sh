@@ -3,6 +3,8 @@
 HASH_SCRIPT='/usr/local/scripts/archv/media-hash.py'
 LOCATIONS=(
 	"${HOME}/Pictures/Anime"
+	"${HOME}/Pictures/Games/Civ V/Miscellaenous Screenshots/"
+	"${HOME}/Pictures/Misc/Ben Garrison"
 	"${HOME}/Pictures/Misc/Redraw Reigen"
 	"${HOME}/Pictures/Photographs/Pets"
 	"${HOME}/Pictures/Comics/smbc"
