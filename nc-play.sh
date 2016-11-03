@@ -5,6 +5,14 @@ set -eu
 trap exit EXIT SIGTERM SIGHUP SIGINT
 
 # Function definitions
+help_and_exit() {
+	printf 'Usage: %s [OPTION]... FILENAME...\n' "$0"
+	printf '\t-s, --random-speeds\n'
+	printf '\t-n, --nightcore-only\n'
+	printf '\t-h, --help\n'
+	exit 0
+}
+
 play() {
     mpv --no-video "$@"
 }
@@ -58,6 +66,12 @@ MASK=3
 # Parse arguments
 for arg in "$@"; do
 	case "$arg" in
+		-h)
+			help_and_exit
+			;;
+		--help)
+			help_and_exit
+			;;
 		-n)
 			MASK=2
 			;;
