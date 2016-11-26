@@ -11,9 +11,15 @@ if [ "$#" -eq 0 ]; then
     exit 1
 fi
 
-REMOTE=TitusHamachi
-SOURCE="$(dirname "$1")"
-DEST="$1"
+docmd() {
+	echo "$@"
+	"$@"
+}
 
-rsync -vrtzpAXl --safe-links --delete-after "$REMOTE:$DEST" "$SOURCE"
+remote=TitusHamachi
+source="$(dirname "$1")"
+dest="$1"
+
+shift
+docmd rsync -vrtzpAXl --safe-links $@ "$remote:$dest" "$source"
 
