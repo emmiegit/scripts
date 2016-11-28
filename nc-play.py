@@ -9,7 +9,18 @@ ANTICORE = 2
 RANDOM = -1
 
 
-def play(songs, modes):
+def help_and_exit():
+    print("Usage: %s [option...] song...")
+    print("Options")
+    print("  -h, --help                 Print this help message")
+    print("  -n, --nightcore-only       Only play at 1.5x speed")
+    print("  -a, --anticore-only        Only play at 2/3rds speed")
+    print("  -s, --random-speeds        Randomly choose speeds between 0.5 and 1.8")
+    print("  -p, --pitch-adjust         Adjust pitch when changing speed")
+    exit(0)
+
+
+def play(songs, modes, pitch_adjust):
     song = random.choice(songs)
     mode = random.choice(modes)
 
@@ -27,7 +38,7 @@ def play(songs, modes):
         "mpv",
         "--no-video",
         "--speed=%f" % speed,
-        "--audio-pitch-correction=no",
+        "--audio-pitch-correction=%s" % pitch_adjust,
         song,
     ))
 
@@ -35,16 +46,19 @@ def play(songs, modes):
 if __name__ == '__main__':
     songs = []
     modes = (NORMAL, NIGHTCORE, ANTICORE)
+    pitch_adjust = 'no'
 
     for arg in sys.argv[1:]:
         if arg in ('-h', '--help'):
             help_and_exit()
-        elif arg in ('-a', '--anticore-only', '--vaporwave'):
-            modes = (ANTICORE,)
         elif arg in ('-n', '--nightcore-only'):
             modes = (NIGHTCORE,)
+        elif arg in ('-a', '--anticore-only', '--vaporwave'):
+            modes = (ANTICORE,)
         elif arg in ('-s', '--random-speeds'):
             modes = (RANDOM,)
+        elif arg in ('-p', '--pitch-adjust'):
+            pitch_adjust = 'yes'
         else:
             songs.append(arg)
 
