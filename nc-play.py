@@ -68,7 +68,7 @@ if __name__ == '__main__':
 
     try:
         while True:
-            play(songs, modes)
+            play(songs, modes, pitch_adjust)
     except KeyboardInterrupt:
         exit()
 
