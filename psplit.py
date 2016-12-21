@@ -40,13 +40,11 @@ EDIT = (ord('e'), ord('s'))
 HELP = (ord('?'), ord('H'))
 QUIT = (ord('q'),)
 
-
 def plural(number):
     if number == 1:
         return ''
     else:
         return 's'
-
 
 def run_editor(arguments):
     try:
@@ -58,7 +56,6 @@ def run_editor(arguments):
             editor = 'vi'
 
     subprocess.call([editor] + arguments)
-
 
 def get_blocks(fh):
     blocks = []
@@ -77,7 +74,6 @@ def get_blocks(fh):
     else:
         return blocks
 
-
 def get_all_blocks(files):
     blocks = []
     for filename in files:
@@ -85,14 +81,13 @@ def get_all_blocks(files):
             blocks += get_blocks(fh)
 
     if not blocks:
-        if len(sys.argv) == 2:
+        if len(files) == 1:
             print("File is empty.")
         else:
             print("Files are empty.")
         exit(0)
 
     return blocks
-
 
 class BlockDisplay(object):
     def __init__(self, blocks, files):
@@ -158,7 +153,6 @@ class BlockDisplay(object):
         win.refresh()
 
         ch = win.getch()
-
 
 if __name__ == "__main__":
     if len(sys.argv) < 2:
