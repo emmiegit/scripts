@@ -21,5 +21,5 @@ source="$(dirname "$1")"
 dest="$1"
 
 shift
-docmd rsync -vrtzpAXl --safe-links $@ "$remote:$dest" "$source"
+docmd rsync -vrtzpAXl --safe-links --delete-after $@ "$remote:$dest" "$source"
 
