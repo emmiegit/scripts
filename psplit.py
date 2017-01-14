@@ -96,7 +96,7 @@ class BlockDisplay(object):
         self.blocks = blocks
 
     def run(self, win):
-        curses.raw()
+        curses.cbreak()
         curses.nonl()
         curses.noecho()
 
