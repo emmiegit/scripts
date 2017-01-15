@@ -24,7 +24,6 @@ MEDIA_TYPES = (
     'aac',
 )
 
-
 def confirmation(fn):
     global ASK_FOR_CONFIRMATION
     if ASK_FOR_CONFIRMATION:
@@ -41,11 +40,9 @@ def confirmation(fn):
     else:
         return True
 
-
 def get_hash(fn):
     with open(fn, 'rb') as fh:
        return hashlib.sha1(fh.read()).hexdigest()
-
 
 def is_media(fn):
     for ext in MEDIA_TYPES:
@@ -53,10 +50,8 @@ def is_media(fn):
             return True
     return False
 
-
 def wildcard_to_regex(pattern):
     return re.escape(pattern).replace('\\*', '.*').replace('\\?', '.?') + '$'
-
 
 def dirify(folder):
     if not folder.endswith(os.path.sep):
@@ -64,14 +59,11 @@ def dirify(folder):
     else:
         return folder
 
-
 def transform_file_ext(ext):
     return ext.lower().replace('jpeg', 'jpg')
 
-
 def matches(pattern, string):
     return bool(re.search(wildcard_to_regex(pattern), string))
-
 
 def log(string, perm=False):
     if perm:
@@ -90,7 +82,6 @@ def log(string, perm=False):
 
 log.line_length = 0
 log.needs_newline = False
-
 
 def get_ignored_files(path, ignore, ignoredirs):
     global errors
@@ -124,7 +115,12 @@ def hash_media(dir_to_explore, err_fh, pause=False):
 
     global errors
     start_time = time.time()
-    old_files_fh = open("%s/hash-renamed-files.txt" % dir_to_explore, 'a')
+    old_files_fn = "%s/hash-renamed-files.txt" % dir_to_explore
+    try:
+        last_mtime = os.stat(old_files_fn).st_mtime
+    except:
+        last_mtime = 0
+    old_files_fh = open(old_files_fn, 'a')
 
     changed = 0
     errors = 0
@@ -173,6 +169,9 @@ def hash_media(dir_to_explore, err_fh, pause=False):
             for pattern in ignore:
                 if matches(pattern, abs_fn):
                     continue
+
+            if os.stat(abs_fn).st_ctime < last_mtime:
+                continue
 
             try:
                 hashsum = get_hash(abs_fn)
@@ -245,7 +244,6 @@ def hash_media(dir_to_explore, err_fh, pause=False):
         print("\r                        \r", end='')
 
     return errors
-
 
 if __name__ == "__main__":
     if len(sys.argv) > 1:
