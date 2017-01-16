@@ -1,16 +1,16 @@
 #!/bin/bash
 set -eu
 
-XMODMAP_FILE='/usr/local/scripts/dat/xmodmap-vim-keyswap'
+XMODMAP_FILE='/usr/local/scripts/dat/xmodmap-vi-keyswap'
 FORCE=false
 
 help_and_exit() {
 	printf 'Usage: %s [-f] [-mXMODMAP_FILE]\n' "$(basename "$0")"
 	printf 'Usage: %s --help\n\n'              "$(basename "$0")"
 	printf '  -f, --force\n'
-	printf '  		Run xmodmap, even if it appears that the keyswap is already set.\n'
+	printf '  	Run xmodmap, even if it appears that the keyswap is already set.\n'
 	printf '  -m[FILE], --modmapfile=[FILE]\n'
-	printf '        Specify the file to use to pass to "xmodmap". The default is to use "%s".\n' "$XMODMAP_FILE"
+	printf '  	Specify the file to use to pass to "xmodmap". The default is to use "%s".\n' "$XMODMAP_FILE"
 	exit 0
 }
 
