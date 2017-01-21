@@ -1,7 +1,7 @@
 #!/bin/bash
 
-HASH_SCRIPT='/usr/local/scripts/archv/media-hash.py'
-LOCATIONS=(
+hash_script='/usr/local/scripts/archv/media-hash.py'
+locations=(
 	"${HOME}/Pictures/Anime"
 	"${HOME}/Pictures/Games/Civ V/Miscellaenous Screenshots/"
 	"${HOME}/Pictures/Misc/Ben Garrison"
@@ -24,10 +24,10 @@ on_cancel() {
 trap on_exit EXIT
 trap on_cancel SIGTERM SIGINT
 
-if [[ ! -f $HASH_SCRIPT ]]; then
+if [[ ! -f $hash_script ]]; then
     echo >&2 'Cannot find hash script.'
     exit 1
 fi
 
-"$HASH_SCRIPT" "${LOCATIONS[@]}"
+"$hash_script" "${locations[@]}" "$@"
 

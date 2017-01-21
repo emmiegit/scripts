@@ -170,7 +170,10 @@ def hash_media(dir_to_explore, err_fh, pause=False):
                 if matches(pattern, abs_fn):
                     continue
 
-            if os.stat(abs_fn).st_ctime < last_mtime:
+            try:
+                if os.stat(abs_fn).st_ctime < last_mtime:
+                    continue
+            except:
                 continue
 
             try:
