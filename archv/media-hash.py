@@ -110,7 +110,7 @@ def get_ignored_files(path, ignore, ignoredirs):
 
 def hash_media(dir_to_explore, err_fh, pause=False):
     if not os.path.isdir(dir_to_explore):
-        log("\"%s\" is not a directory.", True)
+        log("\"%s\" is not a directory." % dir_to_explore, True)
         return 1
 
     global errors
@@ -174,6 +174,7 @@ def hash_media(dir_to_explore, err_fh, pause=False):
                 if os.stat(abs_fn).st_ctime < last_mtime:
                     continue
             except:
+                log("Skipping over \"%s\"." % fn, True)
                 continue
 
             try:
