@@ -130,7 +130,7 @@ def hash_media(dir_to_explore, err_fh, pause=False):
     os.chdir(dir_to_explore)
 
     if DRY_RUN:
-        print("NOTE: This is a dry run, no files will be changed.")
+        log("NOTE: This is a dry run, no files will be changed.")
 
     for cd, subdirs, files in os.walk(dir_to_explore):
         ignorethis = False
@@ -138,7 +138,7 @@ def hash_media(dir_to_explore, err_fh, pause=False):
 
         for pattern in ignoredirs:
             if matches(pattern, _dir):
-                print("Ignoring %s..." % _dir)
+                log("Ignoring %s..." % _dir)
                 ignorethis = True
                 break
 
