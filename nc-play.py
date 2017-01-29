@@ -9,7 +9,6 @@ NIGHTCORE = 1
 ANTICORE = 2
 RANDOM = -1
 
-
 def help_and_exit():
     print("Usage: %s [option...] song...")
     print("Options")
@@ -22,7 +21,6 @@ def help_and_exit():
     print("      --max=[value]          Set the maximum speed")
     print("      --flags=[value]        Give mpv additional flags")
     exit(0)
-
 
 def play(songs, options):
     song = random.choice(songs)
@@ -50,8 +48,9 @@ def play(songs, options):
         flags += options['extra_flags']
 
     flags.append(song)
-    subprocess.run(flags)
-
+    ret = subprocess.call(flags)
+    if ret != 0:
+        exit(1)
 
 if __name__ == '__main__':
     songs = []
