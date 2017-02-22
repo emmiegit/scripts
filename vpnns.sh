@@ -22,7 +22,7 @@ function msg() {
 function getroot() {
 	if [[ $UID != 0 ]]; then
 		msg "This operation needs root privileges."
-		exec env OLD_USER="$USER" sudo "$0" "${args[@]}"
+		exec sudo "$0" "${args[@]}"
 	fi
 }
 
@@ -62,7 +62,7 @@ function iface_up() {
     docmd sysctl -q net.ipv4.ip_forward=1
 
     docmd mkdir -p "/etc/netns/$ns_name"
-	doecho "8.8.8.8" "/etc/netns/$ns_name/resolv.conf"
+	doecho "nameserver 8.8.8.8" "/etc/netns/$ns_name/resolv.conf"
 
     docmd ip netns exec "$ns_name" ping -c 2 -q www.google.com
 }
@@ -89,7 +89,7 @@ function iface_status() {
 }
 
 function ns_run() {
-	docmd exec sudo -u "$OLD_USER" ip netns exec "$ns_name" "$@"
+	docmd exec ip netns exec "$ns_name" "$@"
 }
 
 function vpn_up() {
