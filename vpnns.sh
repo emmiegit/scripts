@@ -20,21 +20,25 @@ function msg() {
 }
 
 function getroot() {
-	if [[ $EUID != 0 ]]; then
-		msg "This script needs root privileges."
-		exec sudo "$0" "${args[@]}"
-		exit 1
+	if [[ $UID != 0 ]]; then
+		msg "This operation needs root privileges."
+		exec env OLD_USER="$USER" sudo "$0" "${args[@]}"
 	fi
 }
 
 function docmd() {
 	echo "$@"
-	#"$@"
+	"$@"
 }
 
 function bgcmd() {
 	echo "$@"
-	#"$@" &
+	"$@" &
+}
+
+function doecho() {
+	echo "echo $1 > $2"
+	echo "$1" > "$2"
 }
 
 function iface_up() {
@@ -58,9 +62,9 @@ function iface_up() {
     docmd sysctl -q net.ipv4.ip_forward=1
 
     docmd mkdir -p "/etc/netns/$ns_name"
-	docmd cp /etc/resolv.conf "/etc/netns/$ns_name/resolv.conf"
+	doecho "8.8.8.8" "/etc/netns/$ns_name/resolv.conf"
 
-    docmd ip netns exec "$ns_name" fping -q www.google.com
+    docmd ip netns exec "$ns_name" ping -c 2 -q www.google.com
 }
 
 function iface_down() {
@@ -76,7 +80,7 @@ function iface_down() {
 }
 
 function iface_status() {
-	if ip netns | grep "$ns_name"; then
+	if ip netns | grep -q "$ns_name"; then
 		msg "Interface $ns_name is UP"
 	else
 		msg "Interface $ns_name is DOWN"
@@ -85,7 +89,7 @@ function iface_status() {
 }
 
 function ns_run() {
-	docmd exec ip netns exec "$ns_name" "$@"
+	docmd exec sudo -u "$OLD_USER" ip netns exec "$ns_name" "$@"
 }
 
 function vpn_up() {
@@ -136,14 +140,18 @@ function vpn_status() {
 }
 
 function usage_and_exit() {
-	msg "Usage: $0 ns (up|down|status|exec) [arguments]"
-	msg "Usage: $0 vpn (up|down|status) [arguments]"
-	msg "Usage: $0 run [arguments]"
+	if "$1"; then
+		msg "Invalid parameters."
+	fi
+	echo "Usage: $0 ns (up|down|status|exec) [arguments]"
+	echo "Usage: $0 vpn (up|down|status) [arguments]"
+	echo "Usage: $0 run [arguments]"
+	echo "Usage: $0 help"
 	exit 1
 }
 
 if [[ $# -eq 0 ]]; then
-	usage_and_exit
+	usage_and_exit true
 fi
 
 case "$1" in
@@ -163,7 +171,7 @@ case "$1" in
 				ns_run "$@"
 				;;
 			*)
-				usage_and_exit
+				usage_and_exit true
 				;;
 		esac
 		;;
@@ -179,7 +187,7 @@ case "$1" in
 				vpn_status
 				;;
 			*)
-				usage_and_exit
+				usage_and_exit true
 				;;
 		esac
 		;;
@@ -187,8 +195,11 @@ case "$1" in
 		shift
 		ns_run "$@"
 		;;
+	help)
+		usage_and_exit false
+		;;
 	*)
-		usage_and_exit
+		usage_and_exit true
 		;;
 esac
 
