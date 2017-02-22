@@ -13,5 +13,7 @@ if [[ $# -eq 1 ]]; then
 			2>&1 \
 			&
 	disown
+else
+	echo 'Only sourcing variables. Specify which part you want to run the game.'
 fi
 
