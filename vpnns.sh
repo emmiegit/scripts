@@ -9,23 +9,32 @@ readonly dev0='vpn0'
 readonly dev1='vpn1'
 readonly subnet=24
 readonly vpn_pidfile="/run/vpnns-$ns_name.pid"
+readonly args=("$@")
+
+function msg() {
+	if tty -s; then
+		printf "\e[1m%s\e[0m\n" "$1"
+	else
+		echo "$1"
+	fi
+}
 
 function getroot() {
 	if [[ $EUID != 0 ]]; then
-		echo >&2 "This script needs root privileges."
-		exec sudo "$0" "$@"
+		msg "This script needs root privileges."
+		exec sudo "$0" "${args[@]}"
 		exit 1
 	fi
 }
 
 function docmd() {
 	echo "$@"
-	"$@"
+	#"$@"
 }
 
 function bgcmd() {
 	echo "$@"
-	"$@" &
+	#"$@" &
 }
 
 function iface_up() {
@@ -68,9 +77,9 @@ function iface_down() {
 
 function iface_status() {
 	if ip netns | grep "$ns_name"; then
-		echo "Interface $ns_name is UP"
+		msg "Interface $ns_name is UP"
 	else
-		echo "Interface $ns_name is DOWN"
+		msg "Interface $ns_name is DOWN"
 		return 1
 	fi
 }
@@ -81,7 +90,7 @@ function ns_run() {
 
 function vpn_up() {
 	if [[ $# -eq 0 ]]; then
-		echo "Usage: $0 vpn up openvpn-file"
+		msg "Usage: $0 vpn up openvpn-file"
 		return 1
 	fi
 
@@ -92,13 +101,14 @@ function vpn_up() {
         sleep .3
     done
 
+	echo "echo $! > $vpn_pidfile"
 	echo "$!" > "$vpn_pidfile"
 	disown
 }
 
 function vpn_down() {
 	if [[ ! -f "$vpn_pidfile" ]]; then
-		echo "The instance isn't up"
+		msg "The instance isn't up"
 		return 1
 	fi
 
@@ -110,29 +120,29 @@ function vpn_down() {
 
 function vpn_status() {
 	if [[ ! -f "$vpn_pidfile" ]]; then
-		echo "The OpenVPN instance is DOWN"
+		msg "The OpenVPN tunnel is DOWN"
 		return 1
 	fi
 
 	readonly local pid="$(cat "$vpn_pidfile")"
 
 	if kill -0 "$pid"; then
-		echo "The OpenVPN instance is UP"
+		msg "The OpenVPN tunnel is UP"
 	else
-		echo "The OpenVPN instance is DEAD"
+		msg "The OpenVPN tunnel is DEAD"
 		rm -f "$vpn_pidfile"
 		return 1
 	fi
 }
 
 function usage_and_exit() {
-	echo "Usage: $0 ns (up|down|status|exec) [arguments]"
-	echo "Usage: $0 vpn (up|down|status) [arguments]"
-	echo "Usage: $0 run [arguments]"
+	msg "Usage: $0 ns (up|down|status|exec) [arguments]"
+	msg "Usage: $0 vpn (up|down|status) [arguments]"
+	msg "Usage: $0 run [arguments]"
 	exit 1
 }
 
-if [[ $# -lt 2 ]]; then
+if [[ $# -eq 0 ]]; then
 	usage_and_exit
 fi
 
