@@ -8,6 +8,7 @@ readonly addr2='10.200.200.2'
 readonly dev0='vpn0'
 readonly dev1='vpn1'
 readonly subnet=24
+readonly iface_match='en+'
 readonly vpn_pidfile="/run/vpnns-$ns_name.pid"
 readonly args=("$@")
 
@@ -57,7 +58,7 @@ function iface_up() {
     docmd ip netns exec "$ns_name" ip route add default via "$addr1" dev "$dev1"
 
     docmd iptables -A INPUT \! -i "$dev0" -s "$addr0/$subnet" -j DROP
-    docmd iptables -t nat -A POSTROUTING -s "$addr0/$subnet" -o wl+ -j MASQUERADE
+    docmd iptables -t nat -A POSTROUTING -s "$addr0/$subnet" -o "$iface_match" -j MASQUERADE
 
     docmd sysctl -q net.ipv4.ip_forward=1
 
@@ -74,7 +75,7 @@ function iface_down() {
     docmd sysctl -q net.ipv4.ip_forward=0
 
     docmd iptables -D INPUT \! -i "$dev0" -s "$addr0/$subnet" -j DROP
-    docmd iptables -t nat -D POSTROUTING -s "$addr0/$subnet" -o wl+ -j MASQUERADE
+    docmd iptables -t nat -D POSTROUTING -s "$addr0/$subnet" -o "$iface_match" -j MASQUERADE
 
     docmd ip netns delete "$ns_name"
 }
@@ -89,6 +90,7 @@ function iface_status() {
 }
 
 function ns_run() {
+	getroot
 	docmd exec ip netns exec "$ns_name" "$@"
 }
 
@@ -101,12 +103,11 @@ function vpn_up() {
 	getroot
 	bgcmd ip netns exec "$ns_name" openvpn --config "$1"
 
-    while ! ip netns exec "$ns_name" ip a show dev tun0 up; do
+    while ! ip netns exec "$ns_name" ip addr show dev tun0 up; do
         sleep .3
     done
 
-	echo "echo $! > $vpn_pidfile"
-	echo "$!" > "$vpn_pidfile"
+	doecho "$!" "$vpn_pidfile"
 	disown
 }
 
