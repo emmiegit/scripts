@@ -14,7 +14,7 @@ usage_and_exit() {
 # Variables
 c_compiler=cc
 includes=()
-define=()
+defines=()
 use_temp=true
 
 # Parse arguments
@@ -43,8 +43,8 @@ shift "$((OPTIND - 1))"
 
 # Create temp files
 if "$use_temp"; then
-	c_file="$(mktemp /tmp/XXXXXXX.c)"
-	c_binary="$(mktemp /tmp/XXXXXXX)"
+	c_file="$(mktemp ${TEMP_DIR:-/tmp}/XXXXXXX.c)"
+	c_binary="$(mktemp ${TEMP_DIR:-/tmp}/XXXXXXX)"
 else
 	c_file="$(mktemp XXXXXXX.c)"
 	c_binary="$(mktemp XXXXXXX)"
