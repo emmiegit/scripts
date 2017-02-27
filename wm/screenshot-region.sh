@@ -1,4 +1,4 @@
 #!/bin/sh
-cd ~/Incoming
-maim -s
+set -u
+exec maim -s "$HOME/Incoming/$(date +%s).png"
 
