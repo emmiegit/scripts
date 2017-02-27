@@ -6,7 +6,7 @@ flags=(
 	'--notify'
 )
 
-pkill "$name" || true
+pkill "\^$name\$" || true
 "$name" "${flags[@]}" \
 	> /dev/null \
 	2> /dev/null \

@@ -1,3 +1,2 @@
 #!/bin/sh
-light-locker-command --lock
-
+exec light-locker-command --lock

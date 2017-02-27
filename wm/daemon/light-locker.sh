@@ -6,7 +6,7 @@ flags=(
 	'--lock-on-suspend'
 )
 
-pkill "$name" || true
+pkill "\^$name\$" || true
 "$name" "${flags[@]}" \
 	> /dev/null \
 	2> /dev/null \
