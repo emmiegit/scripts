@@ -6,7 +6,9 @@ flags=(
 	'--notify'
 )
 
-pkill "\^$name\$" || true
+trap : SIGHUP
+
+pkill -HUP "$name" || true
 "$name" "${flags[@]}" \
 	> /dev/null \
 	2> /dev/null \

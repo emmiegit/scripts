@@ -4,6 +4,7 @@ import hashlib, os, re, sys, traceback, time
 
 ASK_FOR_CONFIRMATION = True
 DRY_RUN = False
+FULL = False
 MEDIA_TYPES = (
     'png',
     'jpg',
@@ -42,7 +43,7 @@ def confirmation(fn):
 
 def get_hash(fn):
     with open(fn, 'rb') as fh:
-       return hashlib.sha1(fh.read()).hexdigest()
+       return hashlib.sha224(fh.read()).hexdigest()
 
 def is_media(fn):
     for ext in MEDIA_TYPES:
@@ -170,12 +171,13 @@ def hash_media(dir_to_explore, err_fh, pause=False):
                 if matches(pattern, abs_fn):
                     continue
 
-            try:
-                if os.stat(abs_fn).st_ctime < last_mtime:
+            if not FULL:
+                try:
+                    if os.stat(abs_fn).st_ctime < last_mtime:
+                        continue
+                except:
+                    log("Skipping over \"%s\"." % fn, True)
                     continue
-            except:
-                log("Skipping over \"%s\"." % fn, True)
-                continue
 
             try:
                 hashsum = get_hash(abs_fn)

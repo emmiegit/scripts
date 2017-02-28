@@ -1,33 +1,43 @@
 #!/bin/bash
 
-hash_script='/usr/local/scripts/archv/media-hash.py'
 locations=(
-	"${HOME}/Pictures/Anime"
-	"${HOME}/Pictures/Games/Civ V/Miscellaenous Screenshots/"
-	"${HOME}/Pictures/Misc/Ben Garrison"
-	"${HOME}/Pictures/Misc/Redraw Reigen"
-	"${HOME}/Pictures/Photographs/Pets"
-	"${HOME}/Pictures/Comics/smbc"
-	"${HOME}/Pictures/Wallpapers/desktop"
-	"${HOME}/Pictures/Wallpapers/phone")
+	"$HOME/Pictures/Anime"
+	"$HOME/Pictures/Games/Civ V/Miscellaenous Screenshots/"
+	"$HOME/Pictures/Misc/Ben Garrison"
+	"$HOME/Pictures/Misc/Redraw Reigen"
+	"$HOME/Pictures/Photographs/Pets"
+	"$HOME/Pictures/Comics/smbc"
+	"$HOME/Pictures/Wallpapers/desktop"
+	"$HOME/Pictures/Wallpapers/phone")
 
-on_exit() {
-    printf "\nDone.\n"
-    exit $?
+hash_new() {
+	/usr/local/scripts/archv/darch.sh -m "$1"
 }
 
-on_cancel() {
-    echo "\nInterrupted by user.\n"
-    exit 1
+hash_old() {
+	/usr/local/scripts/archv/media-hash.py "$1"
 }
 
-trap on_exit EXIT
-trap on_cancel SIGTERM SIGINT
+hasher=hash_new
 
-if [[ ! -f $hash_script ]]; then
-    echo >&2 'Cannot find hash script.'
-    exit 1
+if [[ $# -gt 0 ]]; then
+	for arg in "$@"; do
+		case "$arg" in
+			old)
+				echo "Using old hash program."
+				hasher=hash_old
+				;;
+			*)
+				echo >&2 "Unknown argument: $arg"
+				exit 1
+				;;
+		esac
+	done
 fi
 
-"$hash_script" "${locations[@]}" "$@"
+for dir in "${locations[@]}"; do
+	echo "Hashing $dir..."
+	"$hasher" "$dir"
+	echo
+done
 
