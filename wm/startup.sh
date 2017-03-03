@@ -2,9 +2,12 @@
 set -eu
 
 dir_make() {
-	mkdir -m700 -p "/tmp/$USER/$1"
+	for dir in "$@"; do
+		mkdir -m700 -p "/tmp/$USER/$dir"
+	done
 }
 
+mkdir -m750 "/tmp/$USER"
 dir_make cache
 dir_make mutt/{headers,bodies}
 dir_make pacaur
