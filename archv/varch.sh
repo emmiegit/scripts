@@ -1,18 +1,19 @@
 #!/bin/bash
 set -eu
 
-DEST="$HOME/Documents/Relic/Private"
-LOCK="$DEST/.$1"
-EXT=7z
-HASH_SCRIPT='/usr/local/scripts/archv/media-hash.py'
-CLEAR_RECENT=false
-TEST_ARCHIVE=false
+readonly dest="$HOME/Documents/Relic/Private"
+readonly lock="$dest/.$1"
+readonly ext=7z
+readonly hash_script='/usr/local/scripts/archv/media-hash.py'
+readonly clear_recent=false
+readonly test_archive=false
+readonly remove_files=true
 _remove_lock=true
 
 on_sigterm() {
 	printf 'Caught user interrupt, closing down.\n'
-	if [[ -f $LOCK ]] && "$_remove_lock"; then
-		rm -f "$LOCK"
+	if [[ -f $lock ]] && "$_remove_lock"; then
+		rm -f "$lock"
 	else
 		printf 'Warning: can'\''t remove lock file.'
 	fi
@@ -21,8 +22,8 @@ on_sigterm() {
 
 on_exit() {
 	printf 'Finished.\n'
-	if [[ -f $LOCK ]] && "$_remove_lock"; then
-		rm -f "$LOCK"
+	if [[ -f $lock ]] && "$_remove_lock"; then
+		rm -f "$lock"
 	else
 		printf 'Warning: can'\''t remove lock file.\n'
 	fi
@@ -33,7 +34,7 @@ trap on_sigterm SIGTERM SIGINT
 trap on_exit EXIT
 
 # Lock check
-if [[ -f $LOCK ]]; then
+if [[ -f $lock ]]; then
 	printf >&2 'This script is already running.\n'
 	_remove_lock=false
 	read -r
@@ -41,30 +42,30 @@ if [[ -f $LOCK ]]; then
 fi
 
 # Sanity tests
-if [[ ! -d $DEST ]]; then
+if [[ ! -d $dest ]]; then
 	printf >&2 'Destination directory does not exist.\n'
 	exit 1
 fi
 
 varch() {
-	ARCHIVE="$1.$EXT"
-	cd "$DEST"
-	touch "$LOCK"
+	readonly local archive="$1.$ext"
+	cd "$dest"
+	touch "$lock"
 
 	if [[ -d $1 ]]; then
 		printf '[Compressing]\n'
 		read -rsp 'Password: ' password
 		printf 'Hashing images...\n'
-		"$HASH_SCRIPT" "$DEST/$1"
+		"$hash_script" "$dest/$1"
 		echo
 		printf 'Backing up old archive...\n'
-		[[ -f $ARCHIVE ]] && mv -u "$ARCHIVE" "$ARCHIVE~"
+		[[ -f $archive ]] && mv -u "$archive" "$archive~"
 		printf 'Adding files to archive...\n'
-		7z a -p"$password" -t7z -ms=on -mhe=on -m0=lzma -mx=3 "$ARCHIVE" "$1"
-		"$TEST_ARCHIVE" && 7z t -p"$password" "$ARCHIVE"
+		7z a -p"$password" -t7z -ms=on -mhe=on -m0=lzma -mx=3 "$archive" "$1"
+		"$test_archive" && 7z t -p"$password" "$archive"
 		printf 'Removing old files...\n'
-		rm -rf "${1:?}"
-		if "$CLEAR_RECENT"; then
+		"$remove_files" && rm -rf "${1:?}"
+		if "$clear_recent"; then
 			printf 'Clearing recent documents...\n'
 			: > ~/.local/share/recently-used.xbel
 			printf 'Clearing thumbnails...\n'
@@ -77,13 +78,13 @@ varch() {
 				rm -f ~/.cache/thumbnails/large/*
 			fi
 		fi
-	elif [[ ! -f $ARCHIVE ]]; then
+	elif [[ ! -f $archive ]]; then
 		printf '[Error]\n'
-		printf 'Cannot find archive at %s!\n' "$ARCHIVE"
+		printf 'Cannot find archive at %s!\n' "$archive"
 	else
 		printf '[Extracting]\n'
 		read -rsp 'Password: ' password
-		7z x -p"$password" "$ARCHIVE"
+		7z x -p"$password" "$archive"
 	fi
 }
 

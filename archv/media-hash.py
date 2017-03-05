@@ -8,6 +8,7 @@ FULL = False
 MEDIA_TYPES = (
     'png',
     'jpg',
+    'jpe',
     'jpeg',
     'gif',
     'tif',
@@ -24,6 +25,10 @@ MEDIA_TYPES = (
     'opus',
     'aac',
 )
+REPLACEMENTS = {
+    'jpg': 'jpeg',
+    'jpe': 'jpeg',
+}
 
 def confirmation(fn):
     global ASK_FOR_CONFIRMATION
@@ -61,7 +66,11 @@ def dirify(folder):
         return folder
 
 def transform_file_ext(ext):
-    return ext.lower().replace('jpeg', 'jpg')
+    ext = ext.lower()
+    for orig, modf in REPLACEMENTS.items():
+        if ext.endswith(orig):
+            ext = ext.replace(orig, modf)
+    return ext
 
 def matches(pattern, string):
     return bool(re.search(wildcard_to_regex(pattern), string))
