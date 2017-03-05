@@ -1,4 +1,3 @@
 #!/bin/sh
-cd ~/Incoming
-maim --opengl
+exec maim --opengl "$HOME/Incoming/$(date +%s)"
 

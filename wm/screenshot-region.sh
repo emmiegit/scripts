@@ -1,4 +1,3 @@
 #!/bin/sh
-set -u
-exec maim -s "$HOME/Incoming/$(date +%s).png"
+exec maim --opengl -s "$HOME/Incoming/$(date +%s).png"
 
