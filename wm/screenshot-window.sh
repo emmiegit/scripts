@@ -1,4 +1,3 @@
 #!/bin/sh
-cd ~/Incoming
-maim -i "$(xdotool getactivewindow)"
+exec maim -i "$(xdotool getactivewindow)" "$HOME/Incoming/$(date +%s).png"
 
