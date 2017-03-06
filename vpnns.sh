@@ -31,7 +31,8 @@ function msg() {
 function getroot() {
 	if [[ $UID != 0 ]]; then
 		msg "This operation needs root privileges."
-		_USER="$USER" exec sudo "$0" "${args[@]}"
+		exec sudo "$0" "${args[@]}"
+		exit "$?"
 	fi
 }
 
@@ -80,17 +81,8 @@ function iface_up() {
 
     cmd_do sysctl -q net.ipv4.ip_forward=1
 
-	##
-    cmd_do ip link add "$dev0" type veth peer name "$dev1"
-    cmd_do ip link set "$dev0" up
-    cmd_do ip link set "$dev1" netns "$ns_name" up
-
-    cmd_do ip addr add "$addr1/$subnet" dev "$dev0"
-    cmd_ns ip addr add "$addr2/$subnet" dev "$dev1"
-    cmd_ns ip route add default via "$addr1" dev "$dev1"
-
     cmd_do iptables -A INPUT \! -i "$dev0" -s "$addr0/$subnet" -j DROP
-    cmd_do iptables -t nat -A POSTROUTING -s "$addr0/$subnet" -o "$iface_match" -j MASQUERADE
+    cmd_do iptables -t nat -A POSTROUTING -s "$addr0/$subnet" -j MASQUERADE
 
     cmd_do mkdir -p "/etc/netns/$ns_name"
 	dowrite "nameserver 8.8.8.8" "/etc/netns/$ns_name/resolv.conf"
@@ -112,7 +104,7 @@ function iface_down() {
     cmd_do sysctl -q net.ipv4.ip_forward=0
 
     cmd_do iptables -D INPUT \! -i "$dev0" -s "$addr0/$subnet" -j DROP
-    cmd_do iptables -t nat -D POSTROUTING -s "$addr0/$subnet" -o "$iface_match" -j MASQUERADE
+    cmd_do iptables -t nat -D POSTROUTING -s "$addr0/$subnet" -j MASQUERADE
 
     cmd_do ip netns delete "$ns_name"
 }
@@ -128,8 +120,8 @@ function iface_status() {
 
 function ns_run() {
 	getroot
-	if [[ "${_USER:-root}" != "root" ]]; then
-		cmd_ns sudo -u "$_USER" "$@"
+	if [[ "${SUDO_USER:-root}" != "root" ]]; then
+		cmd_ns sudo -u "$SUDO_USER" "$@"
 	else
 		cmd_ns "$@"
 	fi
