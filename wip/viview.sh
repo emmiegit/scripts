@@ -9,7 +9,7 @@ exit 0 # fixme
 TEMP_FILE=$(mktemp /tmp/viview-XXXXXX.txt)
 
 while read LINE; do
-    echo "$LINE" >> "$TEMP_FILE"
+	echo "$LINE" >> "$TEMP_FILE"
 done < "${1:-/dev/stdin}"
 
 view "$TEMP_FILE"

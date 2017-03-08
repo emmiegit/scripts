@@ -5,13 +5,13 @@ FILE='/usr/local/scripts/dat/hamlet.txt'
 COPY="$(mktemp /tmp/hamlet-XXXXXXXXX.txt)"
 
 if [[ ! -z $1 ]]; then
-    EDITOR=$1
+	EDITOR=$1
 elif [[ ! -z $VISUAL ]]; then
-    EDITOR=$VISUAL
+	EDITOR=$VISUAL
 elif [[ ! -z $EDITOR ]]; then
-    : # $EDITOR is already $EDITOR, so do nothing
+	: # $EDITOR is already $EDITOR, so do nothing
 else
-    EDITOR=vi
+	EDITOR=vi
 fi
 
 cp -f "$FILE" "$COPY"

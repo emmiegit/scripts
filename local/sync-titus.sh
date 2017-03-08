@@ -7,8 +7,8 @@ if [ "$(cat /etc/hostname)" == "Titus" ]; then
 fi
 
 if [ "$#" -eq 0 ]; then
-    printf >&2 'Usage: %s path-to-sync\n' "$0"
-    exit 1
+	printf >&2 'Usage: %s path-to-sync\n' "$0"
+	exit 1
 fi
 
 docmd() {

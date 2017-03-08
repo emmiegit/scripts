@@ -5,8 +5,8 @@ set -eu
 [[ -z $DISPLAY ]] && DISPLAY=:0
 
 if [[ $# -eq 0 ]]; then
-    printf >&2 'Usage: %s (draw | osu)\n' "$(basename "$0")"
-    exit 1
+	printf >&2 'Usage: %s (draw | osu)\n' "$(basename "$0")"
+	exit 1
 fi
 
 mode="$1"

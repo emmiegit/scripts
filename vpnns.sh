@@ -65,9 +65,9 @@ function iface_up() {
 	getroot
 	cmd_do ip netns add "$ns_name"
 
-    cmd_ns ip addr add '127.0.0.1/8' dev lo
-    cmd_ns ip addr add '::1/128' dev lo
-    cmd_ns ip link set lo up
+	cmd_ns ip addr add '127.0.0.1/8' dev lo
+	cmd_ns ip addr add '::1/128' dev lo
+	cmd_ns ip link set lo up
 
 	cmd_do ip link add "$dev1" type veth peer name "$dev0"
 	cmd_do ip link set "$dev1" netns "$ns_name"
@@ -79,17 +79,17 @@ function iface_up() {
 	cmd_ns ip addr add "$addr2/$subnet" dev "$dev1"
 	cmd_ns ip route add default via "$addr1" dev "$dev1"
 
-    cmd_do sysctl -q net.ipv4.ip_forward=1
+	cmd_do sysctl -q net.ipv4.ip_forward=1
 
-    cmd_do iptables -A INPUT \! -i "$dev0" -s "$addr0/$subnet" -j DROP
-    cmd_do iptables -t nat -A POSTROUTING -s "$addr0/$subnet" -j MASQUERADE
+	cmd_do iptables -A INPUT \! -i "$dev0" -s "$addr0/$subnet" -j DROP
+	cmd_do iptables -t nat -A POSTROUTING -s "$addr0/$subnet" -j MASQUERADE
 
-    cmd_do mkdir -p "/etc/netns/$ns_name"
+	cmd_do mkdir -p "/etc/netns/$ns_name"
 	dowrite "nameserver 8.8.8.8" "/etc/netns/$ns_name/resolv.conf"
 
 	msg "Testing namespace..."
 	cmd_ns ping -c 2 8.8.8.8
-    cmd_ns ping -c 2 www.google.com
+	cmd_ns ping -c 2 www.google.com
 }
 
 function iface_down() {
@@ -101,12 +101,12 @@ function iface_down() {
 	getroot
 	cmd_do rm -rf "/etc/netns/$ns_name"
 
-    cmd_do sysctl -q net.ipv4.ip_forward=0
+	cmd_do sysctl -q net.ipv4.ip_forward=0
 
-    cmd_do iptables -D INPUT \! -i "$dev0" -s "$addr0/$subnet" -j DROP
-    cmd_do iptables -t nat -D POSTROUTING -s "$addr0/$subnet" -j MASQUERADE
+	cmd_do iptables -D INPUT \! -i "$dev0" -s "$addr0/$subnet" -j DROP
+	cmd_do iptables -t nat -D POSTROUTING -s "$addr0/$subnet" -j MASQUERADE
 
-    cmd_do ip netns delete "$ns_name"
+	cmd_do ip netns delete "$ns_name"
 }
 
 function iface_status() {
@@ -148,9 +148,9 @@ function vpn_up() {
 			--dev "$tun" \
 			--errors-to-stderr
 
-    until ip netns exec "$ns_name" ip addr show dev "$tun" up; do
-        sleep .3
-    done
+	until ip netns exec "$ns_name" ip addr show dev "$tun" up; do
+	    sleep .3
+	done
 
 	dowrite "$!" "$vpn_pidfile"
 	disown
