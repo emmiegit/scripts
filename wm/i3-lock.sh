@@ -25,7 +25,7 @@ fi
 
 monitors="$(xrandr --query | grep -c ' connected')"
 
-if [[ "$monitors" == 2 ]]; then
+if [[ "$monitors" -eq 2 ]]; then
 	left="$(mktemp /tmp/lockscreen-XXXXXXXX.png)"
 	right="$(mktemp /tmp/lockscreen-XXXXXXXX.png)"
 else
@@ -34,7 +34,9 @@ else
 fi
 
 on_exit() {
-	[[ "$monitors" == 2 ]] && rm -f "$left" "$right"
+	if [[ "$monitors" -eq 2 ]]; then
+		rm -f "$left" "$right"
+	fi
 
 	rm -f "$lockfile"
 	killall -SIGUSR2 dunst || true
@@ -47,16 +49,16 @@ killall -SIGUSR1 dunst || true
 # Display lock screen depending on number of monitors
 case "$monitors" in
 	1)
-		maim --opengl --format png /dev/stdout \
+		maim -u /dev/stdout \
 			| convert /dev/stdin -scale "$small_scale%" -scale "$large_scale%" /dev/stdout \
 			| composite -gravity Center "$lockimage" /dev/stdin /dev/stdout \
 			| i3lock -i /dev/stdin
 		;;
 	2)
-		maim --opengl --format png --geometry="${x_res}x${y_res}+0+0" /dev/stdout \
+		maim -u -g"${x_res}x${y_res}+0+0" /dev/stdout \
 			| convert /dev/stdin -scale "$small_scale%" -scale "$large_scale%" /dev/stdout \
 			| composite -gravity Center "$lockimage" /dev/stdin "$left" &
-		maim --opengl --format png --geometry="${x_res}x${y_res}+${x_res}+0" /dev/stdout \
+		maim -u -g"${x_res}x${y_res}+${x_res}+0" /dev/stdout \
 			| convert /dev/stdin -scale "$small_scale%" -scale "$large_scale%" /dev/stdout \
 			| composite -gravity Center "$lockimage" /dev/stdin "$right" &
 		wait
@@ -64,7 +66,7 @@ case "$monitors" in
 			| i3lock -i /dev/stdin
 		;;
 	*)
-		maim --opengl /dev/stdout \
+		maim -u /dev/stdout \
 			| i3lock -i /dev/stdin
 		;;
 esac
