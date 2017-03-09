@@ -26,8 +26,8 @@ MEDIA_TYPES = (
     'aac',
 )
 REPLACEMENTS = {
-    'jpg': 'jpeg',
-    'jpe': 'jpeg',
+    'jpeg': 'jpg',
+    'jpe': 'jpg',
 }
 
 def confirmation(fn):
@@ -51,8 +51,9 @@ def get_hash(fn):
        return hashlib.sha224(fh.read()).hexdigest()
 
 def is_media(fn):
+    fn = fn.lower()
     for ext in MEDIA_TYPES:
-        if fn.lower().endswith(".%s" % ext):
+        if fn.endswith(".%s" % ext):
             return True
     return False
 
@@ -236,22 +237,6 @@ def hash_media(dir_to_explore, err_fh, pause=False):
                     traceback.print_exc(None, err_fh)
                     errors += 1
 
-          # if new_fn in allfiles.keys():
-          #     print("Found collision for \"%s\" at \"%s\"..." % (new_fn, cd))
-          #     print("(Original at \"%s\")" % (allfiles[new_fn],))
-          #     try:
-          #         if not DRY_RUN and confirmation(abs_new_fn):
-          #             os.remove(abs_new_fn)
-          #             old_files_fh.write("\"%s\" deleted\n" % (abs_fn,))
-          #         changed += 1
-          #         continue
-          #     except:
-          #         log("Unable to remove \"%s\"." % (fn,), True)
-          #         errors += 1
-          #         traceback.print_exc(None, err_fh)
-          # else:
-          #     allfiles[new_fn] = cd
-
     log("Done: %d files changed with %d errors in %.2f seconds." % (changed, errors, time.time() - start_time))
 
     if pause:
@@ -267,9 +252,6 @@ if __name__ == "__main__":
             print("Only these file extensions will be affected: %s" % (' '.join(MEDIA_TYPES)))
             print("Place .ignore files in directories with lists of files for this program to leave as-is.")
             exit(0)
-        if not os.path.exists(sys.argv[1]) or not os.path.isdir(sys.argv[1]):
-            print("No such directory exists: \"%s\"" % sys.argv[1])
-            exit(1)
         errors = 0
         with open("%s/hash-errors.txt" % (os.path.dirname(sys.argv[0])), 'a+') as err_fh:
             for path in sys.argv[1:]:

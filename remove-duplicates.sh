@@ -1,4 +1,5 @@
 #!/bin/bash
+set -eu
 
 locations=(
 	"$HOME/Pictures/Anime"
