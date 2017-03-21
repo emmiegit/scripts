@@ -1,4 +1,5 @@
 #!/bin/bash
+set -eu
 
 export WINEARCH='win32'
 export WINEPREFIX='/media/media/Games/PlayOnLinux/wineprefix/MonsterGirlQuest'
