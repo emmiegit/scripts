@@ -1,5 +1,4 @@
 #!/bin/bash
-set -eu
 
 export WINEARCH='win32'
 export WINEPREFIX='/media/media/Games/PlayOnLinux/wineprefix/MonsterGirlQuest'
@@ -8,9 +7,9 @@ export WINEHOME="$WINEPREFIX"
 if [[ $# -eq 1 ]]; then
 	set -eu
 	if [[ $1 == ng ]]; then
-		readonly local part='NG+'
+		readonly part='NG+'
 	else
-		readonly local part="Part $1"
+		readonly part="Part $1"
 	fi
 
 	LC_ALL='ja_JP.UTF-8' \
@@ -20,6 +19,9 @@ if [[ $# -eq 1 ]]; then
 			2>&1 \
 			&
 	disown
+
+	unset part
+	set +eu
 else
 	echo 'Only sourcing variables. Specify which part you want to run the game.'
 fi
