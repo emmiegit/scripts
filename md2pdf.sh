@@ -1,28 +1,40 @@
 #!/bin/bash
-set -euo pipefail
+set -eu
 
 did_something=false
 
+if [[ $# -eq 0 ]]; then
+	readonly start_dir=.
+else
+	readonly start_dir="$1"
+fi
+
+relapath() {
+	realpath --relative-to="$start_dir" -- "$1"
+}
+
 recursively_convert() {
-	for file in *; do
+	for file in "$1/"*; do
 		if [[ -d $file ]]; then
-			cd "$file"
-			recursively_convert
-			cd ..
+			printf '[DIR] %s\n' "$(relapath "$file")"
+			recursively_convert "$file"
 		elif [[ $file == *.md ]]; then
-			local target="${file%.*}.pdf"
+			local target="${file%.*}.gen.pdf"
 
 			if [[ ! -f $target ]] || [[ $file -nt $target ]]; then
 				did_something=true
-				printf '[MD] %s\n' "$target"
-				pandoc -f markdown_github --latex-engine=xelatex -o "$target" -- "$file"
-				markdown "$file" > "$target"
+				printf '[PDF] %s\n' "$(relapath "$target")"
+				pandoc -f markdown_github --latex-engine=xelatex -o "$target" -- "$file" || {
+					printf 2>&1 'PDF conversion failed, falling back to HTML generation\n'
+					target="${file%.*}.gen.html"
+					printf '[HTML] %s\n' "$(relapath "$target")"
+					markdown "$file" > "$target"
+				}
 			fi
 		fi
 	done
 }
 
-[[ $# -gt 0 ]] && cd "$1"
-recursively_convert
+recursively_convert "$start_dir"
 "$did_something" || printf 'Nothing to do.\n'
 
