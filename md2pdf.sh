@@ -25,10 +25,11 @@ recursively_convert() {
 				did_something=true
 				printf '[PDF] %s\n' "$(relapath "$target")"
 				pandoc -f markdown_github --latex-engine=xelatex -o "$target" -- "$file" || {
-					printf 2>&1 'PDF conversion failed, falling back to HTML generation\n'
 					target="${file%.*}.gen.html"
-					printf '[HTML] %s\n' "$(relapath "$target")"
-					markdown "$file" > "$target"
+					if [[ ! -f $target ]] || [[ $file -nt $target ]]; then
+						printf '[HTML] %s\n' "$(relapath "$target")"
+						markdown "$file" > "$target"
+					fi
 				}
 			fi
 		fi
