@@ -1,7 +1,7 @@
 #!/bin/bash
-set -eu
+set -euo pipefail
 
-DID_SOMETHING=false
+did_something=false
 
 recursively_convert() {
 	local changed=false
@@ -14,12 +14,13 @@ recursively_convert() {
 			recursively_convert
 			cd ..
 		elif [[ $file == *.md ]]; then
-			local target="${file:0:-3}.html"
+			local target="${file%.*}.pdf"
 
 			if [[ ! -f $target ]] || [[ $file -nt $target ]]; then
 				changed=true
-				DID_SOMETHING=true
+				did_something=true
 				printf '[MD] %s\n' "$file"
+				pandoc -f markdown_github "$file" -o "$target"
 				markdown "$file" > "$target"
 			fi
 		fi
@@ -28,5 +29,5 @@ recursively_convert() {
 
 [[ $# -gt 0 ]] && cd "$1"
 recursively_convert
-"$DID_SOMETHING" || printf 'Nothing to do.\n'
+"$did_something" || printf 'Nothing to do.\n'
 
