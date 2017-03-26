@@ -26,11 +26,11 @@ fi
 monitors="$(xrandr --query | grep -c ' connected')"
 
 if [[ "$monitors" -eq 2 ]]; then
-	left="$(mktemp /tmp/lockscreen-XXXXXXXX.png)"
-	right="$(mktemp /tmp/lockscreen-XXXXXXXX.png)"
+	readonly left="$(mktemp /tmp/lockscreen-XXXXXXXX.png)"
+	readonly right="$(mktemp /tmp/lockscreen-XXXXXXXX.png)"
 else
-	left=
-	right=
+	readonly left=
+	readonly right=
 fi
 
 on_exit() {
