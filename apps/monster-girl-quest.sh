@@ -16,11 +16,9 @@ if [[ $# -eq 1 ]]; then
 		wine "$WINEPREFIX/drive_c/Program Files/Monster Girl Quest ($part)/mon_que.exe" \
 			< /dev/null \
 			> /dev/null \
-			2>&1 \
+			2> /dev/null \
 			&
 	disown
-
-	unset part
 	set +eu
 else
 	echo 'Only sourcing variables. Specify which part you want to run the game.'
