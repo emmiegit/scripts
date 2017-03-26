@@ -1,12 +1,12 @@
-#!/bin/sh
+#!/bin/bash
 set -eu
 
-if [ "$(cat /etc/hostname)" == "Titus" ]; then
+if [[ "$(cat /etc/hostname)" == "Titus" ]]; then
 	printf >&2 'Refusing to sync to self.\n'
 	exit 1
 fi
 
-if [ "$#" -eq 0 ]; then
+if [[ "$#" -eq 0 ]]; then
 	printf >&2 'Usage: %s path-to-sync\n' "$0"
 	exit 1
 fi
@@ -16,10 +16,10 @@ docmd() {
 	"$@"
 }
 
-remote=TitusHamachi
-source="$(dirname "$1")"
-dest="$1"
+readonly remote=Titus
+readonly source="$(dirname "$1")"
+readonly dest="$1"
 
 shift
-docmd rsync -vrtzpAXl --safe-links --delete-after $@ "$remote:$dest" "$source"
+docmd rsync -vrtzpAXl --safe-links --delete-after "$@" "$remote:$dest" "$source"
 
