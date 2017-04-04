@@ -9,7 +9,7 @@ import os
 import sys
 
 COMMENT_REGEX = re.compile(r'^\s*#')
-RESET_REGEX = re.compile(r'%reset(?:\s+([A-Za-z]?))', re.IGNORECASE)
+RESET_REGEX = re.compile(r'\s*%reset(?:\s+([A-Za-z]))?\s*', re.IGNORECASE)
 CREDIT_REGEX = re.compile(r'([+-][0-9]+)\s*([A-Za-z]?)')
 MONEY_REGEX = re.compile(r'([+-])\$([0-9]+(?:\.[0-9]+)?k?)', re.IGNORECASE)
 
@@ -18,6 +18,12 @@ def get_sign(s):
         return -1.0
     else:
         return +1.0
+
+def get_reset(text):
+    match = RESET_REGEX.match(text)
+    if match:
+        coin = match.group(1)
+        return coin if coin else ''
 
 def count_credits(credits, text):
     matches = CREDIT_REGEX.finditer(text)
@@ -60,19 +66,23 @@ def print_results(fn, credits, money):
 
 if __name__ == '__main__':
     if len(sys.argv) == 1:
-        print("Usage:\n%s path-to-file..." % os.path.basename(sys.argv[0]))
-        exit(1)
+        inputs = [("<stdin>", sys.stdin.readlines())]
+    else:
+        inputs = []
+        for fn in sys.argv[1:]:
+            with open(fn, 'r') as fh:
+                inputs.append((fn, fh.readlines()))
 
-    for fn in sys.argv[1:]:
-        with open(fn, 'r') as fh:
-            lines = fh.readlines()
-
+    for fn, lines in inputs:
         credits = {}
         money = 0.0
 
         for line in lines:
             if COMMENT_REGEX.match(line):
                 continue
+            reset = get_reset(line)
+            if reset:
+                credits[reset] = 0
             count_credits(credits, line)
             money += count_dollars(line)
         print_results(fn, credits, money)
