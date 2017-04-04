@@ -8,6 +8,7 @@ locations=(
 	"$HOME/Pictures/Misc/Redraw Reigen"
 	"$HOME/Pictures/Photographs/Pets"
 	"$HOME/Pictures/Comics/smbc"
+	"$HOME/Pictures/Comics/misc"
 	"$HOME/Pictures/Wallpapers/desktop"
 	"$HOME/Pictures/Wallpapers/phone")
 
