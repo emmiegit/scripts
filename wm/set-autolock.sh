@@ -4,7 +4,7 @@ STATUS_FILE='/usr/local/scripts/dat/autolock_state'
 
 restart_autolock() {
 	pkill -U "${USER}" xautolock
-	/usr/local/scripts/wm/start-autolock.sh
+	/usr/local/scripts/wm/daemon/start-autolock.sh
 
 	if [[ $? -gt 0 ]]; then
 	    notify-send 'Unable to restart autolock process.'

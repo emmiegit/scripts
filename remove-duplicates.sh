@@ -6,6 +6,7 @@ locations=(
 	"$HOME/Pictures/Games/Civ V/Miscellaenous Screenshots/"
 	"$HOME/Pictures/Misc/Ben Garrison"
 	"$HOME/Pictures/Misc/Redraw Reigen"
+	"$HOME/Pictures/Misc/Unnamed"
 	"$HOME/Pictures/Photographs/Pets"
 	"$HOME/Pictures/Comics/smbc"
 	"$HOME/Pictures/Comics/misc"
