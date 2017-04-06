@@ -10,7 +10,7 @@ import sys
 
 COMMENT_REGEX = re.compile(r'^\s*#')
 RESET_REGEX = re.compile(r'\s*%reset(?:\s+([A-Za-z]))?\s*', re.IGNORECASE)
-CREDIT_REGEX = re.compile(r'([+-][0-9]+)\s*([A-Za-z]?)')
+CREDIT_REGEX = re.compile(r'([+-][0-9]+)\s*([A-Za-z_]*)')
 MONEY_REGEX = re.compile(r'([+-])\$([0-9]+(?:\.[0-9]+)?k?)', re.IGNORECASE)
 
 def get_sign(s):
