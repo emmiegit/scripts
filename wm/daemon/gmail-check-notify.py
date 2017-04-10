@@ -5,6 +5,7 @@ import atexit
 import os
 import signal
 import subprocess
+import sys
 import time
 import traceback
 import urllib.request
@@ -19,7 +20,6 @@ NS = "{http://purl.org/atom/ns#}"
 GMAIL_CREDENTIALS = "/usr/local/scripts/dat/gmail.gpg"
 DELAY = 60
 
-
 def pid_exists(pid):
     try:
         os.kill(pid, 0)
@@ -28,13 +28,11 @@ def pid_exists(pid):
     else:
         return True
 
-
 def notify(summary, text=None):
+    args = ["notify-send", summary]
     if text:
-        os.system("notify-send '%s' '%s'" % (summary, text))
-    else:
-        os.system("notify-send '%s'" % (summary))
-
+        args.append(text)
+    subprocess.check_call(args)
 
 def create_pidfile():
     if os.path.exists(PID_FILE):
@@ -60,7 +58,6 @@ def create_pidfile():
             notify("Unable to write to pidfile. Quitting gmail notifier.")
             exit(1)
 
-
 def remove_pidfile():
     if os.path.exists(PID_FILE):
         try:
@@ -73,21 +70,50 @@ def remove_pidfile():
             traceback.print_exc()
             notify("Error reading gmail notifier pid file.")
 
+def daemonize():
+    try:
+        pid = os.fork()
+        # Have the parent exit
+        if pid > 0:
+            sys.exit(0)
+    except OSError as ex:
+        notify("Fork failed: %d (%s)\n" % (ex.errno, ex.strerror))
 
-if __name__ == "__main__":
+    os.chdir("/")
+    os.setsid()
+    os.umask(0)
+
+    try:
+        pid = os.fork()
+        # Have the second parent exit
+        if pid > 0:
+            sys.exit(0)
+    except OSError as ex:
+        notify("Fork failed: %d (%s)\n" % (ex.errno, ex.strerror))
+
+    # Redirect descriptors
+    sys.stdout.flush()
+    sys.stderr.flush()
+    with open(os.devnull, 'r') as si:
+        os.dup2(si.fileno(), sys.stdin.fileno())
+    with open(os.devnull, 'a+') as so:
+        os.dup2(so.fileno(), sys.stdout.fileno())
+        os.dup2(so.fileno(), sys.stderr.fileno())
+
+    # Create pidfile and set up for its deletion
     create_pidfile()
-
     atexit.register(remove_pidfile)
     signal.signal(signal.SIGTERM, remove_pidfile)
     signal.signal(signal.SIGINT, remove_pidfile)
     signal.signal(signal.SIGHUP, remove_pidfile)
 
+if __name__ == '__main__':
     if not os.path.exists(GMAIL_CREDENTIALS):
         notify("Can't find gmail credentials file.", GMAIL_CREDENTIALS);
         exit(1)
 
     try:
-        cred = subprocess.check_output(("gpg", "-d", GMAIL_CREDENTIALS)).split(b'\n')
+        cred = subprocess.check_output(["gpg", "-d", GMAIL_CREDENTIALS]).split(b'\n')
         user = cred[0].decode()
         passwd = cred[1].decode()
     except:
@@ -95,6 +121,7 @@ if __name__ == "__main__":
         notify("Unable to extract gmail credentials.")
         exit(1)
 
+    daemonize()
     try:
         # Set up authentication for gmail
         auth_handler = urllib.request.HTTPBasicAuthHandler()
@@ -135,9 +162,5 @@ if __name__ == "__main__":
         if count:
             notify("%d new email%s" % (count, "" if count == 1 else "s"))
             unread += count
-
-        try:
-            time.sleep(DELAY)
-        except:
-            remove_pidfile()
+        time.sleep(DELAY)
 
