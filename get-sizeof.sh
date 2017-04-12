@@ -43,8 +43,8 @@ shift "$((OPTIND - 1))"
 
 # Create temp files
 if "$use_temp"; then
-	c_file="$(mktemp ${TEMP_DIR:-/tmp}/XXXXXXX.c)"
-	c_binary="$(mktemp ${TEMP_DIR:-/tmp}/XXXXXXX)"
+	c_file="$(mktemp "${TEMP_DIR:-/tmp}/XXXXXXX.c")"
+	c_binary="$(mktemp "${TEMP_DIR:-/tmp}/XXXXXXX")"
 else
 	c_file="$(mktemp XXXXXXX.c)"
 	c_binary="$(mktemp XXXXXXX)"
@@ -85,10 +85,9 @@ for type in "$@"; do
 	cat >> "$c_file" <<- EOF
 	int main(void)
 	{
-		printf("sizeof($type) -> %lu\n", (unsigned long)sizeof($type));
+		printf("sizeof($type) -> %zu\n", sizeof($type));
 		return 0;
 	}
-
 	EOF
 
 	"$c_compiler" -o "$c_binary" "$c_file" 2>/dev/null \
