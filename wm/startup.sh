@@ -12,5 +12,5 @@ dir_make cache
 dir_make mutt/{headers,bodies}
 dir_make pacaur
 dir_make vim_undo
-exec /usr/local/scripts/wm/vi-keyswap.sh
+dir_make private
 

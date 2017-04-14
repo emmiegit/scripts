@@ -48,7 +48,7 @@ if [[ ! -d $dest ]]; then
 fi
 
 varch() {
-	readonly local archive="$1.$ext"
+	local archive="$1.$ext"
 	cd "$dest"
 	touch "$lock"
 
@@ -63,8 +63,10 @@ varch() {
 		printf 'Adding files to archive...\n'
 		7z a -p"$password" -t7z -ms=on -mhe=on -m0=lzma -mx=3 "$archive" "$1"
 		"$test_archive" && 7z t -p"$password" "$archive"
-		printf 'Removing old files...\n'
-		"$remove_files" && rm -rf "${1:?}"
+		if "$remove_files"; then
+			printf 'Removing old files...\n'
+			rm -rf "${1:?}"
+		fi
 		if "$clear_recent"; then
 			printf 'Clearing recent documents...\n'
 			: > ~/.local/share/recently-used.xbel
