@@ -14,3 +14,5 @@ dir_make pacaur
 dir_make vim_undo
 dir_make private
 
+mkdir -m777 -p "/tmp/shared"
+
