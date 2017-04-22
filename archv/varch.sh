@@ -7,7 +7,7 @@ readonly ext=7z
 readonly hash_script='/usr/local/scripts/archv/media-hash.py'
 readonly clear_recent=false
 readonly test_archive=false
-readonly remove_files=true
+readonly remove_files=false
 _remove_lock=true
 
 on_sigterm() {

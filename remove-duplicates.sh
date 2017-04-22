@@ -4,6 +4,7 @@ set -eu
 locations=(
 	"$HOME/Pictures/Anime"
 	"$HOME/Pictures/Games/Civ V/Miscellaenous Screenshots/"
+	"$HOME/Pictures/Misc/4chan"
 	"$HOME/Pictures/Misc/Ben Garrison"
 	"$HOME/Pictures/Misc/Redraw Reigen"
 	"$HOME/Pictures/Misc/Unnamed"
