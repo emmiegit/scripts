@@ -29,7 +29,7 @@ def pid_exists(pid):
         return True
 
 def notify(summary, text=None):
-    args = ["notify-send", summary]
+    args = ["notify-send", "--", summary]
     if text:
         args.append(text)
     subprocess.check_call(args)
@@ -155,11 +155,11 @@ if __name__ == '__main__':
             count = int(rawcount)
         except ValueError:
             traceback.print_exc()
-            notify("Got a rawcount that's not an integer: \"%s\"" % (rawcount,))
+            notify("Got a rawcount that's not an integer: \"%s\"" % rawcount)
             count = 0
 
         count -= unread
-        if count:
+        if count > 0:
             notify("%d new email%s" % (count, "" if count == 1 else "s"))
             unread += count
         time.sleep(DELAY)
