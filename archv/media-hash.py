@@ -1,6 +1,12 @@
 #!/usr/bin/python2
 from __future__ import print_function, with_statement
-import hashlib, os, re, sys, traceback, time
+from fnmatch import fnmatchcase
+import hashlib
+import os
+import re
+import sys
+import traceback
+import time
 
 ASK_FOR_CONFIRMATION = True
 DRY_RUN = False
@@ -57,9 +63,6 @@ def is_media(fn):
             return True
     return False
 
-def wildcard_to_regex(pattern):
-    return re.escape(pattern).replace('\\*', '.*').replace('\\?', '.?') + '$'
-
 def dirify(folder):
     if not folder.endswith(os.path.sep):
         return folder + os.path.sep
@@ -74,7 +77,13 @@ def transform_file_ext(ext):
     return ext
 
 def matches(pattern, string):
-    return bool(re.search(wildcard_to_regex(pattern), string))
+    return fnmatchcase(string, pattern)
+
+def ignore_file(fn, patterns):
+    for pattern in patterns:
+        if matches(pattern, fn):
+            return True
+    return False
 
 def log(string, perm=False):
     if perm:
@@ -177,9 +186,8 @@ def hash_media(dir_to_explore, err_fh, pause=False):
 
             abs_fn = cd + fn
 
-            for pattern in ignore:
-                if matches(pattern, abs_fn):
-                    continue
+            if ignore_file(abs_fn, ignore):
+                continue
 
             if not FULL:
                 try:

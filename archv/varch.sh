@@ -1,11 +1,12 @@
 #!/bin/bash
-set -eu
+set -euo pipefail
 
 readonly dest="$HOME/Documents/Relic/Private"
 readonly lock="$dest/.$1"
 readonly ext=7z
 readonly hash_script='/usr/local/scripts/archv/media-hash.py'
-readonly clear_recent=false
+readonly hash_only=true
+readonly clear_recent=true
 readonly test_archive=false
 readonly remove_files=false
 _remove_lock=true
@@ -54,10 +55,13 @@ varch() {
 
 	if [[ -d $1 ]]; then
 		printf '[Compressing]\n'
-		read -rsp 'Password: ' password
+		if ! "$hash_only"; then
+			read -rsp 'Password: ' password
+		fi
 		printf 'Hashing images...\n'
 		"$hash_script" "$dest/$1"
 		echo
+		"$hash_only" && return
 		printf 'Backing up old archive...\n'
 		[[ -f $archive ]] && mv -u "$archive" "$archive~"
 		printf 'Adding files to archive...\n'
