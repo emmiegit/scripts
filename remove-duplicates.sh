@@ -7,6 +7,7 @@ locations=(
 	"$HOME/Pictures/Misc/4chan"
 	"$HOME/Pictures/Misc/Ben Garrison"
 	"$HOME/Pictures/Misc/Redraw Reigen"
+	"$HOME/Pictures/Misc/Doujinshi"
 	"$HOME/Pictures/Misc/Unnamed"
 	"$HOME/Pictures/Photographs/Pets"
 	"$HOME/Pictures/Comics/smbc"

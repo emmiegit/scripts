@@ -87,6 +87,7 @@ main() {
 			cd "$repo"
 			printf 'Pulling %s...\n' "$repo"
 			git pull
+			git submodule update --recursive
 			cd ..
 		done
 	fi
