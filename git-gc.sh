@@ -2,14 +2,16 @@
 set -eu
 
 if [[ $# -eq 0 ]]; then
-	readonly dirlist=('.')
+	readonly dirlist=(.)
 else
 	readonly dirlist=("$@")
 fi
 
-readonly origdir="$(realpath "$(dirname "$0")")"
+readonly gc_flags=()
+
+readonly origdir="$(pwd)"
 for dir in "${dirlist[@]}"; do
-	for repo in "$dir"/*; do
+	for repo in "$dir"/*/; do
 		if [[ ! -d "$repo/.git" ]]; then
 			continue
 		fi
@@ -17,7 +19,7 @@ for dir in "${dirlist[@]}"; do
 		cd "$repo"
 		echo "Entering $repo..."
 		git fsck --full
-		git gc --aggressive
+		git gc "${gc_flags[@]}"
 		cd "$origdir"
 	done
 done
