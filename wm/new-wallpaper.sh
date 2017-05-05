@@ -11,7 +11,7 @@ DIR="$HOME/Pictures/Wallpapers/desktop"
 SECTION="$(cat '/usr/local/scripts/dat/wallpaper_section')"
 
 [[ $# -gt 0 ]] && SECTION="$1"
-${DISPLAY+"false"} && export DISPLAY=:0
+${DISPLAY+"false"} && export DISPLAY=':0'
 
 feh --recursive --randomize --"$SPREAD" "$DIR/$SECTION"
 
