@@ -44,6 +44,7 @@ def create_pidfile():
                 notify("Gmail notifier already running.")
             else:
                 notify("Gmail notifier has died, but pid file remains.")
+            os.unlink(PID_FILE)
             exit(1)
         except:
             traceback.print_exc()
