@@ -21,10 +21,14 @@ if [[ $# -eq 1 ]]; then
 			readonly path="Monster Girl Quest Paradox/Game.exe"
 			;;
 		ng|ng+)
-			readonly path="Monster Girl Quest (NG+)/mon_que.exe"
+			readonly path="Monster Girl Quest (NG+)/mon_que_ng+.exe"
 			;;
 		1|2|3)
 			readonly path="Monster Girl Quest (Part $1)/mon_que.exe"
+			;;
+		*)
+			printf "Unknown part: %s\n", "$1"
+			exit 1
 			;;
 	esac
 
