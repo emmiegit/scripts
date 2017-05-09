@@ -27,7 +27,7 @@ class OOMScore(object):
         return bool(self.score)
     __bool__ = __nonzero__
     def __str__(self):
-        return "%d -- (%d) %s" % (self.score, self.pid, self.exe)
+        return "%5d %-10d %s" % (self.score, self.pid, self.exe)
 
 def get_oom_score(name):
     with open(os.path.join(PROCFS, name, 'oom_score')) as fh:
@@ -49,6 +49,7 @@ def get_oom_scores():
     return scores
 
 def print_worst(scores):
+    print("Score: Pid:      Process name:\n------------------------------")
     for score in reversed(sorted(scores)):
         if score:
             print(score)
