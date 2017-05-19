@@ -82,7 +82,7 @@ if __name__ == '__main__':
                 continue
             reset = get_reset(line)
             if reset:
-                credits[reset] = 0
+                credits[reset] = min(credits[reset], 0)
             count_credits(credits, line)
             money += count_dollars(line)
         print_results(fn, credits, money)

@@ -10,8 +10,9 @@ locations=(
 	"$HOME/Pictures/Misc/Doujinshi"
 	"$HOME/Pictures/Misc/Unnamed"
 	"$HOME/Pictures/Photographs/Pets"
-	"$HOME/Pictures/Comics/smbc"
+	"$HOME/Pictures/Comics/clay-bennett"
 	"$HOME/Pictures/Comics/misc"
+	"$HOME/Pictures/Comics/smbc"
 	"$HOME/Pictures/Wallpapers/desktop"
 	"$HOME/Pictures/Wallpapers/phone")
 
