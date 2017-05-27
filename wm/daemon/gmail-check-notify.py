@@ -104,9 +104,6 @@ def daemonize():
     # Create pidfile and set up for its deletion
     create_pidfile()
     atexit.register(remove_pidfile)
-    signal.signal(signal.SIGTERM, remove_pidfile)
-    signal.signal(signal.SIGINT, remove_pidfile)
-    signal.signal(signal.SIGHUP, remove_pidfile)
 
 if __name__ == '__main__':
     if not os.path.exists(GMAIL_CREDENTIALS):
