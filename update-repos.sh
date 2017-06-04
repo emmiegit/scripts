@@ -65,6 +65,7 @@ main() {
 }
 
 if "$background"; then
+	echo 'Running in background.'
 	main </dev/null >/dev/null 2>&1 &
 	disown
 else
