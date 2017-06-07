@@ -58,6 +58,7 @@ main() {
 		(
 		cd "$repo"
 		git pull || true
+		git submodule update || true
 		fsck
 		gc
 		)
