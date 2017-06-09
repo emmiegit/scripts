@@ -3,14 +3,19 @@ set -euo pipefail
 
 readonly repos=(
 	"$HOME/Documents"
-	"$HOME/Pictures/Wallpapers"
 	"$HOME/Documents/Relic/Git/linux"
 	"$HOME/Documents/Relic/Git/osu"
-	"$HOME/Git/dotfiles" "$HOME/Git/scripts"
-	"$HOME/Git/Levyx/helium"
+	"$HOME/Git/Apartment/receipts"
 	"$HOME/Git/Levyx/he-rocksdb"
+	"$HOME/Git/Levyx/helium"
 	"$HOME/Git/Levyx/sandbox"
 	"$HOME/Git/Levyx/xenon"
+	"$HOME/Git/UCR/school-work"
+	"$HOME/Git/c-utils"
+	"$HOME/Git/dotfiles"
+	"$HOME/Git/oppai"
+	"$HOME/Git/scripts"
+	"$HOME/Pictures/Wallpapers"
 )
 
 background=true
