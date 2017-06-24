@@ -47,5 +47,5 @@ if __name__ == '__main__':
             files.sort()
             for fn in files[1:]:
                 print(f"Removing {fn}")
-                #os.remove(fn)
+                os.remove(fn)
 
