@@ -46,6 +46,5 @@ if __name__ == '__main__':
             print(f"Found duplicates: {', '.join(files_quoted)}")
             files.sort()
             for fn in files[1:]:
-                print(f"Removing {fn}")
-                #os.remove(fn)
+                os.remove(fn)
 
