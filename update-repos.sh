@@ -22,7 +22,7 @@ background=true
 fsck=false
 gc=false
 
-while getopts 'fc' opt; do
+while getopts 'fcg' opt; do
 	case "$opt" in
 		f)
 			background=false
