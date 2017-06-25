@@ -8,7 +8,7 @@ readonly hash_script='/usr/local/scripts/archv/media-hash.py'
 readonly hash_only=false
 readonly clear_recent=true
 readonly test_archive=false
-readonly remove_files=false
+readonly remove_files=true
 _remove_lock=true
 
 on_sigterm() {
@@ -58,6 +58,7 @@ varch() {
 		if ! "$hash_only"; then
 			read -rsp 'Password: ' password
 		fi
+		7z l -p"$password" "$archive" >/dev/null 2>&1
 		printf 'Hashing images...\n'
 		"$hash_script" "$dest/$1"
 		echo
