@@ -15,6 +15,7 @@ usage_and_exit() {
 c_compiler=cc
 includes=()
 defines=()
+undefs=()
 use_temp=true
 
 # Parse arguments
@@ -28,6 +29,9 @@ while getopts ':cI:D:?' opt; do
 			;;
 		D)
 			defines+=("$OPTARG")
+			;;
+		U)
+			undefs+=("$OPTARG")
 			;;
 		:)
 			printf >&2 "Option %s requires an argument\n". "$OPTARG"
@@ -54,7 +58,7 @@ fi
 on_exit() {
 	rm -f "$c_file" "$c_binary"
 }
- 
+
 trap on_exit EXIT SIGABRT SIGINT SIGHUP SIGTERM
 
 [[ $# -eq 0 ]] && usage_and_exit
@@ -65,19 +69,26 @@ for type in "$@"; do
 
 	EOF
 
-	for include in "${includes[@]}"; do
-		cat >> "$c_file" <<- EOF
-		#include "$include"
-		EOF
-	done
-	echo >> "$c_file"
-
 	for define in "${defines[@]}"; do
 		key="$(cut -d= -f1 <<< "$define")"
 		val="$(cut -d= -f2 <<< "$define")"
 
 		cat >> "$c_file" <<- EOF
 		#define $key $val
+		EOF
+	done
+	echo >> "$c_file"
+
+	for undef in "${undefs[@]}"; do
+		cat >> "$c_file" <<- EOF
+		#undef $undef
+		EOF
+	done
+	echo >> "$c_file"
+
+	for include in "${includes[@]}"; do
+		cat >> "$c_file" <<- EOF
+		#include "$include"
 		EOF
 	done
 	echo >> "$c_file"

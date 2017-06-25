@@ -22,3 +22,6 @@ sudoedit mirrorlist.bak
 
 echo 'Ranking mirrors...'
 sudo su -c 'rankmirrors mirrorlist.bak > mirrorlist'
+
+echo 'Updating git repo...'
+sudo su -c 'git add -A; git commit -m "Update mirrorlist."' || true
