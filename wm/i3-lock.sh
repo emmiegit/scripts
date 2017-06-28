@@ -55,10 +55,10 @@ case "$monitors" in
 			| i3lock -i /dev/stdin
 		;;
 	2)
-		maim -u -g"${x_res}x${y_res}+0+0" /dev/stdout \
+		maim -u --geometry="${x_res}x${y_res}+0+0" /dev/stdout \
 			| convert /dev/stdin -scale "$small_scale%" -scale "$large_scale%" /dev/stdout \
 			| composite -gravity Center "$lockimage" /dev/stdin "$left" &
-		maim -u -g"${x_res}x${y_res}+${x_res}+0" /dev/stdout \
+		maim -u --geometry="${x_res}x${y_res}+${x_res}+0" /dev/stdout \
 			| convert /dev/stdin -scale "$small_scale%" -scale "$large_scale%" /dev/stdout \
 			| composite -gravity Center "$lockimage" /dev/stdin "$right" &
 		wait
