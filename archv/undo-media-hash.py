@@ -32,5 +32,6 @@ if __name__ == '__main__':
             match = HASH_LIST_REGEX.match(line)
             if match is None:
                 print("Non-matching line: '{}'".format(line.rstrip()))
-            rename(match.group(2), match.group(1))
+            else:
+                rename(match[2], match[1])
 
