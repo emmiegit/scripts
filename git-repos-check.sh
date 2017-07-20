@@ -23,9 +23,9 @@ check_repo() {
 		return
 	fi
 
-	local LOCAL="$(git rev-parse @ 2>/dev/null)"
+	local LOCAL="$(git rev-parse HEAD 2>/dev/null)"
 	local REMOTE="$(git rev-parse @{u} 2>/dev/null)"
-	local BASE="$(git merge-base @ @{u} 2>/dev/null)"
+	local BASE="$(git merge-base HEAD @{u} 2>/dev/null)"
 
 	if [[ $LOCAL == $REMOTE ]]; then
 		printf "[${GREEN}UP-TO-DATE${RESET}]${CHANGES} %s\n" "$REPO"
