@@ -19,7 +19,7 @@ while IFS= read -r -d '' file; do
 	printf 'Added "%s".\n' "$(basename "$file")"
 
 	i=$[i + 1]
-done < <(find -L "$HOME/Music" -type f -name '*.*' -print0 | shuf -z)
+done < <(find -L "$HOME/Music" -type f -name '*.*' -and -not -iname 'albumart.*' -print0 | shuf -z)
 
 [[ $i -eq $songs ]]
 
