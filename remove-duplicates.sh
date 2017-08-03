@@ -14,7 +14,8 @@ locations=(
 	"$HOME/Pictures/Comics/misc"
 	"$HOME/Pictures/Comics/smbc"
 	"$HOME/Pictures/Wallpapers/desktop"
-	"$HOME/Pictures/Wallpapers/phone")
+	"$HOME/Pictures/Wallpapers/phone"
+)
 
 hash_new() {
 	/usr/local/scripts/archv/darch.sh -m "$1"
