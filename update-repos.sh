@@ -55,6 +55,7 @@ main() {
 		echo "$repo"
 		update "$repo" &
 	done
+	wait
 }
 
 if "$background"; then
