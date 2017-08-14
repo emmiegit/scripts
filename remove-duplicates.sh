@@ -14,6 +14,7 @@ locations=(
 	"$HOME/Pictures/Comics/clay-bennett"
 	"$HOME/Pictures/Comics/misc"
 	"$HOME/Pictures/Comics/smbc"
+	"$HOME/Pictures/Comics/trump"
 	"$HOME/Pictures/Wallpapers/desktop"
 	"$HOME/Pictures/Wallpapers/phone"
 )
