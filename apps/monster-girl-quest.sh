@@ -14,11 +14,19 @@ run() {
 	disown
 }
 
-if [[ $# -eq 1 ]]; then
+if [[ $# -gt 1 ]]; then
 	set -eu
 	case "$1" in
 		rpg|paradox)
-			readonly path="Monster Girl Quest Paradox/Game.exe"
+			case "$2" in
+				1|2|3)
+					readonly path="Monster Girl Quest Paradox (Part $2)/Game.exe"
+					;;
+				*)
+					printf "Unknown part: %s\n", "$2"
+					exit 1
+					;;
+			esac
 			;;
 		ng|ng+)
 			readonly path="Monster Girl Quest (NG+)/mon_que_ng+.exe"
