@@ -42,17 +42,20 @@ gc() {
 	git gc || true
 }
 
+update() {
+	cd "$1"
+	git pull || true
+	git submodule update || true
+	fsck
+	gc
+}
+
 main() {
 	for repo in "${repos[@]}" "$@"; do
 		echo "$repo"
-		(
-		cd "$repo"
-		git pull || true
-		git submodule update || true
-		fsck
-		gc
-		)
+		update "$repo" &
 	done
+	wait
 }
 
 if "$background"; then

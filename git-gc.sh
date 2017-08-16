@@ -21,7 +21,7 @@ for dir in "${dirlist[@]}"; do
 		cd "$repo"
 		echo "Entering $repo..."
 		git fsck --full
-		git gc "${gc_flags[@]}"
+		git gc --aggressive
 		cd "$origdir"
 	done
 done

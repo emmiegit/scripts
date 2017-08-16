@@ -5,16 +5,19 @@ locations=(
 	"$HOME/Pictures/Anime"
 	"$HOME/Pictures/Games/Civ V/Miscellaenous Screenshots/"
 	"$HOME/Pictures/Misc/4chan"
-	"$HOME/Pictures/Misc/Ben Garrison"
 	"$HOME/Pictures/Misc/Redraw Reigen"
 	"$HOME/Pictures/Misc/Doujinshi"
+	"$HOME/Pictures/Misc/Poland Ball"
 	"$HOME/Pictures/Misc/Unnamed"
 	"$HOME/Pictures/Photographs/Pets"
+	"$HOME/Pictures/Comics/ben-garrison"
 	"$HOME/Pictures/Comics/clay-bennett"
 	"$HOME/Pictures/Comics/misc"
 	"$HOME/Pictures/Comics/smbc"
+	"$HOME/Pictures/Comics/trump"
 	"$HOME/Pictures/Wallpapers/desktop"
-	"$HOME/Pictures/Wallpapers/phone")
+	"$HOME/Pictures/Wallpapers/phone"
+)
 
 hash_new() {
 	/usr/local/scripts/archv/darch.sh -m "$1"
