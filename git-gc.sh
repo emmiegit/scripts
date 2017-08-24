@@ -7,6 +7,10 @@ else
 	readonly dirlist=("$@")
 fi
 
+readonly gc_flags=(
+	'--aggressive'
+)
+
 readonly origdir="$(pwd)"
 for dir in "${dirlist[@]}"; do
 	for repo in "$dir"/*/; do
