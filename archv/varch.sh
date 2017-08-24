@@ -2,7 +2,7 @@
 set -euo pipefail
 
 readonly dest="$HOME/Documents/Relic/Private"
-readonly lock="$dest/.$1"
+readonly lock="$dest/.$1.lock"
 readonly ext=7z
 readonly hash_script='/usr/local/scripts/archv/media-hash.py'
 readonly hash_only=false
@@ -58,7 +58,14 @@ varch() {
 		if ! "$hash_only"; then
 			read -rsp 'Password: ' password
 		fi
-		7z l -p"$password" "$archive" >/dev/null 2>&1
+		if [[ -f $archive ]]; then
+			if ! 7z l -p"$password" "$archive" >/dev/null 2>&1; then
+				printf >&2 'Invalid password or corrupt archive!\n'
+				exit 1
+			fi
+		else
+			printf 'Creating new archive\n'
+		fi
 		printf 'Hashing images...\n'
 		"$hash_script" "$dest/$1"
 		echo
