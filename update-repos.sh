@@ -53,7 +53,7 @@ update() {
 main() {
 	for repo in "${repos[@]}" "$@"; do
 		echo "$repo"
-		update "$repo" &
+		update "$repo"
 	done
 	wait
 }
