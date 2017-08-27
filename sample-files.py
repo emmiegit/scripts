@@ -1,40 +1,46 @@
 #!/usr/bin/env python
-import os, random, shutil, sys
+import os
+import random
+import shutil
+import sys
 
 def sample(src, dest, amount):
-    files = os.walk(src).next()[2]
+    files = []
+    for dir_path, _, dir_files in os.walk(src):
+        files += map(lambda x: os.path.join(dir_path, x), dir_files)
     random.shuffle(files)
 
-    print(files)
     if len(files) < amount:
-        print "Not enough files to select %d (only %d)." % (amount, len(files))
+        print(f"Not enough files to select {amount} (only {len(files)}).")
 
-    for i in range(amount):
-        fn = files.pop()
-        ext = fn.split(".")[-1]
-        newfn = "%s%s%04d.%s" % (dest, os.sep, i, ext)
-        print "%s -> %s" % (fn, newfn)
-        shutil.copyfile("%s%s%s" % (src, os.sep, fn), newfn)
+    for i, fn in enumerate(files[:amount]):
+        if '.' in fn:
+            ext = fn.split('.')[-1]
+            newfn = f'{i:04}.{ext}'
+        else:
+            newfn = f'{i:04}'
+
+        path = os.path.join(dest, newfn)
+        print(f'{fn} -> {path}')
+        shutil.copyfile(fn, path)
 
 if __name__ == "__main__":
-    if len(sys.argv) <= 3:
+    if len(sys.argv) < 4:
         print("Not enough arguments.")
-        print("Usage: %s [source directory] [output directory] [amount]" % os.path.basename(sys.argv[0]))
+        print(f"Usage: {sys.argv[0]} [source directory] [output directory] [amount]")
         exit(1)
 
     src = sys.argv[1]
     if not os.path.isdir(src):
-        print("Error: directory does not exist: \"%s\"." % src)
+        print(f"Error: directory does not exist: '{src}'")
         exit(1)
 
     dest = sys.argv[2]
     try:
         if not os.path.isdir(dest):
             os.mkdir(dest)
-        if not os.path.isdir(dest):
-            raise ValueError
     except:
-        print("Error: cannot make directory: \"%s\"." % dest)
+        print(f"Error: cannot make directory: '{dest}'")
         exit(1)
 
     try:
@@ -42,8 +48,7 @@ if __name__ == "__main__":
         if amt < 0:
             raise ValueError
     except:
-        print("Error: must enter positive integer, not \"%s\"." % sys.argv[3])
+        print(f"Error: must enter positive integer, not '{sys.argv[3]}'")
         exit(1)
 
     sample(src, dest, amt)
-
