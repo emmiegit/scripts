@@ -1,12 +1,16 @@
 #!/bin/bash
 set -eu
 
-ARCHIVE_LOCATION='/media/archive/Backup'
-ARCHIVE_NAME='dotmozilla.tar.xz'
-ARCHIVE="$ARCHIVE_LOCATION/$ARCHIVE_NAME"
-GPG_KEY='2C3CF0C7'
+archive_location='/media/archive/Backup'
+archive_name='dotmozilla.tar.xz'
+archive="$archive_location/$archive_name"
+gpg_key='2C3CF0C7'
 
-tar -cJf "$ARCHIVE" ~/.mozilla
-gpg --yes -er "$GPG_KEY" "$ARCHIVE"
-rm "$ARCHIVE"
+clean() {
+	rm -f "$archive"
+}
+
+tar -cJf "$archive" ~/.mozilla
+trap clean EXIT
+gpg --yes -er "$gpg_key" "$archive"
 
