@@ -42,7 +42,7 @@ function main() {
 				draw)
 					notify 'Setting tablet to drawing mode.'
 					xsetwacom --set "$tablet_part" MapToOutput 'HEAD-0'
-					xsetwacom --set "$tablet_part" Area 0 0 14000 14000 # pls fix me
+					xsetwacom --set "$tablet_part" Area 0 0 14796 8250
 					;;
 				osu)
 					notify 'Setting tablet to circle-clicking mode.'
