@@ -57,14 +57,14 @@ varch() {
 		printf '[Compressing]\n'
 		if ! "$hash_only"; then
 			read -rsp 'Password: ' password
-		fi
-		if [[ -f $archive ]]; then
-			if ! 7z l -p"$password" "$archive" >/dev/null 2>&1; then
-				printf >&2 'Invalid password or corrupt archive!\n'
-				exit 1
+			if [[ -f $archive ]]; then
+				if ! 7z l -p"$password" "$archive" >/dev/null 2>&1; then
+					printf >&2 'Invalid password or corrupt archive!\n'
+					exit 1
+				fi
+			else
+				printf 'Creating new archive\n'
 			fi
-		else
-			printf 'Creating new archive\n'
 		fi
 		printf 'Hashing images...\n'
 		"$hash_script" "$dest/$1"

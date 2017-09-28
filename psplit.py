@@ -1,5 +1,5 @@
-#!/usr/bin/env python
-from __future__ import print_function, with_statement
+#!/usr/bin/env python3
+import codecs
 import curses
 import os
 import random
@@ -77,7 +77,7 @@ def get_blocks(fh):
 def get_all_blocks(files):
     blocks = []
     for filename in files:
-        with open(filename, 'r') as fh:
+        with codecs.open(filename, 'r', encoding='utf-8', errors='ignore') as fh:
             blocks += get_blocks(fh)
 
     if not blocks:
@@ -99,6 +99,8 @@ class BlockDisplay(object):
         curses.cbreak()
         curses.nonl()
         curses.noecho()
+        curses.start_color()
+        curses.init_pair(1, curses.COLOR_RED, curses.COLOR_BLACK)
 
         while True:
             self.redraw(win)
@@ -141,8 +143,14 @@ class BlockDisplay(object):
 
         win.addstr(0, 0, info)
         win.addstr("\n\n")
-        win.addstr(block)
-        win.addstr("\n")
+
+        try:
+            win.addstr(block)
+            win.addstr("\n")
+        except curses.error:
+            win.attron(curses.A_BOLD | curses.color_pair(1))
+            win.addstr('ERROR')
+            win.attroff(curses.A_BOLD | curses.color_pair(1))
 
         win.refresh()
 
@@ -151,8 +159,7 @@ class BlockDisplay(object):
         win.addstr(0, 0, HEADER)
         win.addstr(HELP_STRING)
         win.refresh()
-
-        ch = win.getch()
+        _ = win.getch()
 
 if __name__ == "__main__":
     if len(sys.argv) < 2:
