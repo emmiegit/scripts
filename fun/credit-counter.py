@@ -10,7 +10,7 @@ import sys
 
 COMMENT_REGEX = re.compile(r'^\s*#')
 RESET_REGEX = re.compile(r'\s*%reset(?:\s+([A-Za-z]))?\s*', re.IGNORECASE)
-CREDIT_REGEX = re.compile(r'[^0-9]([+-][0-9]+)\s*([A-Za-z_]*)[^0-9%]')
+CREDIT_REGEX = re.compile(r'[^0-9]([+-][0-9]+(?:\.[0-9]+)?)\s*([A-Za-z_]*)[^0-9%]')
 MONEY_REGEX = re.compile(r'([+-])\$([0-9]+(?:\.[0-9]+)?k?)', re.IGNORECASE)
 
 def get_sign(s):
@@ -30,8 +30,8 @@ def count_credits(credits, text):
 
     for match in matches:
         amount = match.group(1)
-        coin = match.group(2)
-        credits[coin] = credits.get(coin, 0) + int(amount)
+        coin = match.group(2) or ''
+        credits[coin] = credits.get(coin, 0.0) + float(amount)
 
 def count_dollars(text):
     matches = MONEY_REGEX.finditer(text)

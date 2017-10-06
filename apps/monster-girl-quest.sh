@@ -14,7 +14,7 @@ run() {
 	disown
 }
 
-if [[ $# -gt 1 ]]; then
+if [[ $# -gt 0 ]]; then
 	set -eu
 	case "$1" in
 		rpg|paradox)
