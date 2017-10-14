@@ -27,6 +27,7 @@ Keybinds:
     Last:     G $ <end>
     Random:   r
     Edit:     e s
+    Edit all: E S
     Help:     ?
     Quit:     q
 """
@@ -37,6 +38,7 @@ FIRST = (ord('g'), ord('0'), ord('^'), curses.KEY_HOME)
 LAST = (ord('G'), ord('$'), curses.KEY_END)
 RANDOM = (ord('r'),)
 EDIT = (ord('e'), ord('s'))
+EDIT_ALL = (ord('E'), ord('S'))
 HELP = (ord('?'), ord('H'))
 QUIT = (ord('q'),)
 
@@ -141,6 +143,8 @@ class BlockDisplay:
                 self.blockno = random.randint(0, len(self.blocks) - 1)
             elif ch in EDIT:
                 self.edit(win)
+            elif ch in EDIT_ALL:
+                self.edit_all(win)
             elif ch in HELP:
                 self.print_help(win)
             elif ch in QUIT:
@@ -149,7 +153,19 @@ class BlockDisplay:
     def edit(self, win):
         curses.def_prog_mode()
         curses.endwin()
+        block = self.blocks[self.blockno]
+        run_editor([block.filename])
+        self.blocks = get_all_blocks(self.files)
+        if self.blockno >= len(self.blocks):
+            self.blockno = 0
+        curses.reset_prog_mode()
+        self.redraw(win)
+
+    def edit_all(self, win):
+        curses.def_prog_mode()
+        curses.endwin()
         run_editor(self.files)
+        self.blockno = 0
         self.blocks = get_all_blocks(self.files)
         curses.reset_prog_mode()
         self.redraw(win)
