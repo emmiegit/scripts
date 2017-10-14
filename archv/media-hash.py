@@ -127,7 +127,6 @@ def get_ignored_files(path, ignore, ignoredirs):
     finally:
         log("Got %d pattern%s from %s" % (len(ignore) + len(ignoredirs), ('s' if (len(ignore) + len(ignoredirs) - 1) else ''), path), True)
 
-
 def hash_media(dir_to_explore, err_fh, pause=False):
     if not os.path.isdir(dir_to_explore):
         log("\"%s\" is not a directory." % dir_to_explore, True)
