@@ -61,23 +61,20 @@ def get_blocks(fh, filename, fileno):
     blocks = []
     lines = []
 
-    def make_block():
+    def append_block():
         content = '\n'.join(lines)
-        return Block(content, filename, fileno)
+        blocks.append(Block(content, filename, fileno))
 
     for line in fh.readlines():
         line = line.rstrip()
         if line == '%':
-            blocks.append(make_block())
+            append_block()
             lines = []
         else:
             lines.append(line)
-    blocks.append(make_block())
+    append_block()
 
-    if len(blocks) == 1 and not blocks[0]:
-        return []
-    else:
-        return blocks
+    return filter(None, blocks)
 
 def get_all_blocks(files):
     blocks = []
