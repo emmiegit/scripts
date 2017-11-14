@@ -191,9 +191,10 @@ class BlockDisplay:
             win.addstr(block.content)
             win.addstr("\n")
         except curses.error:
-            win.attron(curses.A_BOLD | curses.color_pair(1))
-            win.addstr('ERROR')
-            win.attroff(curses.A_BOLD | curses.color_pair(1))
+            y, x = win.getyx()
+            win.move(y, 0)
+            win.clrtoeol()
+            win.addstr(' TEXT TOO LONG', curses.A_BOLD | curses.color_pair(1))
 
         win.refresh()
 
