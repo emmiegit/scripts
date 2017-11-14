@@ -9,7 +9,6 @@ dir_make() {
 
 mkdir -m750 "/tmp/$USER"
 dir_make cache
-dir_make mutt/{headers,bodies}
 dir_make pacaur
 dir_make vim_undo
 dir_make private
