@@ -5,12 +5,11 @@ set -eu
 # (CentOS 7)
 
 cd /tmp
-git clone https://github.com/Syllo/nvtop
+if [[ ! -d /tmp/nvtop ]]; then
+	git clone https://github.com/Syllo/nvtop
+	sudo yum install -y ncurses-devel
+fi
 cd nvtop
-
-sudo yum install -y \
-	ncurses-devel \
-	cuda-nvml-dev-9-1
 
 flags=(
 	'-pipe'
@@ -22,18 +21,21 @@ flags=(
 
 for src in src/*.c; do
 	obj="${src%?}o"
-		gcc \
-			"${flags[@]}" \
-			-std=gnu11 \
-			-Iinclude \
-			-isystem /usr/local/cuda-9.1/targets/x86_64-linux/include \
-			-c -o "$obj" \
-			"$src"
+	gcc \
+		"${flags[@]}" \
+		-std=gnu11 \
+		-Iinclude \
+		-isystem /usr/local/cuda-9.1/targets/x86_64-linux/include \
+		-c -o "$obj" \
+		"$src"
 done
 
 # Linking
 gcc \
 	"${flags[@]}" \
+	-lm \
+	-lnvidia-ml \
+	-lncursesw \
 	-Wl,-O1,--sort-common,--as-needed,-z,relo,-z,now \
 	-rdynamic \
 	-L/usr/lib64/nvidia \
