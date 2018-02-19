@@ -2,6 +2,9 @@
 
 main() {
 	case "$(/usr/local/scripts/wm/media/detect-audio-player.sh)" in
+		mpd)
+			mpc -f '%title% by %artist%'
+			;;
 		mocp)
 			mocp -Q '%song by %artist'
 			;;
