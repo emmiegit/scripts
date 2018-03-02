@@ -7,7 +7,7 @@ readonly ext=7z
 readonly hash_script='/usr/local/scripts/archv/media-hash.py'
 readonly hash_only=false
 readonly clear_recent=true
-readonly test_archive=false
+readonly test_archive=true
 readonly remove_files=false
 _remove_lock=true
 
