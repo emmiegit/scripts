@@ -45,7 +45,7 @@ gc() {
 update() {
 	cd "$1"
 	git pull || true
-	git submodule update || true
+	git submodule update --recursive || true
 	fsck
 	gc
 }
