@@ -8,8 +8,8 @@ dir_make() {
 }
 
 mkdir -m750 "/tmp/$USER"
+dir_make aur
 dir_make cache
-dir_make pacaur
 dir_make vim_undo
 dir_make private
 
