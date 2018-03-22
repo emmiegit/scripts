@@ -1,5 +1,7 @@
 #!/bin/sh
 
+source "${0%/*}/mpc.sh"
+
 case "$(/usr/local/scripts/wm/media/detect-audio-player.sh)" in
 	mpd) mpc toggle ;;
 	mocp) mocp --toggle-pause ;;

@@ -1,6 +1,7 @@
 #!/bin/sh
 
 detect_mpd() {
+	source "${0%/*}/mpc.sh"
 	case "$(mpc current 2>&1)" in
 		'') return 1 ;;
 		*) return 0 ;;

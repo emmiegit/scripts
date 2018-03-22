@@ -1,5 +1,7 @@
 #!/bin/sh
 
+source "${0%/*}/mpc.sh"
+
 # There's not way to go back in Pandora, so the
 # pianobar option does nothing.
 case "$(/usr/local/scripts/wm/media/detect-audio-player.sh)" in
