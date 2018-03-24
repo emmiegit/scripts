@@ -1,6 +1,8 @@
 #!/bin/bash
 set -eu
 
+source "${0%/*}/wm/media/mpc.sh"
+
 if [[ $# -gt 0 ]] && [[ $1 -gt 0 ]]; then
 	readonly songs="$1"
 else
