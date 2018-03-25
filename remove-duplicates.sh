@@ -27,14 +27,14 @@ hash_old() {
 	/usr/local/scripts/archv/media-hash.py "$1"
 }
 
-hasher=hash_new
+hasher=hash_old
 
 if [[ $# -gt 0 ]]; then
 	for arg in "$@"; do
 		case "$arg" in
-			old)
-				echo "Using old hash program."
-				hasher=hash_old
+			new)
+				echo "Using new hash program."
+				hasher=hash_new
 				;;
 			*)
 				echo >&2 "Unknown argument: $arg"
