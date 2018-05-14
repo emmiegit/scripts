@@ -7,5 +7,5 @@ exec sudo \
 		-vrtpAXlHogS \
 		--progress \
 		--delete-after \
-		"$@" -- /media/archive/* /media/extern
+		"$@" -- /media/archive/* "/media/${1:-extern}"
 
