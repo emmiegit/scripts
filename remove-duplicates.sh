@@ -12,8 +12,8 @@ locations=(
 	"$HOME/Pictures/Photographs/Pets"
 	"$HOME/Pictures/Comics/ben-garrison"
 	"$HOME/Pictures/Comics/clay-bennett"
-	"$HOME/Pictures/Comics/misc"
 	"$HOME/Pictures/Comics/smbc"
+	"$HOME/Pictures/Comics/star-tribune-sack"
 	"$HOME/Pictures/Comics/trump"
 	"$HOME/Pictures/Wallpapers/desktop"
 	"$HOME/Pictures/Wallpapers/phone"
@@ -27,14 +27,14 @@ hash_old() {
 	/usr/local/scripts/archv/media-hash.py "$1"
 }
 
-hasher=hash_new
+hasher=hash_old
 
 if [[ $# -gt 0 ]]; then
 	for arg in "$@"; do
 		case "$arg" in
-			old)
-				echo "Using old hash program."
-				hasher=hash_old
+			new)
+				echo "Using new hash program."
+				hasher=hash_new
 				;;
 			*)
 				echo >&2 "Unknown argument: $arg"
@@ -49,4 +49,3 @@ for dir in "${locations[@]}"; do
 	"$hasher" "$dir"
 	echo
 done
-

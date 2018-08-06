@@ -8,6 +8,7 @@ else
 fi
 
 readonly gc_flags=(
+	'--auto'
 	'--aggressive'
 )
 

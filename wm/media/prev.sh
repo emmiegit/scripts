@@ -1,8 +1,11 @@
 #!/bin/sh
 
+source "${0%/*}/mpc.sh"
+
 # There's not way to go back in Pandora, so the
 # pianobar option does nothing.
 case "$(/usr/local/scripts/wm/media/detect-audio-player.sh)" in
+	mpd) mpc prev ;;
 	mocp) mocp --prev ;;
 	pianobar) ;;
 	vlc) dbus-send --type=method_call --dest=org.mpris.MediaPlayer2.vlc /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player.Previous ;;

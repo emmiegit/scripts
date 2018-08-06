@@ -3,22 +3,22 @@
 from xml.etree import ElementTree as etree
 import atexit
 import os
-import signal
 import subprocess
 import sys
 import time
 import traceback
 import urllib.request
 
-PID_FILE = "/run/user/%d/gmail-notify.pid" % os.geteuid()
+PID_FILE = f'/run/user/{os.geteuid()}/gmail-notify.pid'
 
 # Constants
-GMAIL_FEED = "https://mail.google.com/gmail/feed/atom"
-NS = "{http://purl.org/atom/ns#}"
+GMAIL_FEED = 'https://mail.google.com/gmail/feed/atom'
+NS = r'{http://purl.org/atom/ns#}'
 
 # Options
-GMAIL_CREDENTIALS = "/usr/local/scripts/dat/gmail.gpg"
-DELAY = 60
+GMAIL_CREDENTIALS = '/usr/local/scripts/dat/gmail.gpg'
+MAIN_DELAY = 60
+BETWEEN_DELAY = 1
 
 def pid_exists(pid):
     try:
@@ -29,7 +29,7 @@ def pid_exists(pid):
         return True
 
 def notify(summary, text=None):
-    args = ["notify-send", "--", summary]
+    args = ['notify-send', '--', summary]
     if text:
         args.append(text)
     subprocess.check_call(args)
@@ -37,13 +37,14 @@ def notify(summary, text=None):
 def create_pidfile():
     if os.path.exists(PID_FILE):
         try:
-            with open(PID_FILE, "r") as fh:
+            with open(PID_FILE, 'r') as fh:
                 pid = int(fh.read().rstrip())
 
             if pid_exists(pid):
                 notify("Gmail notifier already running.")
             else:
                 notify("Gmail notifier has died, but pid file remains.")
+
             os.unlink(PID_FILE)
             exit(1)
         except:
@@ -52,8 +53,8 @@ def create_pidfile():
             exit(1)
     else:
         try:
-            with open(PID_FILE, "w") as fh:
-                fh.write("%d\n" % os.getpid())
+            with open(PID_FILE, 'w') as fh:
+                fh.write(f'{os.getpid()}\n')
         except:
             traceback.print_exc()
             notify("Unable to write to pidfile. Quitting gmail notifier.")
@@ -71,32 +72,32 @@ def remove_pidfile():
             traceback.print_exc()
             notify("Error reading gmail notifier pid file.")
 
-def daemonize():
+def fork_off():
     try:
         pid = os.fork()
-        # Have the parent exit
         if pid > 0:
             sys.exit(0)
     except OSError as ex:
-        notify("Fork failed: %d (%s)\n" % (ex.errno, ex.strerror))
+        notify(f"Fork failed: {ex.errno} ({ex.strerror})")
 
-    os.chdir("/")
+def daemonize():
+    # Have the parent exit
+    fork_off()
+
+    os.chdir('/')
     os.setsid()
     os.umask(0)
 
-    try:
-        pid = os.fork()
-        # Have the second parent exit
-        if pid > 0:
-            sys.exit(0)
-    except OSError as ex:
-        notify("Fork failed: %d (%s)\n" % (ex.errno, ex.strerror))
+    # Have the second parent exit
+    fork_off()
 
     # Redirect descriptors
     sys.stdout.flush()
     sys.stderr.flush()
+
     with open(os.devnull, 'r') as si:
         os.dup2(si.fileno(), sys.stdin.fileno())
+
     with open(os.devnull, 'a+') as so:
         os.dup2(so.fileno(), sys.stdout.fileno())
         os.dup2(so.fileno(), sys.stderr.fileno())
@@ -105,13 +106,62 @@ def daemonize():
     create_pidfile()
     atexit.register(remove_pidfile)
 
+class UnreadNotifier:
+    __slots__ = (
+        'unread',
+    )
+
+    def __init__(self):
+        self.unread = 0
+
+    def try_check(self, attempts=10):
+        for _ in range(attempts):
+            if self.check():
+                return True
+
+        # Exhausted all attempts
+        notify("Authentication failed.")
+        return False
+
+    def check(self):
+        try:
+            with urllib.request.urlopen(GMAIL_FEED) as source:
+                tree = etree.parse(source)
+
+            time.sleep(BETWEEN_DELAY)
+        except:
+            traceback.print_exc()
+            return False
+
+        rawcount = tree.find(NS + "fullcount").text
+        try:
+            count = int(rawcount)
+        except ValueError:
+            traceback.print_exc()
+            notify(f"Got a count that's not an integer: '{rawcount}'")
+            self.count = 0
+            return False
+
+        count -= self.unread
+        if count > 0:
+            plural = '' if count == 1 else 's'
+            notify(f"{count} new email{plural}")
+            self.unread += count
+
+        return True
+
+    def main_loop(self):
+        while True:
+            self.try_check()
+            time.sleep(MAIN_DELAY)
+
 if __name__ == '__main__':
     if not os.path.exists(GMAIL_CREDENTIALS):
-        notify("Can't find gmail credentials file.", GMAIL_CREDENTIALS);
+        notify("Can't find gmail credentials file.", GMAIL_CREDENTIALS)
         exit(1)
 
     try:
-        cred = subprocess.check_output(["gpg", "-d", GMAIL_CREDENTIALS]).split(b'\n')
+        cred = subprocess.check_output(['gpg', '-d', GMAIL_CREDENTIALS]).split(b'\n')
         user = cred[0].decode()
         passwd = cred[1].decode()
     except:
@@ -120,11 +170,12 @@ if __name__ == '__main__':
         exit(1)
 
     daemonize()
+
     try:
         # Set up authentication for gmail
         auth_handler = urllib.request.HTTPBasicAuthHandler()
-        auth_handler.add_password(realm="mail.google.com",
-                                  uri="https://mail.google.com/",
+        auth_handler.add_password(realm='mail.google.com',
+                                  uri='https://mail.google.com/',
                                   user=user,
                                   passwd=passwd)
         opener = urllib.request.build_opener(auth_handler)
@@ -136,29 +187,5 @@ if __name__ == '__main__':
         notify("Unable to authenticate with gmail.")
         exit(1)
 
-    # Number of unread emails we've already told the user about
-    unread = 0
-    while True:
-        try:
-            with urllib.request.urlopen(GMAIL_FEED) as source:
-                tree = etree.parse(source)
-        except:
-            traceback.print_exc()
-            notify("Authentication failed.")
-            time.sleep(DELAY)
-            continue
-
-        rawcount = tree.find(NS + "fullcount").text
-        try:
-            count = int(rawcount)
-        except ValueError:
-            traceback.print_exc()
-            notify("Got a rawcount that's not an integer: \"%s\"" % rawcount)
-            count = 0
-
-        count -= unread
-        if count > 0:
-            notify("%d new email%s" % (count, "" if count == 1 else "s"))
-            unread += count
-        time.sleep(DELAY)
-
+    notifier = UnreadNotifier()
+    notifier.main_loop()

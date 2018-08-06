@@ -2,16 +2,21 @@
 set -eu
 
 name='light-locker'
+pidfile="/run/user/$UID/light-locker.pid"
 flags=(
 	'--lock-on-suspend'
+	'--no-late-locking'
+	'--idle-hint'
 )
 
-trap : SIGHUP
+if [[ -f $pidfile ]]; then
+	kill "$(cat "$pidfile")" || true
+fi
 
-pkill -HUP "$name" || true
 "$name" "${flags[@]}" \
 	> /dev/null \
 	2> /dev/null \
 	< /dev/null &
 disown
 
+echo "$!" > "$pidfile"

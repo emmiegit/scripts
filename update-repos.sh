@@ -4,6 +4,7 @@ set -euo pipefail
 source "$(dirname "$0")/dat/repos"
 
 background=true
+parallel=false
 fsck=false
 gc=false
 
@@ -45,7 +46,7 @@ gc() {
 update() {
 	cd "$1"
 	git pull || true
-	git submodule update || true
+	git submodule update --recursive || true
 	fsck
 	gc
 }
@@ -53,13 +54,19 @@ update() {
 main() {
 	for repo in "${repos[@]}" "$@"; do
 		echo "$repo"
-		update "$repo"
+
+		if "$parallel"; then
+			update "$repo" &
+		else
+			update "$repo"
+		fi
 	done
 	wait
 }
 
 if "$background"; then
 	echo 'Running in background.'
+	parallel=true
 	main </dev/null >/dev/null 2>&1 &
 	disown
 else
