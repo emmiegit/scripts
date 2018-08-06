@@ -7,11 +7,11 @@ exec xrandr \
 	--output DP1 \
 		--off \
 	--output eDP1 \
-		--primary \
 		--mode 1920x1080 \
-		--pos 0x1080 \
+		--pos 0x704 \
 		--rotate normal \
 	--output DP2 \
+		--primary \
 		--mode 2560x1080 \
-		--pos 1336x0 \
+		--pos 1920x0 \
 		--rotate normal
