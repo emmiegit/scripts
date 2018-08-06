@@ -9,7 +9,7 @@ else
 	readonly songs=1
 fi
 
-dir="$HOME/Music"
+dir="$HOME/music"
 prefix_len="${#dir}"
 
 i=0
