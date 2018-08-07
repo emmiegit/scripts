@@ -2,7 +2,7 @@
 
 case "$(/usr/local/scripts/wm/media/detect-audio-player.sh)" in
 	mpd)
-		mpd_password="$(cat ~/Documents/Secure/files/mpd-passwd.txt)"
+		mpd_password="$(cat ~/documents/secure/files/mpd-passwd.txt)"
 		mpc -h "$mpd_password:localhost" -f '%title% by %artist%'
 		;;
 	mocp)

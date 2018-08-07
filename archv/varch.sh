@@ -1,7 +1,7 @@
 #!/bin/bash
 set -euo pipefail
 
-readonly dest="$HOME/Documents/Relic/Private"
+readonly dest="$HOME/documents/relic/private"
 readonly lock="$dest/.$1.lock"
 readonly ext=7z
 readonly hash_script='/usr/local/scripts/archv/media-hash.py'
