@@ -2,7 +2,7 @@
 set -euo pipefail
 
 if [[ ${NOTES_DIR:-x} == x ]]; then
-	NOTES_DIR="$HOME/Documents/Notes"
+	NOTES_DIR="$HOME/documents/notes"
 fi
 
 if [[ ${VISUAL:-x} == x ]]; then

@@ -2,7 +2,7 @@
 set -eu
 
 pack() {
-	dest="$HOME/Documents/Relic/$1.zip"
+	dest="$HOME/documents/relic/$1.zip"
 	[[ -f "$dest" ]] && mv -f "$dest" "$dest~"
 	cd "$2"
 	7z a -tzip -mx=2 "$dest" *
@@ -11,11 +11,11 @@ pack() {
 }
 
 main() {
-	pack co.commit	~/Pictures/Comics/commitstrip
-	pack co.dilbert ~/Pictures/Comics/dilbert
-	pack co.smbc	~/Pictures/Comics/smbc
-	pack co.xkcd	~/Pictures/Comics/xkcd
-	pack music		~/Music
+	pack co.commit	~/pictures/comics/commitstrip
+	pack co.dilbert ~/pictures/comics/dilbert
+	pack co.smbc	~/pictures/comics/smbc
+	pack co.xkcd	~/pictures/comics/xkcd
+	pack music		~/music
 	pack osu		/media/media/Games/osu\!/Songs
 	read -p 'Finished. '
 }
