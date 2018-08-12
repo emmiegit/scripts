@@ -9,7 +9,7 @@ else
 	readonly songs=1
 fi
 
-dir="$HOME/Music"
+dir="$HOME/music"
 prefix_len="${#dir}"
 
 i=0
@@ -27,4 +27,3 @@ while IFS= read -r -d '' file; do
 done < <(find -L "$dir" -type f -name '*.*' -and -not -iname 'albumart.*' -print0 | shuf -z)
 
 [[ $i -eq $songs ]]
-
