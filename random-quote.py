@@ -9,7 +9,6 @@ import time
 
 DAILY_QUOTE_FILE_NAME_REGEX = re.compile(r"daily.quotes?\.py", re.IGNORECASE)
 
-
 def aggregate_quotes(files):
     quotes = {}
 
@@ -22,7 +21,6 @@ def aggregate_quotes(files):
 
     return quotes
 
-
 def random_quote(quotes):
     all_quotes = []
 
@@ -31,7 +29,6 @@ def random_quote(quotes):
             all_quotes.append((quote.strip(), source))
 
     return random.choice(all_quotes)
-
 
 if __name__ == "__main__":
     if len(sys.argv) == 1:
@@ -58,6 +55,3 @@ if __name__ == "__main__":
         print("Today's quote is from %s:\n\n%s" % (source, quote))
     else:
         print("Here is a quote from %s:\n\n%s" % (source, quote))
-
-    sys.exit(0)
-
