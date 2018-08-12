@@ -6,6 +6,6 @@ exec sudo \
 		nice rsync \
 		-vrtpAXlHogS \
 		--progress \
-		--delete-after \
+		--delete-before \
 		"$@" -- /media/archive/* "/media/${1:-extern}"
 
