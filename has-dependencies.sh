@@ -1,8 +1,10 @@
 #!/bin/bash
+set -eu
 
-red="\e[31m\e[1m"
-green="\e[32m"
-reset="\e[0m"
+readonly red="\e[31m\e[1m"
+readonly green="\e[32m"
+readonly reset="\e[0m"
+
 missing=0
 
 for dep in "$@"; do
@@ -20,4 +22,3 @@ else
 	printf 'Not all dependencies are installed.\n'
 	exit $missing
 fi
-
