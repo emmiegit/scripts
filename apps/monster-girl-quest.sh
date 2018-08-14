@@ -1,7 +1,7 @@
 #!/bin/bash
 
 export WINEARCH='win32'
-export WINEPREFIX='/media/media/Games/Wine/MonsterGirlQuest'
+export WINEPREFIX='/media/media/games/wine/monster-girl-quest'
 export WINEHOME="$WINEPREFIX"
 
 run() {

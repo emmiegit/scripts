@@ -1,10 +1,10 @@
 #!/bin/bash
 
-OSU_SONG_DIR='/media/media/Games/osu!/Songs'
+osu_song_dir='/media/media/games/osu!/Songs'
 
 main() {
 	local songs=()
-	cd "$OSU_SONG_DIR"
+	cd "$osu_song_dir"
 
 	for dir in *; do
 		if [[ -d $dir ]] && [[ $dir != Failed ]]; then
@@ -12,11 +12,10 @@ main() {
 		fi
 	done
 
-	[[ -f 'songs.txt' ]] && cp -f songs.txt songs.txt.old
+	[[ -f songs.txt ]] && cp -f songs.txt songs.txt.old
 	printf '%s\n' "${songs[@]}" > songs.txt
 }
 
 [[ $# -eq 0 ]] \
 	&& main \
-	|| main $@
-
+	|| main "$@"
