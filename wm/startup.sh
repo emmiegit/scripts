@@ -12,3 +12,5 @@ dir_make cache
 dir_make vim_undo
 dir_make private
 ln -sf "/tmp/$USER/aur" "$HOME/.cache/yay"
+
+/usr/local/scripts/wm/screenlayout/run.sh
