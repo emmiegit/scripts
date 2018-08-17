@@ -2,21 +2,21 @@
 set -eu
 
 locations=(
-	"$HOME/Pictures/Anime"
-	"$HOME/Pictures/Games/Civ V/Miscellaenous Screenshots/"
-	"$HOME/Pictures/Misc/4chan"
-	"$HOME/Pictures/Misc/Redraw Reigen"
-	"$HOME/Pictures/Misc/Doujinshi"
-	"$HOME/Pictures/Misc/Poland Ball"
-	"$HOME/Pictures/Misc/Unnamed"
-	"$HOME/Pictures/Photographs/Pets"
-	"$HOME/Pictures/Comics/ben-garrison"
-	"$HOME/Pictures/Comics/clay-bennett"
-	"$HOME/Pictures/Comics/smbc"
-	"$HOME/Pictures/Comics/star-tribune-sack"
-	"$HOME/Pictures/Comics/trump"
-	"$HOME/Pictures/Wallpapers/desktop"
-	"$HOME/Pictures/Wallpapers/phone"
+	"$HOME/pictures/anime"
+	"$HOME/pictures/games/Civ V/Miscellaenous Screenshots/"
+	"$HOME/pictures/miscellaneous/4chan"
+	"$HOME/pictures/miscellaneous/redraw-reigen"
+	"$HOME/pictures/miscellaneous/doujinshi"
+	"$HOME/pictures/miscellaneous/poland-ball"
+	"$HOME/pictures/miscellaneous/unnamed"
+	"$HOME/pictures/photographs/Pets"
+	"$HOME/pictures/comics/ben-garrison"
+	"$HOME/pictures/comics/clay-bennett"
+	"$HOME/pictures/comics/smbc"
+	"$HOME/pictures/comics/star-tribune-sack"
+	"$HOME/pictures/comics/trump"
+	"$HOME/pictures/wallpapers/desktop"
+	"$HOME/pictures/wallpapers/phone"
 )
 
 hash_new() {
