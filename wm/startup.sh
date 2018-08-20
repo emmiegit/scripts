@@ -8,6 +8,7 @@ dir_make() {
 }
 
 mkdir -m777 -p "/tmp/shared"
+dir_make aur
 dir_make cache
 dir_make vim_undo
 dir_make private
