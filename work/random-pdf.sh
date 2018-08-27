@@ -29,7 +29,7 @@ Some math problems for you: \\par
 \$$RANDOM - $RANDOM\$ \\par
 \$$RANDOM \\cdot $RANDOM\$ \\par
 \$$RANDOM \\div $RANDOM\$ \\par
-\$$RANDOM^$RANDOM\$ \\par
+\$$RANDOM^{$RANDOM}\$ \\par
 
 \\end{document}
 EOF
