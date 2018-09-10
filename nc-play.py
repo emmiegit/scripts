@@ -33,7 +33,7 @@ def play(songs, options):
     elif mode == ANTICORE:
         speed = 0.67
     elif mode == RANDOM:
-        speed = random.random() * (options['max_speed'] - options['min_speed']) + options['min_speed']
+        speed = random.uniform(options['min_speed'], options['max_speed'])
 
     flags = [
         "mpv",
@@ -59,7 +59,7 @@ if __name__ == '__main__':
             'pitch_adjust': False,
             'extra_flags': [],
             'min_speed': 0.5,
-            'max_speed': 1.8,
+            'max_speed': 1.7,
     }
 
     for arg in sys.argv[1:]:
