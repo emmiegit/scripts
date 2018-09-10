@@ -34,6 +34,6 @@ Some math problems for you: \\par
 \\end{document}
 EOF
 
-pdflatex -output-directory "$tex_dir" "$tex_file"
+chronic pdflatex -output-directory "$tex_dir" "$tex_file"
 cp "$pdf_file" "$final_file"
 echo "Copied to $final_file!"
