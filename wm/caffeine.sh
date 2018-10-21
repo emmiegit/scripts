@@ -14,6 +14,7 @@ caffeinate() {
 	while true; do
 		sleep 55
 		xscreensaver-command -deactivate > /dev/null 2>&1
+		xdotool key shift
 	done
 }
 

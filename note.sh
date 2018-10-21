@@ -79,6 +79,15 @@ case "$1" in
 		git add .
 		git commit
 		;;
+	status)
+		git status
+		;;
+	push)
+		git push
+		;;
+	pull)
+		git pull
+		;;
 	git)
 		shift
 		git "$@"

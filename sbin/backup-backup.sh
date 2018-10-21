@@ -7,5 +7,5 @@ exec sudo \
 		-vrtpAXlHogS \
 		--progress \
 		--delete-before \
+		--exclude=temporary/ \
 		"$@" -- /media/archive/* "/media/${1:-extern}"
-

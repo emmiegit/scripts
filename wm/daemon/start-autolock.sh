@@ -33,4 +33,3 @@ if [[ $? -ne 0 ]]; then
 	notify-send 'Autolock program exited with nonzero status code.'
 	exit 1
 fi
-
