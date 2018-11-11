@@ -8,6 +8,8 @@ if [[ ! -d $backup_dir ]]; then
 	exit 1
 fi
 
+echo /media/archive "$backup_dir"
+
 exec sudo \
 	ionice -c 3 \
 		nice rsync \
