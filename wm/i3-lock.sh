@@ -33,12 +33,14 @@ else
 	readonly right=
 fi
 
+readonly imagefile="$(mktemp /tmp/lockscreen-XXXXXXXX.png)"
+
 on_exit() {
 	if [[ "$monitors" -eq 2 ]]; then
 		rm -f "$left" "$right"
 	fi
 
-	rm -f "$lockfile"
+	rm -f "$lockfile" "$imagefile"
 	killall -SIGUSR2 dunst || true
 }
 
@@ -51,8 +53,7 @@ case "$monitors" in
 	1)
 		maim -u /dev/stdout \
 			| convert /dev/stdin -scale "$small_scale%" -scale "$large_scale%" /dev/stdout \
-			| composite -gravity Center "$lockimage" /dev/stdin /dev/stdout \
-			| i3lock -i /dev/stdin
+			| composite -gravity Center "$lockimage" /dev/stdin "$imagefile"
 		;;
 	2)
 		maim -u --geometry="${x_res}x${y_res}+0+0" /dev/stdout \
@@ -62,12 +63,11 @@ case "$monitors" in
 			| convert /dev/stdin -scale "$small_scale%" -scale "$large_scale%" /dev/stdout \
 			| composite -gravity Center "$lockimage" /dev/stdin "$right" &
 		wait
-		convert +append "$left" "$right" /dev/stdout \
-			| i3lock -i /dev/stdin
+		convert +append "$left" "$right" "$imagefile"
 		;;
 	*)
-		maim -u /dev/stdout \
-			| i3lock -i /dev/stdin
+		maim -u "$imagefile"
 		;;
 esac
 
+i3lock -i "$imagefile"
