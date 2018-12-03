@@ -1,17 +1,22 @@
 #!/bin/sh
 exec xrandr \
-	--output HDMI1 \
-		--off \
 	--output VIRTUAL1 \
-		--off \
-	--output DP1 \
 		--off \
 	--output eDP1 \
 		--mode 1920x1080 \
-		--pos 0x704 \
+		--pos 0x536 \
 		--rotate normal \
+	--output DP1 \
+		--off \
 	--output DP2 \
-		--primary \
+		--off
+	--output HDMI1 \
+		--off \
+	--output DP1-1 \
 		--mode 2560x1080 \
 		--pos 1920x0 \
-		--rotate normal
+		--rotate normal \
+	--output DP1-2 \
+		--off \
+	--output DP1-3 \
+		--off
