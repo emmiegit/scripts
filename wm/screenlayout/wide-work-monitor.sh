@@ -1,4 +1,8 @@
-#!/bin/sh
+#!/bin/bash
+set -eu
+
+/usr/local/scripts/wm/new-wallpaper.sh
+
 exec xrandr \
 	--output VIRTUAL1 \
 		--off \

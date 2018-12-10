@@ -1,4 +1,8 @@
-#!/bin/sh
+#!/bin/bash
+set -eu
+
+/usr/local/scripts/wm/new-wallpaper.sh
+
 exec xrandr \
 	--output VGA-0 \
 		--mode 1280x1024 \
