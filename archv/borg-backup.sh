@@ -6,6 +6,8 @@ archive="$(date +%B-%d-%Y | tr '[:upper:]' '[:lower:]')"
 backup="/media/archive/backup/titus/borg"
 locations=(
 	"$HOME"
+	"/etc"
+	"/var"
 	"/media/media"
 	"/media/archive/git"
 )
