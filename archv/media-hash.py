@@ -11,6 +11,7 @@ import time
 ASK_FOR_CONFIRMATION = True
 DRY_RUN = False
 FULL = False
+
 MEDIA_TYPES = (
     'png',
     'jpg',
@@ -22,6 +23,7 @@ MEDIA_TYPES = (
     'bmp',
     'svg',
     'webm',
+    'webp',
     'wmv',
     'mp4',
     'mkv',
@@ -31,6 +33,7 @@ MEDIA_TYPES = (
     'opus',
     'aac',
 )
+
 REPLACEMENTS = {
     'jpeg': 'jpg',
     'jpe': 'jpg',
