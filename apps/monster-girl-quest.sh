@@ -5,8 +5,10 @@ export WINEPREFIX='/media/media/games/wine/monster-girl-quest'
 export WINEHOME="$WINEPREFIX"
 
 run() {
+	readonly full_path="$WINEPREFIX/drive_c/Program Files/$1"
+	cd "${full_path%/*}"
 	LC_ALL='ja_JP.UTF-8' \
-		wine "$WINEPREFIX/drive_c/Program Files/$1" \
+		wine "${1##*/}"
 			< /dev/null \
 			> /dev/null \
 			2> /dev/null \
@@ -34,6 +36,9 @@ if [[ $# -gt 0 ]]; then
 		1|2|3)
 			readonly path="Monster Girl Quest (Part $1)/mon_que.exe"
 			;;
+		1080|hd|remaster|remastered|upscale|upscaled)
+			readonly path="Monster Girl Quest (1080 Upscale)/Monster Girl Quest Remastered.exe"
+			;;
 		*)
 			printf "Unknown part: %s\n", "$1"
 			exit 1
@@ -41,7 +46,6 @@ if [[ $# -gt 0 ]]; then
 	esac
 
 	run "$path"
-	set +eu
 else
 	echo 'Only sourcing variables. Specify which part you want to run the game.'
 fi
