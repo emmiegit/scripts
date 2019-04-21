@@ -2,6 +2,7 @@
 rm -fv \
 	"$HOME/incoming"/random-*.pdf \
 	/tmp/error.dump.* \
+	/tmp/racerd_* \
 	/tmp/ti-*.log \
 	/tmp/tsserver_*.log \
 	/tmp/tmp* \
