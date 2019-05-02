@@ -8,7 +8,7 @@ source "$HOME/.config/user-dirs.dirs"
 tex_dir="$(mktemp -d /tmp/tex-XXXXXXXX)"
 tex_file="$tex_dir/random.tex"
 pdf_file="$tex_dir/random.pdf"
-final_file="$XDG_DOWNLOAD_DIR/random-$RANDOM.pdf"
+final_file="$XDG_DOWNLOAD_DIR/random-$RANDOM$RANDOM.pdf"
 
 function on_exit() {
 	rm -rf "$tex_dir"
@@ -24,12 +24,10 @@ cat > "$tex_file" << EOF
 \\begin{document}
 \\title{Randomly generated PDF}
 
-Some math problems for you: \\par
-\$$RANDOM + $RANDOM\$ \\par
-\$$RANDOM - $RANDOM\$ \\par
-\$$RANDOM \\cdot $RANDOM\$ \\par
-\$$RANDOM \\div $RANDOM\$ \\par
-\$$RANDOM^{$RANDOM}\$ \\par
+This document is for STAGING or TESTING only. It allows the upload of files to fufill activities when the contents of the document is not relevant for the test at hand. \\par
+
+Here's some random information to prevent Tinman from thinking the same file was reuploaded: \\par
+\$($RANDOM^{$RANDOM} - $RANDOM \\cdot \\frac{$RANDOM + $RANDOM}{$RANDOM}\$ \\par
 
 \\end{document}
 EOF
