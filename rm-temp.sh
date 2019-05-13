@@ -10,6 +10,7 @@ rm -fv \
 	/tmp/ycm*.log
 
 rm -rfv \
+	"/tmp/$USER/aur"/* \
 	/tmp/e-c-ts-* \
 	/tmp/openapi.* \
 	/tmp/sitespeed.*
