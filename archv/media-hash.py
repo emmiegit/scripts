@@ -8,7 +8,7 @@ import sys
 import traceback
 import time
 
-ASK_FOR_CONFIRMATION = True
+ASK_FOR_CONFIRMATION = False
 DRY_RUN = False
 FULL = False
 
