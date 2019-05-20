@@ -1,6 +1,5 @@
-#!/usr/bin/env python
-from __future__ import print_function, with_statement
-import glob
+#!/usr/bin/python3
+
 import os
 import random
 import re
@@ -32,7 +31,7 @@ def random_quote(quotes):
 
 if __name__ == "__main__":
     if len(sys.argv) == 1:
-        files = glob.glob("*.txt")
+        files = ['qotd-list.txt']
     else:
         files = sys.argv[1:]
 
