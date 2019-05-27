@@ -15,6 +15,7 @@ exec sudo \
 		nice rsync \
 		-vrtpAXlHogS \
 		--progress \
-		--delete-before \
+		--preallocate \
+		--delete-during \
 		--exclude=temporary/ \
 		"$@" -- /media/archive/* "$backup_dir"
