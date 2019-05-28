@@ -12,5 +12,6 @@ rm -fv \
 rm -rfv \
 	"/tmp/$USER/aur"/* \
 	/tmp/e-c-ts-* \
+	/tmp/loandocs* \
 	/tmp/openapi.* \
 	/tmp/sitespeed.*
