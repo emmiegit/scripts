@@ -49,4 +49,3 @@ if [[ $# -gt 0 ]]; then
 else
 	echo 'Only sourcing variables. Specify which part you want to run the game.'
 fi
-
