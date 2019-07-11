@@ -16,6 +16,7 @@ locations=(
 	"$HOME/pictures/miscellaneous/redraw-reigen"
 	"$HOME/pictures/miscellaneous/unnamed"
 	"$HOME/pictures/photographs/Pets"
+	"$HOME/pictures/scp/memes"
 	"$HOME/pictures/wallpapers/desktop"
 	"$HOME/pictures/wallpapers/phone"
 )
