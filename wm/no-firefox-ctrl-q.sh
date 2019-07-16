@@ -6,6 +6,9 @@ set -euo pipefail
 readonly window="$(xdotool getactivewindow)"
 readonly name="$(xprop -id "$window" | awk -F '"' '/WM_CLASS/{print $4}')"
 
-if [[ $name != 'Firefox' ]] && [[ $name != 'Firefox Developer Edition' ]]; then
-	xvkbd -xsendevent -text "\Cq"
-fi
+case "$name" in
+	Firefox) ;;
+	Firefox Developer Edition) ;;
+	firefoxdeveloperedition) ;;
+	*) xvkbd -xsendevent -text "\Cq" ;;
+esac
