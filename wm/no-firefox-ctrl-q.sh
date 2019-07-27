@@ -4,11 +4,16 @@ set -euo pipefail
 # Based on https://github.com/sasawat/firefox-ctrl-q-workaround
 
 readonly window="$(xdotool getactivewindow)"
-readonly name="$(xprop -id "$window" | awk -F '"' '/WM_CLASS/{print $4}')"
+readonly name="$(xprop -id "$window" | awk -F '"' '/WM_CLASS/ { print $4 }')"
 
-case "$name" in
-	Firefox) ;;
-	Firefox Developer Edition) ;;
-	firefoxdeveloperedition) ;;
-	*) xvkbd -xsendevent -text "\Cq" ;;
-esac
+readonly blacklist=(
+	'Firefox'
+	'Firefox Developer Edition'
+	'firefoxdeveloperedition'
+)
+
+for item in "${blacklist[@]}"; do
+	[[ $name == $item ]] && exit
+done
+
+xvkbd -xsendevent -text "\Cq"
