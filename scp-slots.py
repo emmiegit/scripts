@@ -35,8 +35,8 @@ def count_slots(url):
 def get_series_url(number):
     if number == 1:
         return 'http://www.scp-wiki.net/scp-series'
-
-    return f'http://www.scp-wiki.net/scp-series-{series}'
+    else:
+        return f'http://www.scp-wiki.net/scp-series-{number}'
 
 if __name__ == '__main__':
     if len(sys.argv) > 1:
