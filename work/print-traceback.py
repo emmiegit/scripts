@@ -12,18 +12,7 @@ def get(obj, path):
     except KeyError:
         return None
 
-if __name__ == '__main__':
-    if len(sys.argv) >= 2:
-        paths = [sys.argv[1].split('.')]
-    else:
-        paths = [
-            ['meta', 'error', 'stack'],
-            ['error', 'stack'],
-            ['traceback'],
-        ]
-
-    obj = json.load(sys.stdin)
-
+def display(obj):
     for path in paths:
         subobj = get(obj, path)
         if subobj is not None:
@@ -34,3 +23,17 @@ if __name__ == '__main__':
         print(obj)
     else:
         pprint(obj)
+
+if __name__ == '__main__':
+    if len(sys.argv) >= 2:
+        paths = [sys.argv[1].split('.')]
+    else:
+        paths = [
+            ['meta', 'error', 'stack'],
+            ['error', 'stack'],
+            ['traceback'],
+        ]
+
+    for line in sys.stdin.readlines():
+        obj = json.loads(line)
+        display(obj)
