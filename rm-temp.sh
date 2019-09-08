@@ -3,6 +3,7 @@ rm -fv \
 	"$HOME/incoming"/random-*.pdf \
 	/tmp/error.dump.* \
 	/tmp/racerd_* \
+	/tmp/rust_language_server_* \
 	/tmp/sbt*.log \
 	/tmp/service-authors.* \
 	/tmp/ti-*.log \
