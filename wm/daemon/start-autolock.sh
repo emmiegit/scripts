@@ -15,17 +15,17 @@ elif [[ ! -f /usr/local/scripts/dat/autolock_delay ]]; then
 	exit 1
 fi
 
-LOCKER='/usr/local/scripts/wm/lock.sh'
-KILL=false
-KILLER_CMD="$(cat '/usr/local/scripts/dat/autolock_killer_cmd')"
-DELAY_TIME="$(cat '/usr/local/scripts/dat/autolock_delay')"
+readonly locker='/usr/local/scripts/wm/lock.sh'
+readonly runkill=false
+readonly killer_cmd="$(cat '/usr/local/scripts/dat/autolock_killer_cmd')"
+readonly delay_time="$(cat '/usr/local/scripts/dat/autolock_delay')"
 
 pkill xautolock || true
 
-if "$KILL"; then
-	xautolock -resetsaver -detectsleep -time "$DELAY_TIME" -locker "$LOCKER" -killtime 30 -killer "$KILLER_CMD" &
+if "$runkill"; then
+	xautolock -resetsaver -detectsleep -time "$delay_time" -locker "$locker" -killtime 30 -killer "$killer_cmd" &
 else
-	xautolock -resetsaver -detectsleep -time "$DELAY_TIME" -locker "$LOCKER" &
+	xautolock -resetsaver -detectsleep -time "$delay_time" -locker "$locker" &
 fi
 disown
 

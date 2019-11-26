@@ -1,2 +1,2 @@
 #!/bin/sh
-exec dm-tool lock
+exec dm-tool switch-to-greeter
