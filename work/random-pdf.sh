@@ -27,7 +27,7 @@ cat > "$tex_file" << EOF
 This document is for STAGING or TESTING only. It allows the upload of files to fufill activities when the contents of the document is not relevant for the test at hand. \\par
 
 Here's some random information to prevent Tinman from thinking the same file was reuploaded: \\par
-\$($RANDOM^{$RANDOM} - $RANDOM \\cdot \\frac{$RANDOM + $RANDOM}{$RANDOM}\$ \\par
+\$$RANDOM^{$RANDOM} - $RANDOM \\cdot \\frac{$RANDOM + $RANDOM}{$RANDOM}\$ \\par
 
 \\end{document}
 EOF
