@@ -8,7 +8,6 @@ rm -fv \
 	/tmp/service-authors.* \
 	/tmp/ti-*.log \
 	/tmp/tsserver_*.log \
-	/tmp/tmp* \
 	/tmp/ycm*.log
 
 rm -rfv \
@@ -16,4 +15,6 @@ rm -rfv \
 	/tmp/e-c-ts-* \
 	/tmp/loandocs* \
 	/tmp/openapi.* \
-	/tmp/sitespeed.*
+	/tmp/sitespeed.* \
+	/tmp/tmp* \
+	/tmp/ts-node-*
