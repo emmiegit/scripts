@@ -31,4 +31,6 @@ exec \
 		-f "$archive-$1" \
 		-v \
 		--print-stats \
-		"${locations[@]}"
+		"${locations[@]}" \
+		> /var/log/tarsnap.log \
+		2>&1
