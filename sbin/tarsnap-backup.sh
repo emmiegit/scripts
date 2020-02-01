@@ -23,7 +23,6 @@ case "$1" in
 		exit 1
 esac
 
-set -x
 exec \
 	ionice -c 3 \
 	nice -n 10 \
