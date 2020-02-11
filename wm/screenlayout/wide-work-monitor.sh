@@ -1,7 +1,11 @@
 #!/bin/bash
 set -eu
 
-/usr/local/scripts/wm/new-wallpaper.sh
+{
+	sleep 15
+	/usr/local/scripts/wm/new-wallpaper.sh
+	/usr/local/scripts/wm/vi-keyswap.sh
+} &
 
 exec xrandr \
 	--output eDP1 \
