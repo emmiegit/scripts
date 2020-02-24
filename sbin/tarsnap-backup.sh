@@ -13,7 +13,7 @@ case "$1" in
 		)
 		;;
 	archive)
-		locations+=('/media/archive')
+		locations+=('/media/archive/git')
 		;;
 	media)
 		locations+=('/media/media')
