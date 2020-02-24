@@ -4,24 +4,26 @@ set -eu
 archive="$(date +%B-%d-%Y | tr '[:upper:]' '[:lower:]')"
 locations=()
 
-case "$1" in
-	root)
-		locations+=(
-			"$HOME"
-			"/etc"
-			"/var"
-		)
-		;;
-	archive)
-		locations+=('/media/archive/git')
-		;;
-	media)
-		locations+=('/media/media')
-		;;
-	*)
-		echo "Unknown location specifier: $1"
-		exit 1
-esac
+for argument in "$@"; do
+	case "$argument" in
+		root)
+			locations+=(
+				"$HOME"
+				"/etc"
+				"/var"
+			)
+			;;
+		archive)
+			locations+=('/media/archive/git')
+			;;
+		media)
+			locations+=('/media/media')
+			;;
+		*)
+			echo "Unknown location specifier: $1"
+			exit 1
+	esac
+done
 
 exec \
 	ionice -c 3 \
