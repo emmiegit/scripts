@@ -35,3 +35,8 @@ exec \
 		"${locations[@]}" \
 		> /var/log/tarsnap.log \
 		2>&1
+
+# Cron backup:
+# 0 20 1 * * /usr/local/scripts/sbin/tarsnap-backup.sh root
+# 0 21 1 * * /usr/local/scripts/sbin/tarsnap-backup.sh archive
+# 0 22 1 */2 * /usr/local/scripts/sbin/tarsnap-backup.sh media
