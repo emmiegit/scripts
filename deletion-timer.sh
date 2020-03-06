@@ -16,6 +16,8 @@ Staff Post - Deletion Vote
 
 ---
 
+TODO: something is messed up with the time zone
+
 Beginning deletion vote at $1.
 
 [[iframe http://home.helenbot.com/tools/timer.html?time=$(date +%s)000&type=del style="width: 500px; height: 250px; border: 0;"]]
