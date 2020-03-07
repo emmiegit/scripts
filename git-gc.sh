@@ -7,11 +7,6 @@ else
 	readonly dirlist=("$@")
 fi
 
-readonly gc_flags=(
-	'--auto'
-	'--aggressive'
-)
-
 readonly origdir="$(pwd)"
 for dir in "${dirlist[@]}"; do
 	for repo in "$dir"/*/; do
@@ -23,7 +18,7 @@ for dir in "${dirlist[@]}"; do
 		echo "Entering $repo..."
 		git fsck --full
 		git gc --aggressive
+		git prune --verbose
 		cd "$origdir"
 	done
 done
-
