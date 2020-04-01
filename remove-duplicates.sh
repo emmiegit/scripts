@@ -5,6 +5,7 @@ locations=(
 	"$HOME/pictures/anime"
 	"$HOME/pictures/comics/ben-garrison"
 	"$HOME/pictures/comics/clay-bennett"
+	"$HOME/pictures/comics/politics"
 	"$HOME/pictures/comics/smbc"
 	"$HOME/pictures/comics/star-tribune-sack"
 	"$HOME/pictures/comics/trump"
