@@ -1,27 +1,7 @@
 #!/bin/bash
 set -eu
 
-locations=(
-	"$HOME/pictures/anime"
-	"$HOME/pictures/comics/ben-garrison"
-	"$HOME/pictures/comics/clay-bennett"
-	"$HOME/pictures/comics/politics"
-	"$HOME/pictures/comics/smbc"
-	"$HOME/pictures/comics/star-tribune-sack"
-	"$HOME/pictures/comics/trump"
-	"$HOME/pictures/games/Civ V/Miscellaenous Screenshots/"
-	"$HOME/pictures/miscellaneous/4chan"
-	"$HOME/pictures/miscellaneous/doujinshi"
-	"$HOME/pictures/miscellaneous/ken-m"
-	"$HOME/pictures/miscellaneous/poland-ball"
-	"$HOME/pictures/miscellaneous/redraw-reigen"
-	"$HOME/pictures/miscellaneous/unnamed"
-	"$HOME/pictures/movies"
-	"$HOME/pictures/photographs/Pets"
-	"$HOME/pictures/scp/memes"
-	"$HOME/pictures/wallpapers/desktop"
-	"$HOME/pictures/wallpapers/phone"
-)
+source "$(dirname "$0")/dat/media-dirs"
 
 hash_new() {
 	/usr/local/scripts/archv/darch.sh -m "$1"
