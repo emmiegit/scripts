@@ -13,7 +13,7 @@ section="$(cat '/usr/local/scripts/dat/wallpaper_section')"
 [[ $# -gt 0 ]] && section="$1"
 
 if [[ ${DISPLAY:-none} == none ]]; then
-	export DISPLAY=':0'
+	export DISPLAY=':1'
 fi
 
 feh --recursive --randomize --"$spread" "$dir/$section"
