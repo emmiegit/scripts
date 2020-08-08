@@ -21,4 +21,4 @@ readonly source="$(dirname "$1")"
 readonly dest="$1"
 
 shift
-docmd rsync -vaHAXP -zz --safe-links --delete-after "$@" "$remote:$dest" "$source"
+docmd rsync -vahHAXP -zz --safe-links --delete-after "$@" "$remote:$dest" "$source"
