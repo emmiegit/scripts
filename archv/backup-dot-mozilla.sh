@@ -11,6 +11,7 @@ clean() {
 	rm -f "$archive"
 }
 
+trap clean EXIT SIGINT SIGTERM
+
 "$tar_program" -cJf "$archive" ~/.mozilla
-trap clean EXIT
 gpg --yes -er "$gpg_key" "$archive"
