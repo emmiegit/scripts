@@ -4,7 +4,7 @@ import random
 
 # Options
 BOSS_ZONE_ORDER = 'follow' # 'random' or 'consistent' or 'follow'
-CONSISTENT_FIRST_LEVEL = True
+CONSISTENT_FIRST_LEVEL = False
 
 # Constants
 ZONES = 5
