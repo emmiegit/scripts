@@ -3,7 +3,7 @@
 import random
 
 # Options
-BOSS_ZONE_ORDER = 'random' # 'random' or 'consistent' or 'follow'
+BOSS_ZONE_ORDER = 'follow' # 'random' or 'consistent' or 'follow'
 CONSISTENT_FIRST_LEVEL = True
 
 # Constants
