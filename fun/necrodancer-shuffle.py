@@ -3,8 +3,7 @@
 import random
 
 # Options
-BOSS_ZONE_ORDER = False
-BOSS_ZONE_RANDOM = True
+BOSS_ZONE_ORDER = 'random' # 'random' or 'consistent' or 'follow'
 CONSISTENT_FIRST_LEVEL = True
 
 # Constants
@@ -49,7 +48,7 @@ def generate_floor_shuffle():
     bosses = list(BOSSES)
     random.shuffle(bosses)
 
-    if BOSS_ZONE_RANDOM:
+    if BOSS_ZONE_ORDER == 'random':
         boss_zones = list(range(1, ZONES + 1))
         random.shuffle(boss_zones)
 
@@ -78,11 +77,10 @@ def generate_floor_shuffle():
         # Get the boss for the zone
         boss = bosses[zone_idx]
 
-        if BOSS_ZONE_RANDOM:
-            zone = boss_zones[zone_idx]
-
-        if BOSS_ZONE_ORDER:
+        if BOSS_ZONE_ORDER == 'consistent':
             zone = zone_idx + 1
+        elif BOSS_ZONE_ORDER == 'random':
+            zone = boss_zones[zone_idx]
 
         levels.append(get_boss_name(zone, boss))
 
