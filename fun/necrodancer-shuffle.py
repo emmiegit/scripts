@@ -4,6 +4,7 @@ import random
 
 # Options
 BOSS_ZONE_ORDER = False
+BOSS_ZONE_RANDOM = True
 CONSISTENT_FIRST_LEVEL = True
 
 # Constants
@@ -48,6 +49,10 @@ def generate_floor_shuffle():
     bosses = list(BOSSES)
     random.shuffle(bosses)
 
+    if BOSS_ZONE_RANDOM:
+        boss_zones = list(range(1, ZONES + 1))
+        random.shuffle(boss_zones)
+
     # Generate shuffled floor levels
     floors = []
     for _ in range(FLOORS):
@@ -72,6 +77,9 @@ def generate_floor_shuffle():
 
         # Get the boss for the zone
         boss = bosses[zone_idx]
+
+        if BOSS_ZONE_RANDOM:
+            zone = boss_zones[zone_idx]
 
         if BOSS_ZONE_ORDER:
             zone = zone_idx + 1
