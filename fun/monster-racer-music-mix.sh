@@ -35,13 +35,19 @@ shift
 arguments=("$@")
 
 # Playback functions
-play_lobby() {
-	file="lobby_${artist}.ogg"
+play() {
+	file="$1"
+	message="$2"
 
 	if [[ -f $file ]]; then
-		echo "Playing: Lobby"
+		echo "Playing: $message"
 		mpv "${arguments[@]}" "$file"
 	fi
+}
+
+play_lobby() {
+	file="lobby_${artist}.ogg"
+	play "$file" 'Lobby'
 }
 
 play_floor() {
@@ -61,11 +67,7 @@ play_floor() {
 	esac
 
 	file="zone${zone}_${floor}_${artist}${variant}.ogg"
-
-	if [[ -f $file ]]; then
-		echo "Playing: ${zone}-${floor} ${variant_descriptor}"
-		mpv "${arguments[@]}" "$file"
-	fi
+	play "$file" "Floor ${zone}-${floor} ${variant_descriptor}"
 }
 
 play_boss() {
@@ -102,11 +104,7 @@ play_boss() {
 	esac
 
 	file="boss_${boss}_${artist}.ogg"
-
-	if [[ -f $file ]]; then
-		echo "Playing: ${boss_name}"
-		mpv "${arguments[@]}" "$file"
-	fi
+	play "$file" "$boss_name"
 }
 
 # Main
