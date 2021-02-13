@@ -50,6 +50,11 @@ play_lobby() {
 	play "$file" 'Lobby'
 }
 
+play_training() {
+	file="training_${artist}.ogg"
+	play "$file" 'Training'
+}
+
 play_floor() {
 	zone="$1"
 	floor="$2"
@@ -109,6 +114,7 @@ play_boss() {
 
 # Main
 play_lobby
+play_training
 
 for zone in {1..5}; do
 	for floor in {1..3}; do
