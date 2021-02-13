@@ -113,6 +113,9 @@ play_boss() {
 }
 
 # Main
+echo "Artist: $artist"
+echo
+
 play_lobby
 play_training
 
