@@ -56,6 +56,8 @@ play_floor() {
 		h)
 			variant_descriptor='Hot'
 			;;
+		'')
+			variant_descriptor=''
 	esac
 
 	file="zone${zone}_${floor}_${artist}${variant}.ogg"
