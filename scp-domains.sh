@@ -2,9 +2,10 @@
 set -eu
 
 domains=(
-	'scp-wiki.wikidot.com'
 	'scpwiki.com'
+	'www.scpwiki.com'
 	'scp-wiki.net'
+	'scp-wiki.wikidot.com'
 )
 
 function check_site() {
