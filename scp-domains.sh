@@ -5,6 +5,7 @@ domains=(
 	'scpwiki.com'
 	'www.scpwiki.com'
 	'scp-wiki.net'
+	'www.scp-wiki.net'
 	'scp-wiki.wikidot.com'
 )
 
