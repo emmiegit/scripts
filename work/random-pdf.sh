@@ -2,7 +2,11 @@
 set -euo pipefail
 
 # Get download directory
-source "$HOME/.config/user-dirs.dirs"
+if [[ -f $HOME/.config/user-dirs.dirs ]]; then
+	source "$HOME/.config/user-dirs.dirs"
+else
+	XDG_DOWNLOAD_DIR="$HOME/incoming"
+fi
 
 # Generates a random PDF for uploading to Tinman
 tex_dir="$(mktemp -d /tmp/tex-XXXXXXXX)"
