@@ -13,6 +13,7 @@ rm -fv \
 
 rm -rfv \
 	"/tmp/$USER/aur"/* \
+	/tmp/brz-diff* \
 	/tmp/e-c-ts-* \
 	/tmp/loandocs* \
 	/tmp/openapi.* \
