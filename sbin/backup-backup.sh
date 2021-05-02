@@ -2,6 +2,7 @@
 set -x
 
 readonly backup_dir="/media/${1:-extern}"
+shift
 
 if [[ ! -d $backup_dir ]]; then
 	echo >&2 "No such directory: $backup_dir"
