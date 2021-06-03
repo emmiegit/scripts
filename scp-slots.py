@@ -6,6 +6,7 @@ import sys
 from bs4 import BeautifulSoup
 from urllib.request import urlopen
 
+DEFAULT_SERIES = 7
 SCP_SERIES_REGEX = re.compile(r'/scp-[0-9]{3,4}')
 
 def count_slots(url):
@@ -42,7 +43,7 @@ if __name__ == '__main__':
     if len(sys.argv) > 1:
         series = int(sys.argv[1])
     else:
-        series = 5
+        series = DEFAULT_SERIES
 
     url = get_series_url(series)
     print(f'Counting slots in {url}...')
