@@ -6,12 +6,23 @@ archive_name='dotmozilla.tar.xz'
 archive="$archive_location/$archive_name"
 gpg_key='2C3CF0C7'
 tar_program='/usr/bin/tar'
+temp_dir="$(mktemp -d /tmp/dot-mozilla-XXXXXXXXX)"
 
 clean() {
 	rm -f "$archive"
+	rm -rf "$temp_dir"
 }
 
 trap clean EXIT SIGINT SIGTERM
 
-"$tar_program" -cJf "$archive" ~/.mozilla
+# Copy all files first so we avoid modified-while-read errors.
+cp -a ~/.mozilla "$temp_dir"
+
+# Create compressed archive
+(
+	cd "$temp_dir"
+	"$tar_program" -cJf "$archive" .mozilla
+)
+
+# Encrypt using the given GPG key
 gpg --yes -er "$gpg_key" "$archive"
