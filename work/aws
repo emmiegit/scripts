@@ -1,2 +1,0 @@
-#!/bin/sh
-PYTHONUSERBASE="$HOME/better-pip" python3 -m awscli "$@"
