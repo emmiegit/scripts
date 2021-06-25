@@ -1,7 +1,7 @@
 #!/bin/bash
 set -eu
 
-[[ $EUID == 0 ]] && exec sudo -u ammon "$0"
+[[ $EUID == 0 ]] && exec sudo -u emmie "$0"
 [[ -z $DISPLAY ]] && DISPLAY=:0
 
 if [[ $# -eq 0 ]]; then
