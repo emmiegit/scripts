@@ -18,9 +18,16 @@ docmd() {
 	"$@"
 }
 
-readonly remote=Titus
-readonly source="$(dirname "$1")"
-readonly dest="$1"
+remote=Titus
 
-shift
+if [[ $# -eq 1 ]]; then
+	source="$(dirname "$1")"
+	dest="$1"
+	shift
+else
+	source="$1"
+	dest="$2"
+	shift 2
+fi
+
 docmd rsync -vahHAXP -zz --safe-links --delete-after "$@" "$remote:$dest" "$source"
