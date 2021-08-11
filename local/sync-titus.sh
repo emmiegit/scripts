@@ -21,8 +21,8 @@ docmd() {
 remote=Titus
 
 if [[ $# -eq 1 ]]; then
-	source="$(dirname "$1")"
-	dest="$1"
+	source="$1"
+	dest="$(dirname "$1")"
 	shift
 else
 	source="$1"
@@ -30,4 +30,4 @@ else
 	shift 2
 fi
 
-docmd rsync -vahHP -zz --safe-links --delete-after "$@" "$remote:$dest" "$source"
+docmd rsync -vahHP -zz --safe-links --delete-after "$@" "$remote:$source" "$dest"
