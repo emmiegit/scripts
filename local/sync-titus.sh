@@ -30,4 +30,4 @@ else
 	shift 2
 fi
 
-docmd rsync -vahHAXP -zz --safe-links --delete-after "$@" "$remote:$dest" "$source"
+docmd rsync -vahHP -zz --safe-links --delete-after "$@" "$remote:$dest" "$source"
