@@ -1,4 +1,4 @@
 mpc() {
-	local mpd_password="$(cat ~/documents/secure/files/mpd-passwd.txt)"
+	local mpd_password="$(cat "$HOME/.mpd/password")"
 	env mpc -h "$mpd_password@localhost" "$@"
 }
