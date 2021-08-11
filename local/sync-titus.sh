@@ -1,9 +1,11 @@
 #!/bin/bash
 set -eu
 
-if [[ "$(cat /etc/hostname)" == "Titus" ]]; then
-	printf >&2 'Refusing to sync to self.\n'
-	exit 1
+if [[ -f /etc/hostname ]]; then
+	if [[ "$(cat /etc/hostname)" == "Titus" ]]; then
+		printf >&2 'Refusing to sync to self.\n'
+		exit 1
+	fi
 fi
 
 if [[ "$#" -eq 0 ]]; then
