@@ -24,6 +24,10 @@ if [[ $# -eq 1 ]]; then
 	source="$1"
 	dest="$(dirname "$1")"
 	shift
+elif [[ $(basename "$1") == $(basename "$2") ]]; then
+	source="$1"
+	dest="$(dirname "$2")"
+	shift 2
 else
 	source="$1"
 	dest="$2"
