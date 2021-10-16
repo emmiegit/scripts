@@ -39,7 +39,7 @@ if __name__ == "__main__":
             print("* (no entries found)")
         for name in totp_data:
             totp = get_totp(totp_data[name]["secret"])
-            print(f"* {Fore.MAGENTA}{name}{Fore.RESET} ({totp})")
+            print(f"* {Fore.MAGENTA}{name}{Fore.RESET}: {totp}")
 
         sys.exit(0)
 
