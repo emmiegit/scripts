@@ -4,7 +4,7 @@ import json
 import sys
 import subprocess
 
-from colorama import init as colorama_init, Fore, Style
+from colorama import init as colorama_init, Fore
 
 def get_totp_codes():
     totp_json = subprocess.check_output(["pass", "show", "misc/totp-codes"])
@@ -28,19 +28,31 @@ def find_most_similar(totp_data, search_name):
     return None
 
 if __name__ == "__main__":
-    if len(sys.argv) < 2:
-        print(f"Usage: {sys.argv[0]} <app-name>...", file=sys.stderr)
-        sys.exit(1)
-
+    exit_code = 0
     colorama_init()
     totp_data = get_totp_codes()
 
+    # No arguments, list all app names
+    if len(sys.argv) < 2:
+        print("List of all TOTP applications:")
+        if not totp_data:
+            print("* (no entries found)")
+        for name in totp_data:
+            totp = get_totp(totp_data[name]["secret"])
+            print(f"* {Fore.MAGENTA}{name}{Fore.RESET} ({totp})")
+
+        sys.exit(0)
+
+    # Print TOTP codes for each app listed
     for app_name in sys.argv[1:]:
         entry = find_most_similar(totp_data, app_name)
         if entry is None:
             print(f"No match for '{app_name}'", file=sys.stderr)
+            exit_code = 1
             continue
 
         name = entry["name"]
         totp = get_totp(entry["secret"])
         print(f"{Fore.MAGENTA}{name}{Fore.RESET}: {totp}")
+
+    sys.exit(exit_code)
