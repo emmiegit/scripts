@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 
 import json
+import re
 import sys
 import subprocess
 
@@ -15,17 +16,14 @@ def get_totp(secret):
     raw_output = subprocess.check_output(["oathtool", "--base32", "--totp", secret])
     return raw_output.decode("utf-8").strip()
 
-def find_most_similar(totp_data, search_name):
-    case_insensitive = search_name.islower()
+def find_matching(totp_data, app_regex):
+    matching = []
 
     for name, entry in totp_data.items():
-        if case_insensitive:
-            name = name.lower()
+        if app_regex.search(name):
+            matching.append(entry)
 
-        if search_name in name:
-            return entry
-
-    return None
+    return matching
 
 if __name__ == "__main__":
     exit_code = 0
@@ -44,15 +42,17 @@ if __name__ == "__main__":
         sys.exit(0)
 
     # Print TOTP codes for each app listed
-    for app_name in sys.argv[1:]:
-        entry = find_most_similar(totp_data, app_name)
-        if entry is None:
-            print(f"No match for '{app_name}'", file=sys.stderr)
+    for app_pattern in sys.argv[1:]:
+        app_regex = re.compile(app_pattern, re.IGNORECASE)
+        entries = find_matching(totp_data, app_regex)
+        if not entries:
+            print(f"No matches for '{app_pattern}'", file=sys.stderr)
             exit_code = 1
             continue
 
-        name = entry["name"]
-        totp = get_totp(entry["secret"])
-        print(f"{Fore.MAGENTA}{name}{Fore.RESET}: {totp}")
+        for entry in entries:
+            name = entry["name"]
+            totp = get_totp(entry["secret"])
+            print(f"{Fore.MAGENTA}{name}{Fore.RESET}: {totp}")
 
     sys.exit(exit_code)
