@@ -1,7 +1,7 @@
 #!/bin/bash
 set -eu
 
-password="$(cat ~/documents/secure/files/borg-passwd.txt)"
+password="$(pass show computer/titus/borg-raw)"
 archive="$(date +%B-%d-%Y | tr '[:upper:]' '[:lower:]')"
 backup="/media/archive/backup/titus/borg"
 locations=(
