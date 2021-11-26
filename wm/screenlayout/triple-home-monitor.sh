@@ -1,7 +1,10 @@
 #!/bin/bash
 set -eu
 
-/usr/local/scripts/wm/new-wallpaper.sh
+(
+	sleep 10;
+	/usr/local/scripts/wm/new-wallpaper.sh
+) &
 
 exec xrandr \
 	--output VGA-0 \
