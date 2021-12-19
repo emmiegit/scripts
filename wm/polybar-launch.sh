@@ -4,6 +4,9 @@ set -eu
 # Stop old instances
 polybar-msg cmd quit
 
+# Load mpd password
+export MPD_PASSWORD="$(cat "$HOME/.mpd/password.txt")"
+
 # Launch bars
 for bar in "$@"; do
 	polybar "$bar" 2>&1 >"/tmp/$USER/polybar-$bar.log" &
