@@ -2,7 +2,9 @@
 set -eu
 
 # Stop old instances
-polybar-msg cmd quit
+if compgen -G /tmp/polybar_mqueue.*; then
+	polybar-msg cmd quit
+fi
 
 # Load mpd password
 export MPD_PASSWORD="$(cat "$HOME/.mpd/password.txt")"
