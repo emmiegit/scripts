@@ -1,5 +1,5 @@
 wm/lock.sh
+private/
 
 *.pyc
 .*.swp
-
