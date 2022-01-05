@@ -10,6 +10,7 @@ readonly blacklist=(
 	'Firefox'
 	'Firefox Developer Edition'
 	'firefoxdeveloperedition'
+	'Tor Browser'
 )
 
 for item in "${blacklist[@]}"; do
