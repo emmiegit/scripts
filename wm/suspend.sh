@@ -7,7 +7,6 @@ else
 	notify-send 'Not suspending, only locking...'
 fi
 
-/usr/local/scripts/wm/lock.sh
+/usr/local/scripts/wm/i3-lock.sh
 xset dpms force suspend
 $SUSPEND && systemctl suspend
-
