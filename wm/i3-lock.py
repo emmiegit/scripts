@@ -145,8 +145,7 @@ def merge_images(directory, monitors):
 
 
 def run_i3lock(image_path):
-    # subprocess.check_call(['i3lock', '-i', image_path])
-    subprocess.check_call(["/usr/bin/feh", image_path])
+    subprocess.check_call(["i3lock", "-i", image_path])
 
 
 if __name__ == "__main__":
@@ -167,13 +166,3 @@ if __name__ == "__main__":
             # Merge images and display i3lock
             image_path = merge_images(directory, monitors)
             run_i3lock(image_path)
-
-
-#   maim -u --geometry="${x_res}x${y_res}+0+0" /dev/stdout \
-#       | convert /dev/stdin -scale "$small_scale%" -scale "$large_scale%" /dev/stdout \
-#       | composite -gravity Center "$lockimage" /dev/stdin "$directory/left.png" &
-#   maim -u --geometry="${x_res}x${y_res}+${x_res}+0" /dev/stdout \
-#       | convert /dev/stdin -scale "$small_scale%" -scale "$large_scale%" /dev/stdout \
-#       | composite -gravity Center "$lockimage" /dev/stdin "$directory/right.png" &
-#   wait
-#   convert +append "$left" "$right" "$imagefile"
