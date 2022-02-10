@@ -2,6 +2,7 @@
 
 import os
 import re
+import shutil
 import subprocess
 import sys
 import tempfile
@@ -23,7 +24,7 @@ LOCK_IMAGE_PATH = "/usr/local/scripts/dat/lock.png"
 
 # Regular expression for monitor dimensions from xrandr
 MONITOR_DIMENSION_REGEX = re.compile(
-    r"^([\w\-]+) connected [^\d]*(\d+)x(\d+)\+(\d+)\+(\d+)"
+    r"^([\w\-]+) connected [^\d]*(\d+)x(\d+)\+(\d+)\+(\d+)",
 )
 
 # The pixelation effect. These two numbers need to multiply to 10,000.
@@ -119,7 +120,12 @@ def capture_and_blur(directory, monitor):
 def merge_images(directory, monitors):
     full_output = os.path.join(directory, "image.png")
 
+    # Screenshot full desktop as base image
+    # This is guaranteed to have the correct dimensions we need
+    subprocess.check_call(["maim", "-u", full_output])
+
     for monitor in monitors:
+        # Impose the partial image on the incomplete one
         image_input = monitor.filename(directory)
         subprocess.check_call(
             [
@@ -132,7 +138,7 @@ def merge_images(directory, monitors):
                 "over",
                 "-composite",
                 full_output,
-            ]
+            ],
         )
 
     return full_output
@@ -140,7 +146,7 @@ def merge_images(directory, monitors):
 
 def run_i3lock(image_path):
     # subprocess.check_call(['i3lock', '-i', image_path])
-    subprocess.check_call(["feh", image_path])
+    subprocess.check_call(["/usr/bin/feh", image_path])
 
 
 if __name__ == "__main__":
