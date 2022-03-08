@@ -23,6 +23,3 @@ else
 	empty_cache
 	sudo -k
 fi
-
-read -rp 'Finished. '
-
