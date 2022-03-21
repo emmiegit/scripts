@@ -28,12 +28,12 @@ def hash_rename(algorithm, path, errors):
         _, ext = os.path.splitext(path)
         new_path = os.path.join(directory, digest + ext)
 
-        if os.path.exists(new_path):
+        if path == new_path:
+            print(f"File {path} already renamed.")
+        elif os.path.exists(new_path):
             raise RuntimeError(
                 f"Destination path '{new_path}' (from '{path}') already exists",
             )
-        elif path == new_path:
-            print(f"File {path} already renamed.")
         else:
             print(f"Renaming {path} -> {new_path}")
             os.rename(path, new_path)
