@@ -32,9 +32,11 @@ def hash_rename(algorithm, path, errors):
             raise RuntimeError(
                 f"Destination path '{new_path}' (from '{path}') already exists",
             )
-
-        print(f"Renaming {path} -> {new_path}")
-        os.rename(path, new_path)
+        elif path == new_path:
+            print(f"File {path} already renamed.")
+        else:
+            print(f"Renaming {path} -> {new_path}")
+            os.rename(path, new_path)
     except Exception as error:
         errors.append(error)
 
