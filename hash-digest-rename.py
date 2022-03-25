@@ -18,7 +18,7 @@ def plural(number):
 
 def hash_rename(algorithm, path, errors):
     try:
-        if not os.path.isfile():
+        if not os.path.isfile(path):
             raise RuntimeError(f"Source path '{path}' not a regular file")
 
         with open(path, "rb") as file:
