@@ -3,12 +3,15 @@ set -eu
 
 XMODMAP_FILE='/usr/local/scripts/dat/xmodmap-vi-keyswap'
 FORCE=false
+RESET=false
 
 help_and_exit() {
 	printf 'Usage: %s [-f] [-mXMODMAP_FILE]\n' "$(basename "$0")"
 	printf 'Usage: %s --help\n\n'              "$(basename "$0")"
 	printf '  -f, --force\n'
 	printf '  	Run xmodmap, even if it appears that the keyswap is already set.\n'
+	printf '  -r, --reset\n'
+	printf '  	Reset to original keyboard layout.\n'
 	printf '  -m[FILE], --modmapfile=[FILE]\n'
 	printf '  	Specify the file to use to pass to "xmodmap". The default is to use "%s".\n' "$XMODMAP_FILE"
 	exit 0
@@ -49,8 +52,10 @@ keyswap() {
 
 for arg in "$@"; do
 	case "$arg" in
-		-f)             FORCE=false ;;
-		--force)        FORCE=false ;;
+		-f)             FORCE=true ;;
+		--force)        FORCE=true ;;
+		-r)             RESET=true ;;
+		--reset)        RESET=true ;;
 		-h)             help_and_exit ;;
 		--help)         help_and_exit ;;
 		-m*)            set_xmodmap_file "$arg" ;;
@@ -62,5 +67,8 @@ for arg in "$@"; do
 	esac
 done
 
-keyswap
-
+if "$RESET"; then
+	setxkbmap -layout us
+else
+	keyswap
+fi
