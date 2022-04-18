@@ -12,7 +12,7 @@ PULL_REPOS=false
 
 # Declare functions
 help_and_exit() {
-	echo 'Usage: %s [-p | --pull] [directory-to-check]\n' "$(basename "$0")"
+	echo 'Usage: %s [-f | --fetch] [-p | --pull] [directory-to-check]\n' "$(basename "$0")"
 	echo ' -p, --pull: Attempt to pull all up-to-date and behind repositories.\n'
 	echo ' -h, --help: Print this help message and quit.\n'
 	exit 0
@@ -101,20 +101,18 @@ main() {
 # Process arguments
 argno=1
 for arg in $@; do
-	if [ $argno -eq $# -a -d "$arg" ]; then
+	if [[ $argno -eq $# -a -d $arg ]]; then
 		cd "$arg"
 		break
 	fi
 
 	case "$arg" in
-		-F) FETCH_REPOS=true ;;
-		--fetch) FETCH_REPOS=true ;;
-		-p) PULL_REPOS=true ;;
-		--pull) PULL_REPOS=true ;;
-		-h) help_and_exit ;;
-		--help) help_and_exit ;;
+		-F|--fetch) fetch_repos=true ;;
+		-p|--pull) pull_repos=true ;;
+		-h|--help) help_and_exit ;;
 		*)
-			printf 'Unknown argument: %s. See --help for help.\n' "$arg"
+			echo "Unknown argument: $arg" >&2
+			echo "See --help for help" >&2
 			exit 1
 			;;
 	esac
