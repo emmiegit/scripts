@@ -20,22 +20,26 @@ help_and_exit() {
 }
 
 check_repo() {
+	local git_local
+	local git_remote
+	local git_base
+
 	if [[ -z $(git remote 2>/dev/null) ]]; then
-		echo "[${green}UP-TO-DATE${reset}]${changes} %s\n" "$repo"
+		echo "[${green}UP-TO-DATE${reset}]${changes} $repo"
 		return
 	fi
 
 	"$fetch_repos" && git fetch
 
-	local local="$(git rev-parse HEAD 2>/dev/null)"
-	local remote="$(git rev-parse @{u} 2>/dev/null)"
-	local base="$(git merge-base HEAD @{u} 2>/dev/null)"
+	git_local="$(git rev-parse 'HEAD' 2>/dev/null)"
+	git_remote="$(git rev-parse '@{u}' 2>/dev/null)"
+	git_base="$(git merge-base HEAD '@{u}' 2>/dev/null)"
 
-	if [[ $local == $remote ]]; then
+	if [[ "$git_local" == "$git_remote" ]]; then
 		echo "[${green}UP-TO-DATE${reset}]${changes} ${repo}"
-	elif [[ $local == $base ]]; then
+	elif [[ "$git_local" == "$git_base" ]]; then
 		echo "[${yellow}NEEDS PULL${reset}]${changes} ${repo}"
-	elif [[ $remote == $base ]]; then
+	elif [[ "$git_remote" == "$git_base" ]]; then
 		echo "[${yellow}NEEDS PUSH${reset}]${changes} ${repo}"
 		return 1
 	else
@@ -50,6 +54,7 @@ main() {
 	local return=0
 	local lines=()
 	local to_pull=()
+	local status
 
 	for dir in *; do
 		[[ ! -d $dir ]] && continue
@@ -61,7 +66,7 @@ main() {
 			continue
 		fi
 
-		local status="$(git status --porcelain)"
+		status="$(git status --porcelain)"
 		if echo "$status" | grep -q '^[^ ?]'; then
 			changes="${blue}!${reset}"
 			to_commit=true
@@ -72,11 +77,10 @@ main() {
 			changes=' '
 		fi
 
-		lines+=("$(check_repo)")
-		if [[ $? -gt 0 ]]; then
-			((return++))
-		else
+		if lines+=("$(check_repo)"); then
 			to_pull+=("$repo")
+		else
+			((return++))
 		fi
 
 		cd ..
@@ -101,8 +105,8 @@ main() {
 
 # Process arguments
 argno=1
-for arg in $@; do
-	if [[ $argno -eq $# -a -d $arg ]]; then
+for arg in "$@"; do
+	if [[ $argno -eq $# && -d $arg ]]; then
 		cd "$arg"
 		break
 	fi
