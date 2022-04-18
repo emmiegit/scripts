@@ -7,6 +7,7 @@ RED='\e[31m'
 BLUE='\e[34m'
 RESET='\e[0m'
 
+FETCH_REPOS=false
 PULL_REPOS=false
 
 # Declare functions
@@ -22,6 +23,8 @@ check_repo() {
 		printf "[${GREEN}UP-TO-DATE${RESET}]${CHANGES} %s\n" "$REPO"
 		return
 	fi
+
+	"$FETCH_REPOS" && git fetch
 
 	local LOCAL="$(git rev-parse HEAD 2>/dev/null)"
 	local REMOTE="$(git rev-parse @{u} 2>/dev/null)"
@@ -104,6 +107,8 @@ for arg in $@; do
 	fi
 
 	case "$arg" in
+		-F) FETCH_REPOS=true ;;
+		--fetch) FETCH_REPOS=true ;;
 		-p) PULL_REPOS=true ;;
 		--pull) PULL_REPOS=true ;;
 		-h) help_and_exit ;;
