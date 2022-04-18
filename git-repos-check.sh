@@ -67,10 +67,10 @@ main() {
 		fi
 
 		status="$(git status --porcelain)"
-		if echo "$status" | grep -q '^[^ ?]'; then
+		if grep -q '^[^ ?]' <<< "$status"; then
 			changes="${blue}!${reset}"
 			to_commit=true
-		elif echo "$status" | grep -q '^ .'; then
+		elif grep -q '^ .' <<< "$status"; then
 			changes="${red}!${reset}"
 			untracked=true
 		else
