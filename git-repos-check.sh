@@ -59,7 +59,7 @@ main() {
 	for dir in *; do
 		[[ ! -d $dir ]] && continue
 		cd "$dir"
-		repo="$(basename "$(pwd)")"
+		repo="${PWD##*/}"
 		if [[ ! -d .git ]]; then
 			lines+=("[NOT A REPO]  $repo")
 			cd ..
