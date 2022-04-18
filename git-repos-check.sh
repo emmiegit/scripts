@@ -50,7 +50,7 @@ check_repo() {
 
 main() {
 	local untracked=false
-	local to_commit=false
+	local staged=false
 	local return=0
 	local lines=()
 	local to_pull=()
@@ -69,7 +69,7 @@ main() {
 		git_status="$(git status --porcelain)"
 		if grep -q '^[^ ?]' <<< "$git_status"; then
 			changes="${blue}!${reset}"
-			to_commit=true
+			staged=true
 		elif grep -q '^ .' <<< "$git_status"; then
 			changes="${red}!${reset}"
 			untracked=true
@@ -87,7 +87,7 @@ main() {
 	done
 
 	"$untracked" && echo "'${red}!${reset}' means that untracked or unstaged files are present."
-	"$to_commit" && echo "'${blue}!${reset}' means that changes have been staged but not commited."
+	"$staged" && echo "'${blue}!${reset}' means that changes have been staged but not commited."
 	printf "%s\n" "${lines[@]}"
 
 	if "$pull_repos" && [[ ${#to_pull[@]} -gt 0 ]]; then
