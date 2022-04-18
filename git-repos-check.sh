@@ -54,7 +54,7 @@ main() {
 	local return=0
 	local lines=()
 	local to_pull=()
-	local status
+	local git_status
 
 	for dir in *; do
 		[[ ! -d $dir ]] && continue
@@ -66,11 +66,11 @@ main() {
 			continue
 		fi
 
-		status="$(git status --porcelain)"
-		if grep -q '^[^ ?]' <<< "$status"; then
+		git_status="$(git status --porcelain)"
+		if grep -q '^[^ ?]' <<< "$git_status"; then
 			changes="${blue}!${reset}"
 			to_commit=true
-		elif grep -q '^ .' <<< "$status"; then
+		elif grep -q '^ .' <<< "$git_status"; then
 			changes="${red}!${reset}"
 			untracked=true
 		else
