@@ -148,6 +148,10 @@ def run_i3lock(image_path):
     subprocess.check_call(["i3lock", "-i", image_path])
 
 
+def turn_off_screen():
+    subprocess.check_call(["xset", "dpms", "force", "suspend"])
+
+
 if __name__ == "__main__":
     with lock_file(LOCK_FILE_PATH):
         with tempfile.TemporaryDirectory(prefix="lockscreen-") as directory:
@@ -166,3 +170,4 @@ if __name__ == "__main__":
             # Merge images and display i3lock
             image_path = merge_images(directory, monitors)
             run_i3lock(image_path)
+            turn_off_screen()
