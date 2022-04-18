@@ -25,7 +25,7 @@ check_repo() {
 	local git_base
 
 	if [[ -z $(git remote 2>/dev/null) ]]; then
-		echo "[${green}UP-TO-DATE${reset}]${changes} $repo"
+		echo -e "[${green}UP-TO-DATE${reset}]${changes} $repo\n"
 		return
 	fi
 
@@ -36,14 +36,14 @@ check_repo() {
 	git_base="$(git merge-base HEAD '@{u}' 2>/dev/null)"
 
 	if [[ "$git_local" == "$git_remote" ]]; then
-		echo "[${green}UP-TO-DATE${reset}]${changes} ${repo}"
+		echo -e "[${green}UP-TO-DATE${reset}]${changes} ${repo}"
 	elif [[ "$git_local" == "$git_base" ]]; then
-		echo "[${yellow}NEEDS PULL${reset}]${changes} ${repo}"
+		echo -e "[${yellow}NEEDS PULL${reset}]${changes} ${repo}"
 	elif [[ "$git_remote" == "$git_base" ]]; then
-		echo "[${yellow}NEEDS PUSH${reset}]${changes} ${repo}"
+		echo -e "[${yellow}NEEDS PUSH${reset}]${changes} ${repo}"
 		return 1
 	else
-		echo "[${bold_red}DIVERGED${reset}]${changes}   ${repo}"
+		echo -e "[${bold_red}DIVERGED${reset}]${changes}   ${repo}"
 		return 1
 	fi
 }
@@ -86,8 +86,8 @@ main() {
 		cd ..
 	done
 
-	"$untracked" && echo "'${red}!${reset}' means that untracked or unstaged files are present."
-	"$staged" && echo "'${blue}!${reset}' means that changes have been staged but not commited."
+	"$untracked" && echo -e "'${red}!${reset}' means that untracked or unstaged files are present."
+	"$staged" && echo -e "'${blue}!${reset}' means that changes have been staged but not commited."
 	printf "%s\n" "${lines[@]}"
 
 	if "$pull_repos" && [[ ${#to_pull[@]} -gt 0 ]]; then
