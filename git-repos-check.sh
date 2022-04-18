@@ -1,5 +1,5 @@
 #!/bin/bash
-set -eu
+set -u
 
 readonly green='\e[32m'
 readonly yellow='\e[33;1m'
