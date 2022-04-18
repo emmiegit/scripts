@@ -1,101 +1,102 @@
 #!/bin/bash
+set -eu
 
-GREEN='\e[32m'
-YELLOW='\e[33;1m'
-BOLD_RED='\e[31;1m'
-RED='\e[31m'
-BLUE='\e[34m'
-RESET='\e[0m'
+readonly green='\e[32m'
+readonly yellow='\e[33;1m'
+readonly bold_red='\e[31;1m'
+readonly red='\e[31m'
+readonly blue='\e[34m'
+readonly reset='\e[0m'
 
-FETCH_REPOS=false
-PULL_REPOS=false
+fetch_repos=false
+pull_repos=false
 
 # Declare functions
 help_and_exit() {
-	echo 'Usage: %s [-f | --fetch] [-p | --pull] [directory-to-check]\n' "$(basename "$0")"
-	echo ' -p, --pull: Attempt to pull all up-to-date and behind repositories.\n'
-	echo ' -h, --help: Print this help message and quit.\n'
+	echo "Usage: ${0##*/} [-f | --fetch] [-p | --pull] [directory-to-check]"
+	echo ' -p, --pull: Attempt to pull all up-to-date and behind repositories.'
+	echo ' -h, --help: Print this help message and quit.'
 	exit 0
 }
 
 check_repo() {
 	if [[ -z $(git remote 2>/dev/null) ]]; then
-		printf "[${GREEN}UP-TO-DATE${RESET}]${CHANGES} %s\n" "$REPO"
+		echo "[${green}UP-TO-DATE${reset}]${changes} %s\n" "$repo"
 		return
 	fi
 
-	"$FETCH_REPOS" && git fetch
+	"$fetch_repos" && git fetch
 
-	local LOCAL="$(git rev-parse HEAD 2>/dev/null)"
-	local REMOTE="$(git rev-parse @{u} 2>/dev/null)"
-	local BASE="$(git merge-base HEAD @{u} 2>/dev/null)"
+	local local="$(git rev-parse HEAD 2>/dev/null)"
+	local remote="$(git rev-parse @{u} 2>/dev/null)"
+	local base="$(git merge-base HEAD @{u} 2>/dev/null)"
 
-	if [[ $LOCAL == $REMOTE ]]; then
-		printf "[${GREEN}UP-TO-DATE${RESET}]${CHANGES} %s\n" "$REPO"
-	elif [[ $LOCAL == $BASE ]]; then
-		printf "[${YELLOW}NEEDS PULL${RESET}]${CHANGES} %s\n" "$REPO"
-	elif [[ $REMOTE == $BASE ]]; then
-		printf "[${YELLOW}NEEDS PUSH${RESET}]${CHANGES} %s\n" "$REPO"
+	if [[ $local == $remote ]]; then
+		echo "[${green}UP-TO-DATE${reset}]${changes} ${repo}"
+	elif [[ $local == $base ]]; then
+		echo "[${yellow}NEEDS PULL${reset}]${changes} ${repo}"
+	elif [[ $remote == $base ]]; then
+		echo "[${yellow}NEEDS PUSH${reset}]${changes} ${repo}"
 		return 1
 	else
-		printf "[${BOLD_RED}DIVERGED${RESET}]${CHANGES}   %s\n" "$REPO"
+		echo "[${bold_red}DIVERGED${reset}]${changes}   ${repo}"
 		return 1
 	fi
 }
 
 main() {
-	local UNTRACKED=false
-	local TO_COMMIT=false
-	local RET=0
+	local untracked=false
+	local to_commit=false
+	local return=0
 	local lines=()
 	local to_pull=()
 
 	for dir in *; do
 		[[ ! -d $dir ]] && continue
 		cd "$dir"
-		REPO="$(basename "$(pwd)")"
+		repo="$(basename "$(pwd)")"
 		if [[ ! -d .git ]]; then
-			lines+=("[NOT A REPO]  $REPO")
+			lines+=("[NOT A REPO]  $repo")
 			cd ..
 			continue
 		fi
 
 		local status="$(git status --porcelain)"
 		if echo "$status" | grep -q '^[^ ?]'; then
-			CHANGES="${BLUE}!${RESET}"
-			TO_COMMIT=true
+			changes="${blue}!${reset}"
+			to_commit=true
 		elif echo "$status" | grep -q '^ .'; then
-			CHANGES="${RED}!${RESET}"
-			UNTRACKED=true
+			changes="${red}!${reset}"
+			untracked=true
 		else
-			CHANGES=' '
+			changes=' '
 		fi
 
 		lines+=("$(check_repo)")
-		if [ $? -gt 0 ]; then
-			((RET++))
+		if [[ $? -gt 0 ]]; then
+			((return++))
 		else
-			to_pull+=("$REPO")
+			to_pull+=("$repo")
 		fi
 
 		cd ..
 	done
 
-	$UNTRACKED && printf "'${RED}!${RESET}' means that untracked or unstaged files are present.\n"
-	$TO_COMMIT && printf "'${BLUE}!${RESET}' means that changes have been staged but not commited.\n"
+	"$untracked" && echo "'${red}!${reset}' means that untracked or unstaged files are present."
+	"$to_commit" && echo "'${blue}!${reset}' means that changes have been staged but not commited."
 	printf "%s\n" "${lines[@]}"
 
-	if $PULL_REPOS && [ ${#to_pull[@]} -gt 0 ]; then
+	if "$pull_repos" && [[ ${#to_pull[@]} -gt 0 ]]; then
 		for repo in "${to_pull[@]}"; do
 			cd "$repo"
-			printf 'Pulling %s...\n' "$repo"
+			echo "Pulling $repo..."
 			git pull
 			git submodule update --recursive
 			cd ..
 		done
 	fi
 
-	return $RET
+	return "$return"
 }
 
 # Process arguments
@@ -121,4 +122,3 @@ done
 
 # Run program
 main
-
