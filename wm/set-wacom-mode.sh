@@ -29,7 +29,7 @@ for arg in "$@"; do
 done
 
 function notify() {
-	if ! "$quiet"; then
+	if [[ $# -gt 0 ]] && ! "$quiet"; then
 		notify-send "$@"
 	fi
 }
@@ -79,4 +79,4 @@ function main() {
 	esac
 }
 
-notify-send "$(main 2>&1)"
+notify "$(main 2>&1)"
