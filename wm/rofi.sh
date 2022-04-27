@@ -1,5 +1,6 @@
 #!/bin/sh
-exec rofi -show run -modi run \
+set -eu
+exec rofi -show "$1" -modi "$1" \
 	-font 'mono 12' -columns 3 \
 	-disable-history \
 	-color-window '#222222, #222222, #b1b4b3' \
