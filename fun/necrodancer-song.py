@@ -98,4 +98,28 @@ SONGS = [
 ]
 
 if __name__ == "__main__":
-    pass
+    results = SONGS
+
+    if len(sys.argv) < 2:
+        print(f"Usage: {sys.argv[0]} <search-term...>")
+        sys.exit(1)
+
+    for term in sys.argv[1:]:
+        # Special handling: if it's only an integer, then search for this index directly
+        if term.isdecimal():
+            number = int(term)
+            term_filter = lambda song: song.number == number
+        else:
+            term = term.casefold()
+            term_filter = lambda song: term in str(song).casefold()
+
+        results = filter(term_filter, results)
+
+    # Finished filtering, print results
+    results = list(results)
+
+    if results:
+        for song in results:
+            print(song)
+    else:
+        print("No results")
