@@ -100,10 +100,6 @@ SONGS = [
 if __name__ == "__main__":
     results = SONGS
 
-    if len(sys.argv) < 2:
-        print(f"Usage: {sys.argv[0]} <search-term...>")
-        sys.exit(1)
-
     for term in sys.argv[1:]:
         # Special handling:
         # * If it begins with "-", then negate the condition
@@ -138,8 +134,6 @@ if __name__ == "__main__":
         results = [song for song in results if flip(term_filter(song))]
 
     # Finished filtering, print results
-    results = list(results)
-
     if results:
         for song in results:
             print(song)
