@@ -15,6 +15,11 @@ class Location:
     floor: int
     variant: Optional[str] = None
 
+    def __iter__(self):
+        yield f"{self.zone}-{self.floor}"
+
+        if self.variant is not None:
+            yield self.variant
 
 @dataclass
 class Song:
@@ -23,6 +28,21 @@ class Song:
     location: Union[str, Location]
     shopkeeper: bool = False  # Song has shopkeeper singing
     feat: Optional[str] = None  # "Featuring"
+
+    def __iter__(self):
+        yield self.number
+        yield self.name
+
+        if isinstance(self.location, Location):
+            yield from self.location
+        else:
+            yield self.location
+
+        if self.shopkeeper:
+            yield "Shopkeeper"
+
+        if self.variant is not None:
+            yield self.variant
 
 
 SONGS = [
