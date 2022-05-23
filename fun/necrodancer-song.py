@@ -26,8 +26,7 @@ class Song:
 
 
 SONGS = [
-    # Can't prefix with zero because octal
-    Song(0, "Dead End", "Credits"),
+    Song(0, "Dead End", "Credits"),  # Can't prefix with zero because octal
     Song(1, "Tombtorial", "Tutorial"),
     Song(2, "Rhythmortis", "Lobby"),
     Song(3, "Watch Your Step", "Training"),
