@@ -4,10 +4,12 @@
 Helps finding song numbers for Crypt of the NecroDancer songs.
 """
 
+import re
 import sys
 from dataclasses import dataclass
 from typing import Optional, Union
 
+LOCATION_REGEX = re.compile(r"([0-9]+)-([0-9]+)")
 
 @dataclass
 class Location:
@@ -103,8 +105,16 @@ if __name__ == "__main__":
         sys.exit(1)
 
     for term in sys.argv[1:]:
-        # Special handling: if it's only an integer, then search for this index directly
-        if term.isdecimal():
+        # Special handling:
+        # * If it's only an integer, then search for this index directly
+        # * If it's a pair of integers, then search for that location
+
+        match = LOCATION_REGEX.fullmatch(term)
+        if match is not None:
+            zone = int(match[1])
+            floor = int(match[2])
+            term_filter = lambda song: song.zone == zone and song.floor == floor
+        elif term.isdecimal():
             number = int(term)
             term_filter = lambda song: song.number == number
         else:
