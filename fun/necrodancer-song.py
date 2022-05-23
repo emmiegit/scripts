@@ -15,11 +15,13 @@ class Location:
     floor: int
     variant: Optional[str] = None
 
-    def __iter__(self):
-        yield f"{self.zone}-{self.floor}"
+    def __str__(self):
+        display = f"{self.zone}-{self.floor}"
 
         if self.variant is not None:
-            yield self.variant
+            display += f" {self.variant}"
+
+        return display
 
 @dataclass
 class Song:
@@ -29,21 +31,16 @@ class Song:
     shopkeeper: bool = False  # Song has shopkeeper singing
     feat: Optional[str] = None  # "Featuring"
 
-    def __iter__(self):
-        yield self.number
-        yield self.name
-
-        if isinstance(self.location, Location):
-            yield from self.location
-        else:
-            yield self.location
+    def __str__(self):
+        parts = [f"{self.number:02}. {self.name} ({self.location})"]
 
         if self.shopkeeper:
-            yield "Shopkeeper"
+            parts.append("with Shopkeeper")
 
-        if self.variant is not None:
-            yield self.variant
+        if self.feat is not None:
+            parts.append(f"feat. {self.feat}")
 
+        return ", ".join(parts)
 
 SONGS = [
     Song(0, "Dead End", "Credits"),  # Can't prefix with zero because octal
