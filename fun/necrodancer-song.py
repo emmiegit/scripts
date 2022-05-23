@@ -128,7 +128,7 @@ if __name__ == "__main__":
             term = term.casefold()
             term_filter = lambda song: term in str(song).casefold()
 
-        results = filter(term_filter, results)
+        results = [song for song in results if flip(term_filter(song))]
 
     # Finished filtering, print results
     results = list(results)
