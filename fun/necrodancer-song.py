@@ -32,7 +32,8 @@ class Song:
     feat: Optional[str] = None  # "Featuring"
 
     def __str__(self):
-        parts = [f"{self.number:02}. {self.name} ({self.location})"]
+        display = f"{self.number:02}. {self.name} ({self.location})"
+        parts = []
 
         if self.shopkeeper:
             parts.append("with Shopkeeper")
@@ -40,7 +41,10 @@ class Song:
         if self.feat is not None:
             parts.append(f"feat. {self.feat}")
 
-        return ", ".join(parts)
+        if parts:
+            display += " " + ", ".join(parts)
+
+        return display
 
 SONGS = [
     Song(0, "Dead End", "Credits"),  # Can't prefix with zero because octal
