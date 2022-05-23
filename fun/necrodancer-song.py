@@ -32,17 +32,11 @@ class Song:
     feat: Optional[str] = None  # "Featuring"
 
     def __str__(self):
-        display = f"{self.number:02}. {self.name} ({self.location})"
-        parts = []
-
-        if self.shopkeeper:
-            parts.append("with Shopkeeper")
+        extra = f" with Shopkeeper" if self.shopkeeper else ""
+        display = f"{self.number:02}. {self.name} ({self.location}{extra})"
 
         if self.feat is not None:
-            parts.append(f"feat. {self.feat}")
-
-        if parts:
-            display += " " + ", ".join(parts)
+           display += f", feat. {self.feat}"
 
         return display
 
