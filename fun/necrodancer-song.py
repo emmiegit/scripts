@@ -106,8 +106,15 @@ if __name__ == "__main__":
 
     for term in sys.argv[1:]:
         # Special handling:
+        # * If it begins with "-", then negate the condition
         # * If it's only an integer, then search for this index directly
         # * If it's a pair of integers, then search for that location
+
+        if term.startswith("-"):
+            term = term[1:]
+            flip = lambda x: not x
+        else:
+            flip = lambda x: x
 
         match = LOCATION_REGEX.fullmatch(term)
         if match is not None:
