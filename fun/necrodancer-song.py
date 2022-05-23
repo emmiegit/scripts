@@ -113,7 +113,14 @@ if __name__ == "__main__":
         if match is not None:
             zone = int(match[1])
             floor = int(match[2])
-            term_filter = lambda song: song.zone == zone and song.floor == floor
+
+            def zone_floor_filter(song):
+                if not isinstance(song.location, Location):
+                    return False
+
+                return song.location.zone == zone and song.location.floor == floor
+
+            term_filter = zone_floor_filter
         elif term.isdecimal():
             number = int(term)
             term_filter = lambda song: song.number == number
