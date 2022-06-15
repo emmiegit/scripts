@@ -34,8 +34,9 @@ def hash_rename(algorithm, path, errors):
         if path == new_path:
             print(f"File {path} already renamed.")
         elif os.path.exists(new_path):
+            os.remove(path)
             raise RuntimeError(
-                f"Destination path '{new_path}' (from '{path}') already exists",
+                f"Destination path '{new_path}' (from '{path}') already exists, deleting",
             )
         else:
             print(f"Renaming {path} -> {new_path}")
