@@ -52,7 +52,7 @@ if __name__ == "__main__":
     algorithm = normalize_algorithm(sys.argv[1])
     paths = sys.argv[2:]
 
-    print(f"Hashing {len(paths)} files{plural(len(paths))} with {algorithm}")
+    print(f"Hashing {len(paths)} file{plural(len(paths))} with {algorithm}")
     errors = []
 
     for path in paths:
