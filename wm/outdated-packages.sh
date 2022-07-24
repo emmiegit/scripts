@@ -1,10 +1,10 @@
-#!/bin/sh
+#!/bin/bash
+set -eu
 
-packages="$(checkupdates | wc -l)"
+packages="$(pacman -Qu | wc -l)"
+arch_linux_icon='' # siji font
 
 case "$packages" in
-	0) echo "Up-to-date" ;;
-	1) echo "1 package" ;;
-	*) echo "$packages packages" ;;
+	0) echo ;;
+	*) echo "$arch_linux_icon $packages" ;;
 esac
-
