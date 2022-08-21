@@ -13,4 +13,4 @@ exec rofi -show "$1" -modi "$1" \
 	-color-normal '#222222, #b1b4b3, #222222, #005577, #b1b4b3' \
 	-color-active '#222222, #b1b4b3, #222222, #007763, #b1b4b3' \
 	-color-urgent '#222222, #b1b4b3, #222222, #77003d, #b1b4b3' \
-	-kb-row-select 'Tab' -kb-row-tab ''
+	-kb-row-tab ''
