@@ -1,5 +1,11 @@
 #!/bin/sh
 set -eu
+
+if [[ $# -ne 1 ]]; then
+	echo "Usage: $0 [mode]" >&2
+	exit 1
+fi
+
 exec rofi -show "$1" -modi "$1" \
 	-font 'mono 12' -columns 3 \
 	-disable-history \
