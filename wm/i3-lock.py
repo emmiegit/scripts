@@ -152,6 +152,10 @@ def turn_off_screen():
     subprocess.check_call(["xset", "dpms", "force", "suspend"])
 
 
+def i3lock_running():
+    ...
+
+
 def perform_lock():
     with lock_file(LOCK_FILE_PATH):
         with tempfile.TemporaryDirectory(prefix="lockscreen-") as directory:
@@ -174,4 +178,5 @@ def perform_lock():
 
 
 if __name__ == "__main__":
-    perform_lock()
+    if not i3lock_running():
+        perform_lock()
