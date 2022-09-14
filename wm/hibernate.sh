@@ -7,6 +7,6 @@ else
 	notify-send 'Not hibernating, only locking...'
 fi
 
-/usr/local/scripts/wm/lock.sh
+/usr/local/scripts/wm/lock
 $HIBERNATE && systemctl hibernate
 

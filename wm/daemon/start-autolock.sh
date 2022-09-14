@@ -15,7 +15,7 @@ elif [[ ! -f /usr/local/scripts/dat/autolock_delay ]]; then
 	exit 1
 fi
 
-readonly locker='/usr/local/scripts/wm/lock.sh'
+readonly locker='/usr/local/scripts/wm/lock'
 readonly runkill=false
 readonly killer_cmd="$(cat '/usr/local/scripts/dat/autolock_killer_cmd')"
 readonly delay_time="$(cat '/usr/local/scripts/dat/autolock_delay')"
