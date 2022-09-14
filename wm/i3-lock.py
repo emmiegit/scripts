@@ -8,6 +8,8 @@ import sys
 import tempfile
 from contextlib import contextmanager
 
+import psutil
+
 """
 Provide a blurred screenshot for i3lock.
 
@@ -153,7 +155,10 @@ def turn_off_screen():
 
 
 def i3lock_running():
-    ...
+    for proc in psutil.process_iter():
+        if proc.name() == "i3lock":
+            return True
+    return False
 
 
 def perform_lock():
