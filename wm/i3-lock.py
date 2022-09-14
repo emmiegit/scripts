@@ -155,10 +155,7 @@ def turn_off_screen():
 
 
 def i3lock_running():
-    for proc in psutil.process_iter():
-        if proc.name() == "i3lock":
-            return True
-    return False
+    return any(proc for proc in psutil.process_iter() if proc.name() == "i3lock")
 
 
 def perform_lock():
