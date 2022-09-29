@@ -29,4 +29,6 @@ exec xrandr \
 		--pos 1920x0 \
 		--rotate normal \
 	--output HDMI-0 \
-		--same-as DP-5
+		--mode 1920x1080 \
+		--pos 5120x0 \
+		--rotate normal
