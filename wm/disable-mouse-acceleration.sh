@@ -1,5 +1,5 @@
 #!/bin/bash
-set -eux
+set -ux
 
 # Device-specific settings
 xinput --set-prop '2.4G Mouse' 'libinput Accel Speed' 0.25
