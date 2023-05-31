@@ -51,7 +51,7 @@ from pathlib import Path
 
 HOME_DIR = os.path.expanduser("~")
 
-AudioMetadata = namedtuple("AudioMetadata", ("artist", "album", "title"))
+AudioMetadata = namedtuple("AudioMetadata", ("artist", "album", "title", "track"))
 
 
 def default_music_dir():
@@ -79,26 +79,32 @@ def edit_tags(path, metadata):
 def process_title(basename):
     stem, _ = os.path.splitext(basename)
     # TODO
-    return stem
+    return stem, None
 
 
 def process_path(path):
     match path.parts:
         case (basename,):
+            title, track = process_title(basename)
             return AudioMetadata(
-                title=process_title(basename),
+                title=title,
+                track=track,
                 artist=None,
                 album=None,
             )
         case (artist, basename):
+            title, track = process_title(basename)
             return AudioMetadata(
-                title=process_title(basename),
+                title=title,
+                track=track,
                 artist=artist,
                 album=None,
             )
         case (artist, album, basename):
+            title, track = process_title(basename)
             return AudioMetadata(
-                title=process_title(basename),
+                title=title,
+                track=track,
                 artist=artist,
                 album=album,
             )
