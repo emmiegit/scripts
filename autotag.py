@@ -76,6 +76,12 @@ def is_subdir(parent, child):
     return parent in child.parents
 
 
+def get_relative_path(root, path):
+    root = os.path.realpath(root)
+    path = os.path.realpath(path)
+    return Path(os.path.relpath(path, root))
+
+
 def edit_tags(path, metadata):
     arguments = ["id3tag"]
 
@@ -131,18 +137,16 @@ def interpret_path(path):
                 album=album,
             )
         case _:
-            raise ValueError(f"File '{path}' too deep within music directory")
+            raise ValueError(f"Path '{path}' too deep")
 
 
 def process_file(full_path, args):
     root = args.music_dir
 
     if not is_subdir(root, full_path):
-        raise ValueError(
-            f"File '{full_path}' is not within the music directory '{root}'",
-        )
+        raise ValueError(f"Path '{full_path}' not within music directory")
 
-    path = Path(os.path.relpath(full_path, root))
+    path = get_relative_path(root, full_path)
     metadata = interpret_path(path)
     edit_tags(full_path, metadata)
 
@@ -163,6 +167,7 @@ if __name__ == "__main__":
         help="All files to process",
     )
     args = argparser.parse_args()
+    print(f"Using music path: {args.music_dir}")
 
     exit_status = 0
     for path in args.FILE:
