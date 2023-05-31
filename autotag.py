@@ -83,7 +83,7 @@ def get_relative_path(root, path):
 
 
 def edit_tags(path, metadata):
-    arguments = ["id3tag"]
+    arguments = ["id3tag", "--v1tag"]
 
     if metadata.artist is not None:
         arguments.append(f"--artist={metadata.artist}")
