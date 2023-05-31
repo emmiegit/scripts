@@ -75,10 +75,25 @@ def is_subdir(parent, child):
 
 
 def edit_tags(path, metadata):
-    ...
+    arguments = ["id3tag"]
+
+    if metadata.artist is not None:
+        arguments.append(f"--artist={metadata.artist}")
+
+    if metadata.album is not None:
+        arguments.append(f"--album={metadata.album}")
+
+    if metadata.title is not None:
+        arguments.append(f"--song={metadata.title}")
+
+    if metadata.track is not None:
+        arguments.append(f"--track={metadata.track}")
+
+    arguments.append(path)
+    subprocess.check_call(arguments)
 
 
-def process_title(basename):
+def interpret_title(basename):
     stem, _ = os.path.splitext(basename)
     match = NUMBERED_TRACK_REGEX.fullmatch(stem)
     if match is None:
@@ -87,10 +102,10 @@ def process_title(basename):
         return match[2], match[1]
 
 
-def process_path(path):
+def interpret_path(path):
     match path.parts:
         case (basename,):
-            title, track = process_title(basename)
+            title, track = interpret_title(basename)
             return AudioMetadata(
                 title=title,
                 track=track,
@@ -98,7 +113,7 @@ def process_path(path):
                 album=None,
             )
         case (artist, basename):
-            title, track = process_title(basename)
+            title, track = interpret_title(basename)
             return AudioMetadata(
                 title=title,
                 track=track,
@@ -106,7 +121,7 @@ def process_path(path):
                 album=None,
             )
         case (artist, album, basename):
-            title, track = process_title(basename)
+            title, track = interpret_title(basename)
             return AudioMetadata(
                 title=title,
                 track=track,
@@ -117,23 +132,15 @@ def process_path(path):
             raise ValueError(f"File '{path}' too deep within music directory")
 
 
-def process_file(path, args):
+def process_file(full_path, args):
     root = args.music_dir
 
-    # Check that it's a subdirectory of the music root
-    if not is_subdir(root, path):
-        raise ValueError(f"File '{path}' is not within the music directory '{root}'")
+    if not is_subdir(root, full_path):
+        raise ValueError(f"File '{full_path}' is not within the music directory '{root}'")
 
-    # Get relative path from music root
-    path = Path(os.path.relpath(path, root))
-
-    # Determine naming based on depth
-    print(path.parts)
-    metadata = process_path(path)
-
-    # Edit file based on gathered metadata
-    print(metadata)
-    # TODO
+    path = Path(os.path.relpath(full_path, root))
+    metadata = interpret_path(path)
+    edit_tags(full_path, metadata)
 
 
 if __name__ == "__main__":
