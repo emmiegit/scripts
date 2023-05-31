@@ -46,9 +46,12 @@ import argparse
 import os
 import subprocess
 import sys
+from collections import namedtuple
 from pathlib import Path
 
 HOME_DIR = os.path.expanduser("~")
+
+AudioMetadata = namedtuple("AudioMetadata", ("artist", "album", "title"))
 
 
 def default_music_dir():
@@ -65,19 +68,61 @@ def default_music_dir():
     return os.path.expanduser("~/music")
 
 
-def edit_tags(path, *, artist=None, album=None, title=None):
+def is_subdir(parent, child):
+    return Path(parent) in Path(child).parents
+
+
+def edit_tags(path, metadata):
     ...
 
 
-def process_file(audio_path, args):
-    path = Path(audio_path)
-    root = Path(args.music_dir)
+def process_title(basename):
+    stem, _ = os.path.splitext(basename)
+    # TODO
+    return stem
+
+
+def process_path(path):
+    match path.parts:
+        case (basename,):
+            return AudioMetadata(
+                title=process_title(basename),
+                artist=None,
+                album=None,
+            )
+        case (artist, basename):
+            return AudioMetadata(
+                title=process_title(basename),
+                artist=artist,
+                album=None,
+            )
+        case (artist, album, basename):
+            return AudioMetadata(
+                title=process_title(basename),
+                artist=artist,
+                album=album,
+            )
+        case _:
+            raise ValueError(f"File '{path}' too deep within music directory")
+
+
+def process_file(path, args):
+    root = args.music_dir
 
     # Check that it's a subdirectory of the music root
-    if root not in path.parents:
+    if not is_subdir(root, path):
         raise ValueError(f"File '{path}' is not within the music directory '{root}'")
 
-    ...
+    # Get relative path from music root
+    path = Path(os.path.relpath(path, root))
+
+    # Determine naming based on depth
+    print(path.parts)
+    metadata = process_path(path)
+
+    # Edit file based on gathered metadata
+    print(metadata)
+    # TODO
 
 
 if __name__ == "__main__":
@@ -113,14 +158,13 @@ if __name__ == "__main__":
     )
     argparser.add_argument(
         "FILE",
-        dest="paths",
         nargs="+",
         help="All files to process",
     )
     args = argparser.parse_args()
 
     exit_status = 0
-    for path in args.paths:
+    for path in args.FILE:
         try:
             process_file(path, args)
         except Exception as error:
