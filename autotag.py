@@ -140,15 +140,15 @@ def interpret_path(path):
             raise ValueError(f"Path '{path}' too deep")
 
 
-def process_file(full_path, args):
+def process_file(orig_path, args):
     root = args.music_dir
 
-    if not is_subdir(root, full_path):
+    if not is_subdir(root, orig_path):
         raise ValueError(f"Path '{full_path}' not within music directory")
 
-    path = get_relative_path(root, full_path)
+    path = get_relative_path(root, orig_path)
     metadata = interpret_path(path)
-    edit_tags(full_path, metadata)
+    edit_tags(orig_path, metadata)
 
 
 if __name__ == "__main__":
