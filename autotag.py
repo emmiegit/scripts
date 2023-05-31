@@ -98,6 +98,7 @@ def edit_tags(path, metadata):
         arguments.append(f"--track={metadata.track}")
 
     arguments.append(path)
+    print(" ".join(arguments))
     subprocess.check_call(arguments)
 
 
