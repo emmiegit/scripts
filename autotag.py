@@ -71,7 +71,9 @@ def default_music_dir():
 
 
 def is_subdir(parent, child):
-    return Path(parent) in Path(child).parents
+    parent = Path(os.path.realpath(parent))
+    child = Path(os.path.realpath(child))
+    return parent in child.parents
 
 
 def edit_tags(path, metadata):
@@ -133,7 +135,6 @@ def interpret_path(path):
 
 
 def process_file(full_path, args):
-    full_path = os.path.abspath(full_path)
     root = args.music_dir
 
     if not is_subdir(root, full_path):
