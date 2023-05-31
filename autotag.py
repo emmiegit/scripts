@@ -156,27 +156,6 @@ if __name__ == "__main__":
         help="Override the directory to use as the music root",
     )
     argparser.add_argument(
-        "-a",
-        "--artist",
-        dest="artist",
-        default=None,
-        help="Override artist value for all files",
-    )
-    argparser.add_argument(
-        "-A",
-        "--album",
-        dest="album",
-        default=None,
-        help="Override album value for all files",
-    )
-    argparser.add_argument(
-        "-t",
-        "--title",
-        dest="title",
-        default=None,
-        help="Override title value for all files",
-    )
-    argparser.add_argument(
         "FILE",
         nargs="+",
         help="All files to process",
