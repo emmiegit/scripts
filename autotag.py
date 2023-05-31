@@ -145,7 +145,10 @@ def process_file(orig_path, args):
     root = args.music_dir
 
     if not is_subdir(root, orig_path):
-        raise ValueError(f"Path '{full_path}' not within music directory")
+        raise ValueError(f"Path '{orig_path}' not within music directory")
+
+    if not os.path.isfile(orig_path):
+        raise ValueError(f"Not regular file: {orig_path}")
 
     path = get_relative_path(root, orig_path)
     metadata = interpret_path(path)
