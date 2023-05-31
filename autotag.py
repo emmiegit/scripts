@@ -133,6 +133,7 @@ def interpret_path(path):
 
 
 def process_file(full_path, args):
+    full_path = os.path.abspath(full_path)
     root = args.music_dir
 
     if not is_subdir(root, full_path):
