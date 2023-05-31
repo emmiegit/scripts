@@ -44,12 +44,14 @@ However I don't want to parse it myself so I just call "xdg-user-dir MUSIC" to p
 
 import argparse
 import os
+import re
 import subprocess
 import sys
 from collections import namedtuple
 from pathlib import Path
 
 HOME_DIR = os.path.expanduser("~")
+NUMBERED_TRACK_REGEX = re.compile(r"(\d+)\. (.+)")
 
 AudioMetadata = namedtuple("AudioMetadata", ("artist", "album", "title", "track"))
 
@@ -78,8 +80,11 @@ def edit_tags(path, metadata):
 
 def process_title(basename):
     stem, _ = os.path.splitext(basename)
-    # TODO
-    return stem, None
+    match = NUMBERED_TRACK_REGEX.fullmatch(stem)
+    if match is None:
+        return stem, None
+    else:
+        return match[2], match[1]
 
 
 def process_path(path):
