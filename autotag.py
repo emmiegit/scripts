@@ -97,6 +97,7 @@ def edit_tags(path, metadata):
     if metadata.track is not None:
         arguments.append(f"--track={metadata.track}")
 
+    arguments.append("--")
     arguments.append(path)
     print(" ".join(arguments))
     subprocess.check_call(arguments)
