@@ -82,8 +82,8 @@ def get_relative_path(root, path):
     return Path(os.path.relpath(path, root))
 
 
-def edit_tags(path, metadata):
-    arguments = ["id3tag", "--v2tag"]
+def edit_tags(path, metadata, version=2):
+    arguments = ["id3tag", f"--v{version}tag"]
 
     if metadata.artist is not None:
         arguments.append(f"--artist={metadata.artist}")
@@ -153,7 +153,7 @@ def process_file(orig_path, args):
 
     path = get_relative_path(root, orig_path)
     metadata = interpret_path(path)
-    edit_tags(orig_path, metadata)
+    edit_tags(orig_path, metadata, args.version)
 
 
 if __name__ == "__main__":
@@ -165,6 +165,23 @@ if __name__ == "__main__":
         dest="music_dir",
         default=default_music_dir(),
         help="Override the directory to use as the music root",
+    )
+    argparser.add_argument(
+        "-1",
+        "--v1",
+        dest="version",
+        action="store_const",
+        const=1,
+        default=2,
+        help="Force use of version 1 for ID tagging",
+    )
+    argparser.add_argument(
+        "-2",
+        "--v2",
+        dest="version",
+        action="store_const",
+        const=2,
+        help="Force use of version 1 for ID tagging",
     )
     argparser.add_argument(
         "FILE",
