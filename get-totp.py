@@ -40,13 +40,13 @@ def get_totp_codes():
 
     return totp_codes
 
-def get_totp(code):
+def get_totp(entry):
     command = ["oathtool", "--base32", "--totp"]
-    if code.digits:
-        command.append(f"--digits={code.digits}")
-    if code.period:
-        command.append(f"--time-step-size={code.period}")
-    command.append(code.secret)
+    if entry.digits:
+        command.append(f"--digits={entry.digits}")
+    if entry.period:
+        command.append(f"--time-step-size={entry.period}")
+    command.append(entry.secret)
 
     raw_output = subprocess.check_output(command)
     return raw_output.decode("utf-8").strip()
@@ -60,6 +60,14 @@ def find_matching(totp_codes, app_regex):
 
     return matching
 
+def format_name(entry):
+    base = f"{Fore.MAGENTA}{entry.name}{Fore.RESET}"
+
+    if entry.account is None:
+        return base
+    else:
+        return f"{base} ({Fore.GREEN}{entry.account}{Fore.RESET})"
+
 if __name__ == "__main__":
     exit_code = 0
     colorama_init()
@@ -70,9 +78,9 @@ if __name__ == "__main__":
         print("List of all TOTP applications:")
         if not totp_codes:
             print("* (no entries found)")
-        for code in totp_codes:
-            totp = get_totp(code)
-            print(f"* {Fore.MAGENTA}{code.name}{Fore.RESET}: {totp}")
+        for entry in totp_codes:
+            totp = get_totp(entry)
+            print(f"* {format_name(entry)}: {totp}")
 
         sys.exit(0)
 
@@ -87,6 +95,6 @@ if __name__ == "__main__":
 
         for entry in entries:
             totp = get_totp(entry)
-            print(f"{Fore.MAGENTA}{entry.name}{Fore.RESET}: {totp}")
+            print(f"{format_name(entry)}: {totp}")
 
     sys.exit(exit_code)
