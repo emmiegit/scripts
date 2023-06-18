@@ -54,6 +54,7 @@ HOME_DIR = os.path.expanduser("~")
 NUMBERED_TRACK_REGEX = re.compile(r"(\d+)\. (.+)")
 
 AudioMetadata = namedtuple("AudioMetadata", ("artist", "album", "title", "track"))
+AudioMetadataOverrides = namedtuple("AudioMetadataOverrides", ("artist", "album", "title", "track", "comment", "description", "date", "genre"))
 
 
 def default_music_dir():
@@ -82,20 +83,40 @@ def get_relative_path(root, path):
     return Path(os.path.relpath(path, root))
 
 
-def edit_tags(path, metadata, version=2):
+def edit_tags(path, metadata, overrides, version=2):
     arguments = ["id3tag", f"--v{version}tag"]
 
-    if metadata.artist is not None:
-        arguments.append(f"--artist={metadata.artist}")
+    artist = overrides.artist or metadata.artist
+    if artist is not None:
+        arguments.append(f"--artist={artist}")
 
-    if metadata.album is not None:
-        arguments.append(f"--album={metadata.album}")
+    album = overrides.album or metadata.album
+    if album is not None:
+        arguments.append(f"--album={album}")
 
-    if metadata.title is not None:
-        arguments.append(f"--song={metadata.title}")
+    title = overrides.title or metadata.title
+    if title is not None:
+        arguments.append(f"--song={title}")
 
-    if metadata.track is not None:
-        arguments.append(f"--track={metadata.track}")
+    track = overrides.track or metadata.track
+    if track is not None:
+        arguments.append(f"--track={track}")
+
+    comment = overrides.comment
+    if comment is not None:
+        arguments.append(f"--comment={comment}")
+
+    description = overrides.description
+    if description is not None:
+        arguments.append(f"--desc={description}")
+
+    date = overrides.date
+    if date is not None:
+        arguments.append(f"--year={date}")
+
+    genre = overrides.genre
+    if genre is not None:
+        arguments.append(f"--genre={genre}")
 
     arguments.append("--")
     arguments.append(path)
@@ -151,9 +172,20 @@ def process_file(orig_path, args):
     if not os.path.isfile(orig_path):
         raise ValueError(f"Not regular file: {orig_path}")
 
+    overrides = AudioMetadataOverrides(
+        artist=args.artist_override,
+        album=args.album_override,
+        title=args.title_override,
+        track=args.track_override,
+        comment=args.comment_override,
+        description=args.description_override,
+        date=args.date_override,
+        genre=args.genre_override,
+    )
+
     path = get_relative_path(root, orig_path)
     metadata = interpret_path(path)
-    edit_tags(orig_path, metadata, args.version)
+    edit_tags(orig_path, metadata, overrides, args.version)
 
 
 if __name__ == "__main__":
@@ -182,6 +214,55 @@ if __name__ == "__main__":
         action="store_const",
         const=2,
         help="Force use of version 1 for ID tagging",
+    )
+    argparser.add_argument(
+        "-a",
+        "--artist",
+        dest="artist_override",
+        help="Override the artist value to write for all songs",
+    )
+    argparser.add_argument(
+        "-A",
+        "--album",
+        dest="album_override",
+        help="Override the album value to write for all songs",
+    )
+    argparser.add_argument(
+        "-t",
+        "--title",
+        dest="title_override",
+        help="Override the title value to write for all songs",
+    )
+    argparser.add_argument(
+        "-n",
+        "--track",
+        dest="track_override",
+        help="Override the track value to write for all songs",
+    )
+    argparser.add_argument(
+        "-c",
+        "--comment",
+        dest="comment_override",
+        help="Override the comment value to write for all songs",
+    )
+    argparser.add_argument(
+        "-C",
+        "--description",
+        dest="description_override",
+        help="Override the description value to write for all songs",
+    )
+    argparser.add_argument(
+        "-d",
+        "--date",
+        "--year",
+        dest="date_override",
+        help="Override the date value to write for all songs",
+    )
+    argparser.add_argument(
+        "-g",
+        "--genre",
+        dest="genre_override",
+        help="Override the genre value to write for all songs",
     )
     argparser.add_argument(
         "FILE",
