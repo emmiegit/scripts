@@ -43,5 +43,6 @@ if __name__ == "__main__":
     days_since = (datetime.now() - START_DAY).days
     percent = days_since / FULL_CORRUPTION  # between 0 and 1
     bar = make_bar(percent)
-    print(f"Corruption progress: {bar} {percent * 100:.1f}%")
-    copy_to_clipboard(bar)
+    output = f"Corruption progress: {bar} {percent * 100:.1f}%"
+    print(output)
+    copy_to_clipboard(output)
