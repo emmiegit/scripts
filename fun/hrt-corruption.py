@@ -12,13 +12,14 @@ FULL_CORRUPTION = 2 * 365
 
 def make_bar(percent):
     result = [None] * BAR_SIZE
-    piece_cost = BAR_SIZE / FULL_CORRUPTION
+    piece_cost = 1 / BAR_SIZE
     piece_choices = len(BAR_LEVELS) - 1
+    nudge = 0.0001  # Avoids rounding-down issues at 100%
 
     for i in range(BAR_SIZE):
         piece = min(percent, piece_cost)
         piece_weight = piece / piece_cost
-        bar_index = int(piece_weight * piece_choices)
+        bar_index = int(piece_weight * piece_choices + nudge)
         result[i] = BAR_LEVELS[bar_index]
         percent -= piece
 
@@ -28,5 +29,4 @@ if __name__ == "__main__":
     days_since = (datetime.now() - START_DAY).days
     percent = days_since / FULL_CORRUPTION  # between 0 and 1
     bar = make_bar(percent)
-    print(f"{bar} {percent * 100:.1f}% corrupted")
-
+    print(f"Corruption progress: {bar} {percent * 100:.1f}%")
