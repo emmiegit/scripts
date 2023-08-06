@@ -42,7 +42,7 @@ def process_files(temp_dir, dest="."):
                 print(f"{filename} -> {dest}")
 
                 sourcefile = os.path.join(temp_dir, path)
-                destfile = shutil.move(path, dest)
+                destfile = shutil.move(sourcefile, dest)
                 paths_to_tag.append(destfile)
             case _:
                 print(f"Cannot interpret filename: {filename}", file=sys.stderr)
