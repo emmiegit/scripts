@@ -23,6 +23,7 @@ def process_files(temp_dir, dest="."):
         if os.path.isfile(path):
             continue
 
+        sourcefile = os.path.join(temp_dir, path)
         filename, ext = os.path.splitext(path)
         parts = filename.split(" - ")
         match len(parts):
@@ -33,7 +34,6 @@ def process_files(temp_dir, dest="."):
                 os.makedirs(album_dir, exist_ok=True)
                 print(f"{filename} -> {album_dir}")
 
-                sourcefile = os.path.join(temp_dir, path)
                 destfile = os.path.join(album_dir, title + ext)
                 shutil.move(sourcefile, destfile)
                 paths_to_tag.append(destfile)
@@ -41,11 +41,12 @@ def process_files(temp_dir, dest="."):
                 # Single title song, like fusion collabs
                 print(f"{filename} -> {dest}")
 
-                sourcefile = os.path.join(temp_dir, path)
                 destfile = shutil.move(sourcefile, dest)
                 paths_to_tag.append(destfile)
             case _:
                 print(f"Cannot interpret filename: {filename}", file=sys.stderr)
+                shutil.move(sourcefile, dest)
+
 
     if AUTOTAGGER_PROGRAM is not None:
         command = [AUTOTAGGER_PROGRAM] + paths_to_tag
