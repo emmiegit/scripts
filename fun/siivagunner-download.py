@@ -23,16 +23,19 @@ def process_files(temp_dir, dest="."):
         if os.path.isfile(path):
             continue
 
-        filename, _ = os.path.splitext(path)
-        match filename.split(" - "):
-            case title, album:
+        filename, ext = os.path.splitext(path)
+        parts = filename.split(" - ")
+        match len(parts):
+            case 2:
                 # Move to album subdirectory
+                title, album = parts
                 album_dir = os.path.join(dest, album)
                 os.makedirs(album_dir, exist_ok=True)
                 print(f"{filename} -> {album_dir}")
-                destfile = shutil.move(path, album_dir)
+                destfile = os.path.join(album_dir, title + ext)
+                shutil.move(path, destfile)
                 paths_to_tag.append(destfile)
-            case title:
+            case 1:
                 # Single title song, like fusion collabs
                 print(f"{filename} -> {dest}")
                 destfile = shutil.move(path, dest)
