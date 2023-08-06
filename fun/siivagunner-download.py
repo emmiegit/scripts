@@ -32,12 +32,16 @@ def process_files(temp_dir, dest="."):
                 album_dir = os.path.join(dest, album)
                 os.makedirs(album_dir, exist_ok=True)
                 print(f"{filename} -> {album_dir}")
+
+                sourcefile = os.path.join(temp_dir, path)
                 destfile = os.path.join(album_dir, title + ext)
-                shutil.move(path, destfile)
+                shutil.move(sourcefile, destfile)
                 paths_to_tag.append(destfile)
             case 1:
                 # Single title song, like fusion collabs
                 print(f"{filename} -> {dest}")
+
+                sourcefile = os.path.join(temp_dir, path)
                 destfile = shutil.move(path, dest)
                 paths_to_tag.append(destfile)
             case _:
