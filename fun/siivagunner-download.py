@@ -7,7 +7,7 @@ import sys
 from tempfile import TemporaryDirectory
 
 YOUTUBE_DL_PROGRAM = "yt-dlp"
-AUTOTAGGER_PROGRAM = os.path.expanduser("~/scripts/autotag.py")
+AUTOTAGGER_PROGRAM = os.path.expanduser("~/git/scripts/autotag.py")
 
 
 def download_audio(directory, url):
