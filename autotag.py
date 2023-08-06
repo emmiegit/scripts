@@ -83,22 +83,34 @@ def get_relative_path(root, path):
     return Path(os.path.relpath(path, root))
 
 
+def get_override(metadata, overrides, attr):
+    primary = getattr(metadata, attr)
+    override = getattr(overrides, attr)
+
+    # If override is an empty string, then the caller
+    # explicitly wants this field excluded.
+    if override == "":
+        return None
+
+    return override or primary
+
+
 def edit_tags(path, metadata, overrides, version=2):
     arguments = ["id3tag", f"--v{version}tag"]
 
-    artist = overrides.artist or metadata.artist
+    artist = get_override(metadata, overrides, "artist")
     if artist is not None:
         arguments.append(f"--artist={artist}")
 
-    album = overrides.album or metadata.album
+    album = get_override(metadata, overrides, "album")
     if album is not None:
         arguments.append(f"--album={album}")
 
-    title = overrides.title or metadata.title
+    title = get_override(metadata, overrides, "title")
     if title is not None:
         arguments.append(f"--song={title}")
 
-    track = overrides.track or metadata.track
+    track = get_override(metadata, overrides, "track")
     if track is not None:
         arguments.append(f"--track={track}")
 
