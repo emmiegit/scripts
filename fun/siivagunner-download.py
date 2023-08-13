@@ -9,6 +9,21 @@ from tempfile import TemporaryDirectory
 YOUTUBE_DL_PROGRAM = "yt-dlp"
 AUTOTAGGER_PROGRAM = os.path.expanduser("~/git/scripts/autotag.py")
 
+UNMAP = {
+    "：": ":",
+    "＂": "\"",
+    # TODO |, \, ?
+}
+
+
+def unmap_windows_chars(path):
+    new_path = path
+
+    for part, sub in UNMAP.items():
+        new_path = path.replace(part, sub)
+
+    return new_path if new_path != path else None
+
 
 def download_audio(directory, url):
     output = os.path.join(directory, "%(title)s.%(ext)s")
@@ -22,6 +37,15 @@ def process_files(temp_dir, dest="."):
     for path in os.listdir(temp_dir):
         if os.path.isfile(path):
             continue
+
+        # Replace Windows-safe replacement characters, if present
+        new_path = unmap_windows_chars(path)
+        if new_path is not None:
+            old_sourcefile = os.path.join(temp_dir, path)
+            new_sourcefile = os.path.join(temp_dir, new_path)
+            os.rename(old_sourcefile, new_sourcefile)
+            print(f"{old_sourcefile} -> {new_sourcefile}")
+            path = new_path
 
         sourcefile = os.path.join(temp_dir, path)
         filename, ext = os.path.splitext(path)
