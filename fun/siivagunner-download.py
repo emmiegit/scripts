@@ -20,7 +20,7 @@ def unmap_windows_chars(path):
     new_path = path
 
     for part, sub in UNMAP.items():
-        new_path = path.replace(part, sub)
+        new_path = new_path.replace(part, sub)
 
     return new_path if new_path != path else None
 
