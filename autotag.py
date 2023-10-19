@@ -184,6 +184,9 @@ def process_file(orig_path, args):
     if not os.path.isfile(orig_path):
         raise ValueError(f"Not regular file: {orig_path}")
 
+    if os.path.islink(orig_path):
+        print(f"Warning! {orig_path} is a symlink.")
+
     overrides = AudioMetadataOverrides(
         artist=args.artist_override,
         album=args.album_override,
