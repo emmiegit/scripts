@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 detect_mpd() {
 	source "${0%/*}/mpc.sh"
@@ -42,4 +42,3 @@ elif detect_mpd; then
 else
 	printf '(unknown)'
 fi
-

@@ -1,9 +1,9 @@
-#!/bin/sh
+#!/bin/bash
 
 case "$(/usr/local/scripts/wm/media/detect-audio-player.sh)" in
 	mpd)
-		mpd_password="$(cat ~/documents/secure/files/mpd-passwd.txt)"
-		mpc -h "$mpd_password:localhost" -f '%title% by %artist%'
+		source "${0%/*}/mpc.sh"
+		mpc -f '%title% by %artist%'
 		;;
 	mocp)
 		mocp -Q '%song by %artist'

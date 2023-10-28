@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 case "$(/usr/local/scripts/wm/media/detect-audio-player.sh)" in
 	mpd) echo 'Not implemented yet'; false ;;
@@ -7,4 +7,3 @@ case "$(/usr/local/scripts/wm/media/detect-audio-player.sh)" in
 	vlc) dbus-send --session --dest=org.mpris.vlc /Player org.freedesktop.MediaPlayer.Stop ;;
 	*) false ;;
 esac
-
