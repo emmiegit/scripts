@@ -2,7 +2,7 @@
 set -eu
 
 if [[ $EUID != 0 ]]; then
-	exec sudo "$0" "$@"
+	exec sudo -E "$0" "$@"
 fi
 
 echodo() {
