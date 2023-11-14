@@ -1,14 +1,18 @@
-#!/bin/sh
+#!/bin/bash
 set -eu
+
+if [[ $EUID != 0 ]]; then
+	exec sudo "$0" "$@"
+fi
 
 echodo() {
 	echo "$@"
-	sudo "$@"
+	"$@"
 }
 
 cd /etc/pacman.d
 
-if [ ! -f mirrorlist.pacnew ]; then
+if [[ ! -f mirrorlist.pacnew ]]; then
 	echo 'No mirrorlist.pacnew!'
 	exit 1
 fi
@@ -21,7 +25,7 @@ echo 'Please uncomment any mirrors you would like to use:'
 sudoedit mirrorlist.bak
 
 echo 'Ranking mirrors...'
-sudo su -c 'rankmirrors mirrorlist.bak > mirrorlist'
+rankmirrors mirrorlist.bak > mirrorlist
 
 echo 'Updating git repo...'
-sudo su -c 'etckeeper commit "Update mirrorlist."'
+etckeeper commit 'Update mirrorlist.'
