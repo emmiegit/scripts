@@ -1,17 +1,13 @@
 #!/bin/bash
 set -eu
 
+if [[ $EUID != 0 ]]; then
+	exec sudo "$0" "$@"
+fi
+
 echodo() {
 	echo "$@"
-	sudo "$@"
-}
-
-rank_and_update() {
-	echo 'Ranking mirrors...'
-	rankmirrors mirrorlist.bak > mirrorlist
-
-	echo 'Updating git repo...'
-	etckeeper commit 'Update mirrorlist.'
+	"$@"
 }
 
 cd /etc/pacman.d
@@ -26,5 +22,10 @@ echodo mv -f mirrorlist mirrorlist.old
 echodo cp -f mirrorlist.pacnew mirrorlist.bak
 
 echo 'Please uncomment any mirrors you would like to use:'
-sudoedit mirrorlist.bak
-sudo rank_and_update
+"$EDITOR" mirrorlist.bak
+
+echo 'Ranking mirrors...'
+rankmirrors mirrorlist.bak > mirrorlist
+
+echo 'Updating git repo...'
+etckeeper commit 'Update mirrorlist.'
