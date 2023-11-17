@@ -27,7 +27,7 @@ def unmap_windows_chars(path):
 
 def download_audio(directory, url):
     output = os.path.join(directory, "%(title)s.%(ext)s")
-    command = [YOUTUBE_DL_PROGRAM, url, "-x", "-o", output]
+    command = [YOUTUBE_DL_PROGRAM, url, "--no-playlist", "-x", "-o", output]
     print(command)
     subprocess.check_output(command)
 
