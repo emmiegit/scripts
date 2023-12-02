@@ -1,7 +1,7 @@
 #!/bin/sh
 set -x
 
-readonly backup_dir="/media/${1:-extern}"
+readonly backup_dir="/media/${1:-banquet}"
 shift
 
 if [[ ! -d $backup_dir ]]; then
