@@ -2,7 +2,7 @@
 
 import pyperclip
 
-ZERO_WIDTH_SPACE = "​"
+ZERO_WIDTH_SPACE = "\u200b"
 
 if __name__ == "__main__":
     pyperclip.copy(ZERO_WIDTH_SPACE)
