@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     numbers = []
 
     def totals_and_reset():
@@ -16,7 +16,7 @@ if __name__ == '__main__':
 
     while True:
         try:
-            numbers.append(float(input('> ')))
+            numbers.append(float(input("> ")))
         except ValueError:
             totals_and_reset()
         except EOFError:
