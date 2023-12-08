@@ -1,6 +1,5 @@
 #!/bin/bash
 rm -fv \
-	"$HOME/incoming"/random-*.pdf \
 	/tmp/*.cdtor.[co] \
 	/tmp/error.dump.* \
 	/tmp/racerd_* \
