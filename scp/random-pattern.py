@@ -63,7 +63,7 @@ if __name__ == "__main__":
         action="store_const",
         const=ALPHANUMERIC_ALL,
         default=DIGITS,
-        help="Use uppercase alphanumeric as the set of characters",
+        help="Use all alphanumeric as the set of characters",
     )
     argparser.add_argument(
         "-c",
