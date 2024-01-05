@@ -5,8 +5,9 @@ set -eu
 /usr/local/scripts/wm/i3-lock.py
 xset dpms force suspend
 
-# Suspension
-systemctl suspend
-
-# Post-suspend recovery
-systemctl restart ibus.service
+# TODO suspend currently broken due to kernel update
+## Suspension
+#systemctl suspend
+#
+## Post-suspend recovery
+#systemctl restart ibus.service
