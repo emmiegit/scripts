@@ -36,7 +36,7 @@ usage_and_exit() {
 list_files() {
 	local files=()
 
-	for filename in *.txt; do
+	for filename in *.md; do
 		files+=("${filename%.*}")
 	done
 
@@ -56,11 +56,11 @@ case "$1" in
 		;;
 	edit)
 		check_args 2
-		"$VISUAL" "$2.txt"
+		"$VISUAL" "$2.md"
 		;;
 	new)
 		check_args 2
-		if [[ -f "$2.txt" ]]; then
+		if [[ -f "$2.md" ]]; then
 			echo "Note '$2' already exists!"
 			exit 1
 		else
@@ -69,7 +69,7 @@ case "$1" in
 		;;
 	show|view)
 		check_args 2
-		cat "$2.txt"
+		cat "$2.md"
 		;;
 	del|delete|rm|remove)
 		shift
