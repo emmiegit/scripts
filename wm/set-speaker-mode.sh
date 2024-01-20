@@ -2,7 +2,7 @@
 set -eu
 
 if [[ $# -eq 0 ]]; then
-	printf >&2 'Usage: %s (headphones | tv)\n' "$(basename "$0")"
+	printf >&2 'Usage: %s (headphones | tv)\n' "${0##*/}"
 	exit 1
 fi
 
