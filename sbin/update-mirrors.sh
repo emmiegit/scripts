@@ -23,6 +23,7 @@ echodo cp -f mirrorlist.pacnew mirrorlist.bak
 
 echo 'Please uncomment any mirrors you would like to use:'
 "$EDITOR" mirrorlist.bak
+echodo sed -i '/#Server/d' mirrorlist.bak
 
 echo 'Ranking mirrors...'
 rankmirrors mirrorlist.bak > mirrorlist
