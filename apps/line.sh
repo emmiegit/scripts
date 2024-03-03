@@ -6,7 +6,7 @@ export WINEHOME="$WINEPREFIX"
 cd "$WINEHOME/drive_c/users/$USER/AppData/Local/LINE/bin"
 
 case $1 in
-	exit|quit|kill)
+	exit|quit|kill|stop)
 		wineserver -k
 		exit 0
 		;;
