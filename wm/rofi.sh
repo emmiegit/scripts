@@ -6,11 +6,26 @@ if [[ $# -ne 1 ]]; then
 	exit 1
 fi
 
-exec rofi -show "$1" -modi "$1" \
-	-font 'mono 12' -columns 3 \
-	-disable-history \
-	-color-window '#222222, #222222, #b1b4b3' \
-	-color-normal '#222222, #b1b4b3, #222222, #005577, #b1b4b3' \
-	-color-active '#222222, #b1b4b3, #222222, #007763, #b1b4b3' \
-	-color-urgent '#222222, #b1b4b3, #222222, #77003d, #b1b4b3' \
-	-kb-row-tab ''
+case "$1" in
+	emoji|unicode)
+		exec rofimoji \
+			--files \
+				emoji \
+				math \
+				chess_symbols \
+				currency_symbols \
+				miscellaneous_symbols \
+				latin-1_supplement \
+				cjk_radicals_supplement \
+				cjk_japanese_kun \
+				cjk_japanese_on \
+			--hidden-descriptions \
+			--selector-args="-theme $HOME/.config/rofi/grid.rasi"
+		;;
+	run|window)
+		exec rofi -show combi -modi combi -combi-modes 'window,drun,run'
+		;;
+	*)
+		echo "Unknown mode: $1" >&2
+		;;
+esac
