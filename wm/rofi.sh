@@ -18,9 +18,7 @@ case "$1" in
 				latin-1_supplement \
 				cjk_radicals_supplement \
 				cjk_japanese_kun \
-				cjk_japanese_on \
-			--hidden-descriptions \
-			--selector-args="-theme $HOME/.config/rofi/grid.rasi"
+				cjk_japanese_on
 		;;
 	run|window)
 		exec rofi -show combi -modi combi -combi-modes 'window,drun,run'
