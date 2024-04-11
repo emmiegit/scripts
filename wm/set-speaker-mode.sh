@@ -9,8 +9,8 @@ fi
 mode="$1"
 quiet=false
 analog_sink='alsa_output.pci-0000_12_00.3.analog-stereo' # unused, former headphone_sink
-headphones_sink='alsa_output.usb-Focusrite_Scarlett_Solo_USB_Y799H6922E91A3-00.HiFi__hw_USB__sink'
-television_sink='alsa_output.pci-0000_0b_00.1.hdmi-stereo'
+headphones_sink='alsa_output.usb-Focusrite_Scarlett_Solo_USB_Y799H6922E91A3-00.3.HiFi__hw_USB__sink'
+television_sink='alsa_output.pci-0000_0b_00.1.3.hdmi-stereo'
 
 shift
 for arg in "$@"; do
