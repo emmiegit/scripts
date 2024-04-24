@@ -8,10 +8,28 @@ fi
 
 mode="$1"
 quiet=false
-analog_sink='alsa_output.pci-0000_12_00.3.analog-stereo' # unused, former headphone_sink
-headphones_sink='alsa_output.usb-Focusrite_Scarlett_Solo_USB_Y799H6922E91A3-00.3.HiFi__hw_USB__sink'
-television_sink='alsa_output.pci-0000_0b_00.1.3.hdmi-stereo'
 
+# Determine sink names
+headphones_sink=''
+television_sink=''
+
+while read -r sink; do
+	if [[ $sink = *hdmi* ]]; then
+		television_sink="$sink"
+	elif [[ $sink = *Scarlett* ]]; then
+		headphones_sink="$sink"
+	fi
+done < <(pactl list sinks | grep 'Name: ')
+
+if [[ -z $television_sink ]]; then
+	notify 'No television sink found.'
+	exit 1
+elif [[ -z $headphones_sink ]]; then
+	notify 'No headphone sink found.'
+	exit 1
+fi
+
+# Parse arguments
 shift
 for arg in "$@"; do
 	case "$arg" in
@@ -39,11 +57,11 @@ function set_sink() {
 
 case "$mode" in
 	headphones|hp)
-		notify 'Setting computer to headphone mode.'
+		notify "Setting computer to headphone mode. ($headphones_sink)"
 		set_sink "$headphones_sink"
 		;;
 	television|tv)
-		notify 'Setting computer to television mode.'
+		notify "Setting computer to television mode. ($television_sink)"
 		set_sink "$television_sink"
 		;;
 	*)
