@@ -19,7 +19,7 @@ while read -r sink; do
 	elif [[ $sink = *Scarlett* ]]; then
 		headphones_sink="$sink"
 	fi
-done < <(pactl list sinks | grep 'Name: ')
+done < <(pactl list sinks | grep 'Name: ' | awk '{print $2}')
 
 if [[ -z $television_sink ]]; then
 	notify 'No television sink found.'
@@ -47,7 +47,7 @@ done
 
 function notify() {
 	if [[ $# -gt 0 ]] && ! "$quiet"; then
-		notify-send "$@"
+		notify-send 'Speaker change' "$@"
 	fi
 }
 
@@ -57,11 +57,11 @@ function set_sink() {
 
 case "$mode" in
 	headphones|hp)
-		notify "Setting computer to headphone mode. ($headphones_sink)"
+		notify 'Setting computer to headphone mode'
 		set_sink "$headphones_sink"
 		;;
 	television|tv)
-		notify "Setting computer to television mode. ($television_sink)"
+		notify 'Setting computer to television mode'
 		set_sink "$television_sink"
 		;;
 	*)
