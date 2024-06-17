@@ -73,6 +73,7 @@ def process_files(temp_dir, dest="."):
 
 
     if AUTOTAGGER_PROGRAM is not None:
+        assert paths_to_tag, "No songs to tag"
         command = [AUTOTAGGER_PROGRAM] + paths_to_tag
         print(command)
         subprocess.check_output(command)
