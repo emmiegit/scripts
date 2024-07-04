@@ -13,7 +13,7 @@ if compgen -G /tmp/polybar_mqueue.*; then
 fi
 
 # Load mpd password
-export MPD_PASSWORD="$(cat "$HOME/.mpd/password.txt")"
+export MPD_PASSWORD="$(cat "$HOME/.mpd/password")"
 
 # Launch bars
 for bar in "$@"; do
