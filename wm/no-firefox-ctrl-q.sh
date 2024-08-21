@@ -10,6 +10,7 @@ readonly blacklist=(
 	'Firefox'
 	'Firefox Developer Edition'
 	'firefoxdeveloperedition'
+	'firefox-developer-edition'
 	'Tor Browser'
 )
 
