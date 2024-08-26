@@ -1,0 +1,1 @@
+screenshot/all-maim.sh
