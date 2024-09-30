@@ -1,9 +1,9 @@
 #!/bin/bash
 set -eu
 
-password="$(pass show computer/titus/borg-raw)"
+source "${0%/*}/borg-source.sh"
+
 archive="$(date +%B-%d-%Y | tr '[:upper:]' '[:lower:]')"
-backup="/media/archive/backup/titus/borg"
 locations=(
 	"$HOME"
 	"/etc"
@@ -12,7 +12,6 @@ locations=(
 	"/media/archive/git"
 )
 
-export BORG_PASSPHRASE="$password"
 exec \
 	ionice -c 3 \
 	nice -n 10 \
