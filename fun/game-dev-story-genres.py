@@ -10,6 +10,8 @@ Data sourced from https://gamefaqs.gamespot.com/xbox-series-x/424246-game-dev-st
 import sys
 from enum import Enum, unique
 
+MAXIMUM_TIER = 1
+
 
 @unique
 class Genre(Enum):
@@ -739,6 +741,9 @@ if __name__ == "__main__":
 
     combinations = filter_combination_tiers(game_types, genres)
     for i, tier in enumerate(combinations):
+        if i > MAXIMUM_TIER:
+            break
+
         if tier:
             tier_name = COMBINATION_TIER_NAMES[i]
             print(tier_name)
