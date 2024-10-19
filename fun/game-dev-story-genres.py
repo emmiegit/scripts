@@ -166,7 +166,6 @@ COMBINATIONS = [
         (GameType.OGRE, Genre.ACTION),
         (GameType.DETECTIVE, Genre.ADVENTURE),
         (GameType.DETECTIVE, Genre.AUDIO_NOVEL),
-        (GameType.MYSTERY, Genre.SHOOTER),
         (GameType.COWBOY, Genre.ADVENTURE),
         (GameType.COWBOY, Genre.AUDIO_NOVEL),
         (GameType.HORSESHOES, Genre.SHOOTER),
