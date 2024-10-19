@@ -713,11 +713,13 @@ def filter_combination_tiers(game_types, genres):
 def append_type_or_genre(value, game_types, genres):
     try:
         genres.append(Genre(name))
+        return
     except ValueError:
         pass
 
     try:
         game_types.append(GameType(name))
+        return
     except ValueError:
         pass
 
