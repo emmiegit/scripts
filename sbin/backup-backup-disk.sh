@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 set -x
 
 readonly backup_dir="/media/${1:-banquet}"
