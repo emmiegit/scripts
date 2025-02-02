@@ -91,9 +91,10 @@ def upload_data(source, destination):
     subprocess.check_call(command)
 
 
-def cleanup_data(directory):
-    print(f"Finished upload, deleting ({directory})")
-    shutil.rmtree(download_path)
+def cleanup_data(torrent_file, directory):
+    print(f"Finished upload, deleting ({torrent_file} / {directory})")
+    os.remove(torrent_file)  # since we use *.torrent files to track status
+    shutil.rmtree(download_path)  # temporary storage before upload
 
 
 def transfer_torrents(torrent_date, torrent_files):
@@ -103,7 +104,7 @@ def transfer_torrents(torrent_date, torrent_files):
     for torrent_file in torrent_files:
         download_path = download_torrent(torrent_file)
         upload_data(download_path, destination)
-        cleanup_data(download_path)
+        cleanup_data(torrent_file, download_path)
 
 
 if __name__ == "__main__":
