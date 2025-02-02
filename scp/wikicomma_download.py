@@ -92,13 +92,13 @@ def upload_data(source, destination):
     run_command(command)
 
 
-def cleanup_data(torrent_file, directory):
+def cleanup_data(torrent_file, download_dir):
     print("Finished upload")
     print(f"Deleting {torrent_file}")
     os.remove(torrent_file)  # since we use *.torrent files to track status
 
     print(f"Deleting {download_path}")
-    shutil.rmtree(download_path)  # temporary storage before upload
+    shutil.rmtree(download_dir)  # temporary storage before upload
 
 
 def transfer_torrents(torrent_date, torrent_files):
