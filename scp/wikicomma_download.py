@@ -27,7 +27,7 @@ def run_command(command):
     subprocess.check_call(command)
 
 
-def download_torrent_files(torrent_date, url):
+def download_torrent_files(torrent_directory, url):
     r = requests.get(args.url)
     soup = BeautifulSoup(r.text, features="html.parser")
     torrent_files = []
@@ -43,7 +43,7 @@ def download_torrent_files(torrent_date, url):
         filename = os.path.basename(href)
 
         r = requests.get(torrent_url, stream=True)
-        torrent_file = os.path.join(TORRENT_DIRECTORY, torrent_date, filename)
+        torrent_file = os.path.join(torrent_directory, filename)
         with open(torrent_file, "wb") as file:
             print(f"+ {filename}")
             for chunk in r.iter_content(chunk_size=512):
@@ -108,14 +108,15 @@ if __name__ == "__main__":
     argparser.add_argument("url")
     args = argparser.parse_args()
 
-    os.makedirs(TORRENT_DIRECTORY, exist_ok=True)
-    os.makedirs(DOWNLOADS_DIRECTORY, exist_ok=True)
-
     match = WIKICOMMA_URL_REGEX.fullmatch(args.url)
     if match is None:
         print("Warning: URL does not match known Wikicomma torrent path")
         sys.exit(1)
 
     torrent_date = match[1]
-    torrent_files = download_torrent_files(torrent_date, args.url)
+    torrent_directory = os.path.join(TORRENT_DIRECTORY, torrent_date)
+    os.makedirs(torrent_directory, exist_ok=True)
+    os.makedirs(DOWNLOADS_DIRECTORY, exist_ok=True)
+
+    torrent_files = download_torrent_files(torrent_directory, args.url)
     transfer_torrents(torrent_date, torrent_files)
