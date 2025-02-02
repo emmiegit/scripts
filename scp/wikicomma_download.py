@@ -134,11 +134,15 @@ if __name__ == "__main__":
     torrent_date = match[1]
     torrent_directory = os.path.join(TORRENT_DIRECTORY, torrent_date)
 
-    if args.fetch_torrents:
-        # Run the fetch-torrents action, then exit
-        os.makedirs(torrent_directory, exist_ok=True)
-        download_torrent_files(torrent_directory, args.url)
-    else:
-        # Otherwise, assuming torrent files exist, and then download/upload
-        os.makedirs(DOWNLOADS_DIRECTORY, exist_ok=True)
-        transfer_torrents(torrent_date, torrent_directory)
+    try:
+        if args.fetch_torrents:
+            # Run the fetch-torrents action, then exit
+            os.makedirs(torrent_directory, exist_ok=True)
+            download_torrent_files(torrent_directory, args.url)
+        else:
+            # Otherwise, assuming torrent files exist, and then download/upload
+            os.makedirs(DOWNLOADS_DIRECTORY, exist_ok=True)
+            transfer_torrents(torrent_date, torrent_directory)
+    except KeyboardInterrupt:
+        print("Interrupted")
+        sys.exit(1)
