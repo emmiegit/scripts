@@ -27,7 +27,7 @@ def run_command(command):
     subprocess.check_call(command)
 
 
-def download_torrent_files(url):
+def download_torrent_files(torrent_date, url):
     r = requests.get(args.url)
     soup = BeautifulSoup(r.text, features="html.parser")
     torrent_files = []
@@ -43,7 +43,7 @@ def download_torrent_files(url):
         filename = os.path.basename(href)
 
         r = requests.get(torrent_url, stream=True)
-        torrent_file = os.path.join(TORRENT_DIRECTORY, filename)
+        torrent_file = os.path.join(TORRENT_DIRECTORY, torrent_date, filename)
         with open(torrent_file, "wb") as file:
             print(f"+ {filename}")
             for chunk in r.iter_content(chunk_size=512):
@@ -117,5 +117,5 @@ if __name__ == "__main__":
         sys.exit(1)
 
     torrent_date = match[1]
-    torrent_files = download_torrent_files(args.url)
+    torrent_files = download_torrent_files(torrent_date, args.url)
     transfer_torrents(torrent_date, torrent_files)
