@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 import argparse
+from glob import iglob
 import os
 import re
 import shutil
@@ -31,6 +32,12 @@ def download_torrent_files(torrent_directory, url):
     r = requests.get(args.url)
     soup = BeautifulSoup(r.text, features="html.parser")
 
+    # First, check if any *.torrent files exist
+    torrent_glob = os.path.join(torrent_directory, "*.torrent")
+    if next(iglob(torrent_glob), None) is not None:
+        print(f"Existing {torrent_glob} files found, exiting")
+        sys.exit(1)
+
     print("Downloading torrent files")
     for link in soup.select("td.fb-n a"):
         href = link["href"]
@@ -40,13 +47,10 @@ def download_torrent_files(torrent_directory, url):
             continue
 
         filename = os.path.basename(href)
-        torrent_file = os.path.join(torrent_directory, filename)
-        if os.path.isfile(torrent_file):
-            print(f"- {filename} exists")
-            continue
-
         torrent_url = urljoin(args.url, href)
+
         r = requests.get(torrent_url, stream=True)
+        torrent_file = os.path.join(torrent_directory, filename)
         with open(torrent_file, "wb") as file:
             print(f"+ {filename}")
             for chunk in r.iter_content(chunk_size=512):
@@ -99,11 +103,12 @@ def cleanup_data(torrent_file, download_dir):
     shutil.rmtree(download_dir)  # temporary storage before upload
 
 
-def transfer_torrents(torrent_date, torrent_files):
+def transfer_torrents(torrent_date, torrent_directory):
     destination_path = os.path.join(UPLOAD_SSH_PATH, torrent_date)
     destination = f"{UPLOAD_SSH_SERVER}:{destination_path}"
 
-    for torrent_file in torrent_files:
+    torrent_glob = os.path.join(torrent_directory, "*.torrent")
+    for torrent_file in iglob(torrent_glob):
         download_path = download_torrent(torrent_file)
         upload_data(download_path, destination)
         cleanup_data(torrent_file, download_path)
@@ -136,5 +141,4 @@ if __name__ == "__main__":
     else:
         # Otherwise, assuming torrent files exist, and then download/upload
         os.makedirs(DOWNLOADS_DIRECTORY, exist_ok=True)
-        torrent_files = os.listdir(torrent_directory)
-        transfer_torrents(torrent_date, torrent_files)
+        transfer_torrents(torrent_date, torrent_directory)
