@@ -85,6 +85,7 @@ def upload_data(source, destination):
         "--human-readable",
         "--partial",
         "--progress",
+        "--delete-after",
         source,
         destination,
     ]
