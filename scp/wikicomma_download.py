@@ -30,7 +30,6 @@ def run_command(command):
 def download_torrent_files(torrent_directory, url):
     r = requests.get(args.url)
     soup = BeautifulSoup(r.text, features="html.parser")
-    torrent_files = []
 
     print("Downloading torrent files")
     for link in soup.select("td.fb-n a"):
@@ -41,7 +40,6 @@ def download_torrent_files(torrent_directory, url):
 
         filename = os.path.basename(href)
         torrent_file = os.path.join(torrent_directory, filename)
-        torrent_files.append(torrent_file)
         if os.path.isfile(torrent_file):
             print(f"- {filename} exists")
             continue
@@ -52,7 +50,6 @@ def download_torrent_files(torrent_directory, url):
             print(f"+ {filename}")
             for chunk in r.iter_content(chunk_size=512):
                 file.write(chunk)
-    return torrent_files
 
 
 def download_torrent(torrent_file):
