@@ -39,11 +39,14 @@ def download_torrent_files(torrent_directory, url):
             # skip invalid links, like the ".." parent link
             continue
 
-        torrent_url = urljoin(args.url, href)
         filename = os.path.basename(href)
-
-        r = requests.get(torrent_url, stream=True)
         torrent_file = os.path.join(torrent_directory, filename)
+        if os.path.isfile(torrent_file):
+            print(f"- {filename} exists")
+            continue
+
+        torrent_url = urljoin(args.url, href)
+        r = requests.get(torrent_url, stream=True)
         with open(torrent_file, "wb") as file:
             print(f"+ {filename}")
             for chunk in r.iter_content(chunk_size=512):
