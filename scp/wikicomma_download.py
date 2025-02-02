@@ -41,6 +41,7 @@ def download_torrent_files(torrent_directory, url):
 
         filename = os.path.basename(href)
         torrent_file = os.path.join(torrent_directory, filename)
+        torrent_files.append(torrent_file)
         if os.path.isfile(torrent_file):
             print(f"- {filename} exists")
             continue
@@ -51,7 +52,6 @@ def download_torrent_files(torrent_directory, url):
             print(f"+ {filename}")
             for chunk in r.iter_content(chunk_size=512):
                 file.write(chunk)
-        torrent_files.append(torrent_file)
     return torrent_files
 
 
