@@ -66,7 +66,7 @@ def download_torrent(torrent_file):
             torrent_file,
         ]
     )
-    torrent_name = os.path.basename(torrent_file)
+    torrent_name, _ = os.path.splitext(os.path.basename(torrent_file))
     path = os.path.join(DOWNLOADS_DIRECTORY, torrent_name)
     assert os.path.isdir(path), f"Download for {torrent_file} did not write to {path}"
     return path
