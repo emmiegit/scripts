@@ -22,6 +22,11 @@ WIKICOMMA_URL_REGEX = re.compile(
 )
 
 
+def run_command(command):
+    print(f"Running {command}")
+    subprocess.check_call(command)
+
+
 def download_torrent_files(url):
     r = requests.get(args.url)
     soup = BeautifulSoup(r.text, features="html.parser")
@@ -49,11 +54,18 @@ def download_torrent_files(url):
 
 def download_torrent(torrent_file):
     print(f"Downloading Wikicomma torrent data ({torrent_file})")
-    subprocess.check_call(
-        ["aria2c", torrent_file],
-        cwd=DOWNLOADS_DIRECTORY,
-    )
 
+    run_command(
+        [
+            "aria2c",
+            "--continue",
+            "--dir",
+            DOWNLOADS_DIRECTORY,
+            "--seed-time",
+            "0",
+            torrent_file,
+        ]
+    )
     torrent_name = os.path.basename(torrent_file)
     path = os.path.join(DOWNLOADS_DIRECTORY, torrent_name)
     assert os.path.isdir(path), f"Download for {torrent_file} did not write to {path}"
@@ -62,7 +74,18 @@ def download_torrent(torrent_file):
 
 def upload_data(source, destination):
     print(f"Uploading Wikicomma data to remote server ({destination})")
-    subprocess.check_call(["rsync", "-vahHP", "-zz", source, destination])
+    command = [
+        "rsync",
+        "--verbose",
+        "--archive",
+        "--compress",
+        "--human-readable",
+        "--partial",
+        "--progress",
+        source,
+        destination,
+    ]
+    subprocess.check_call(command)
 
 
 def cleanup_data(directory):
