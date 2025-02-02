@@ -94,7 +94,7 @@ def cleanup_data(directory):
 
 
 def transfer_torrents(torrent_date, torrent_files):
-    destination_path = os.path.join(UPLOAD_SSH_PATH, torrent_date, directory)
+    destination_path = os.path.join(UPLOAD_SSH_PATH, torrent_date)
     destination = f"{UPLOAD_SSH_SERVER}:{destination_path}"
 
     for torrent_file in torrent_files:
