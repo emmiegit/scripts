@@ -110,6 +110,13 @@ def transfer_torrents(torrent_date, torrent_files):
 
 if __name__ == "__main__":
     argparser = argparse.ArgumentParser()
+    argparser.add_argument(
+        "-t",
+        "--fetch-torrents",
+        dest="fetch_torrents",
+        action="store_true",
+        help="One-time job to fetch all the *.torrent files to pull from",
+    )
     argparser.add_argument("url")
     args = argparser.parse_args()
 
@@ -120,8 +127,13 @@ if __name__ == "__main__":
 
     torrent_date = match[1]
     torrent_directory = os.path.join(TORRENT_DIRECTORY, torrent_date)
-    os.makedirs(torrent_directory, exist_ok=True)
-    os.makedirs(DOWNLOADS_DIRECTORY, exist_ok=True)
 
-    torrent_files = download_torrent_files(torrent_directory, args.url)
-    transfer_torrents(torrent_date, torrent_files)
+    if args.fetch_torrents:
+        # Run the fetch-torrents action, then exit
+        os.makedirs(torrent_directory, exist_ok=True)
+        download_torrent_files(torrent_directory, args.url)
+    else:
+        # Otherwise, assuming torrent files exist, and then download/upload
+        os.makedirs(DOWNLOADS_DIRECTORY, exist_ok=True)
+        torrent_files = os.listdir(torrent_directory)
+        transfer_torrents(torrent_date, torrent_files)
