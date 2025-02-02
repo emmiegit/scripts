@@ -89,7 +89,7 @@ def upload_data(source, destination):
         source,
         destination,
     ]
-    subprocess.check_call(command)
+    run_command(command)
 
 
 def cleanup_data(torrent_file, directory):
