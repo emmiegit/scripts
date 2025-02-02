@@ -43,7 +43,7 @@ def download_torrent_files(torrent_directory, url):
         href = link["href"]
         if TORRENT_URL_REGEX.fullmatch(href) is None:
             # skip invalid links, like the ".." parent link
-            print(f"Skipping invalid link: {href}")
+            print(f"Skipping invalid link: {href!r}")
             continue
 
         filename = os.path.basename(href)
