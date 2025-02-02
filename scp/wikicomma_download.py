@@ -99,7 +99,7 @@ def cleanup_data(torrent_file, download_dir):
     print(f"Deleting {torrent_file}")
     os.remove(torrent_file)  # since we use *.torrent files to track status
 
-    print(f"Deleting {download_path}")
+    print(f"Deleting {download_dir}")
     shutil.rmtree(download_dir)  # temporary storage before upload
 
 
