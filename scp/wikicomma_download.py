@@ -116,10 +116,15 @@ def transfer_torrents(torrent_date, torrent_directory):
     destination = f"{UPLOAD_SSH_SERVER}:{destination_path}"
 
     torrent_glob = os.path.join(torrent_directory, "*.torrent")
+    processed_torrent = False
     for torrent_file in iglob(torrent_glob):
         download_path = download_torrent(torrent_file)
         upload_data(download_path, destination)
         cleanup_data(torrent_file, download_path)
+        processed_torrent = True
+
+    if not processed_torrent:
+        print("Nothing to do (did you run with -t first?)")
 
 
 if __name__ == "__main__":
