@@ -16,6 +16,7 @@ TORRENT_DIRECTORY = "/tmp/emmie/wikicomma"
 DOWNLOADS_DIRECTORY = "/media/archive/temporary/wikicomma"
 UPLOAD_SSH_SERVER = "rsync.net"
 UPLOAD_SSH_PATH = "./wikicomma"
+RSYNC_RETRIES = 3
 
 TORRENT_URL_REGEX = re.compile(r"/snapshots/[^\.]+\.torrent/[^\.]+\.torrent")
 WIKICOMMA_URL_REGEX = re.compile(
