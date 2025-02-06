@@ -91,7 +91,15 @@ def upload_data(source, destination):
         source,
         destination,
     ]
-    run_command(command)
+
+    # Retry a few times in case of errors
+    for _ in range(RSYNC_RETRIES):
+        try:
+            run_command(command)
+            break
+        except subprocess.CalledProcessError as exc:
+            print(f"rsync error: {exc}")
+            continue
 
 
 def cleanup_data(torrent_file, download_dir):
