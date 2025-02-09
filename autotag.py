@@ -140,7 +140,7 @@ def edit_tags(path, metadata, overrides, version=2):
     cmdline = " ".join(arguments)
 
     if not PERMIT_NON_ASCII:
-        if not all(arg.isascii() and arg.isprintable() for arg in arguments):
+        if not cmdline.isascii() and cmdline.isprintable():
             print(f"Command-line contains non-ASCII arguments, denying due to encoding issues:\n    {cmdline}")
             sys.exit(1)
 
