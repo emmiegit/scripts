@@ -53,6 +53,11 @@ from pathlib import Path
 HOME_DIR = os.path.expanduser("~")
 NUMBERED_TRACK_REGEX = re.compile(r"(\d+)\. (.+)")
 
+# Because there are issues with encoding non-ASCII information in a way that mpd can understand
+# (it seems to be using latin-1 or something? I can't tell what the issue is), the tool should
+# refuse to encode non-ASCII characters as a precaution.
+PERMIT_NON_ASCII = False
+
 AudioMetadata = namedtuple("AudioMetadata", ("artist", "album", "title", "track"))
 AudioMetadataOverrides = namedtuple("AudioMetadataOverrides", ("artist", "album", "title", "track", "comment", "description", "date", "genre"))
 
@@ -132,7 +137,14 @@ def edit_tags(path, metadata, overrides, version=2):
 
     arguments.append("--")
     arguments.append(path)
-    print(" ".join(arguments))
+    cmdline = " ".join(arguments)
+
+    if not PERMIT_NON_ASCII:
+        if not all(arg.isascii() and arg.isprintable() for arg in arguments):
+            print(f"Command-line contains non-ASCII arguments, denying due to encoding issues:\n    {cmdline}")
+            sys.exit(1)
+
+    print(cmdline)
     subprocess.check_call(arguments)
 
 
