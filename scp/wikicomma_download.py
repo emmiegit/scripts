@@ -34,10 +34,10 @@ async def run_command(command):
     print(f"Running {command}")
     proc = await asyncio.create_subprocess_exec(
         *command,
-        stdout=asyncio.subprocess.PIPE,
+        stdout=None,
         stderr=asyncio.subprocess.PIPE,
     )
-    stdout, stderr = await proc.communicate()
+    _, stderr = await proc.communicate()
     if proc.returncode == 0:
         return stdout
 
