@@ -82,14 +82,10 @@ async def download_torrent(torrent_file):
             "--continue",
             "--dir",
             DOWNLOADS_DIRECTORY,
-            "--max-concurrent-downloads",
-            "8",
-            "--split",
-            "8",
-            "--http-accept-gzip",
-            "true",
-            "--seed-time",
-            "0",
+            "--max-concurrent-downloads=8",
+            "--split=8",
+            "--http-accept-gzip=true",
+            "--seed-time=0",
             torrent_file,
         ]
     )
