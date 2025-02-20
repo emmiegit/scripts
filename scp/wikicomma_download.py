@@ -75,7 +75,6 @@ def download_torrent_files(torrent_directory, url):
 
 async def download_torrent(torrent_file):
     print(f"Downloading Wikicomma torrent data ({torrent_file})")
-
     await run_command(
         [
             "aria2c",
