@@ -138,12 +138,23 @@ async def transfer_torrents(torrent_date, torrent_directory):
     destination = f"{UPLOAD_SSH_SERVER}:{destination_path}"
 
     torrent_glob = os.path.join(torrent_directory, "*.torrent")
+    semaphore = asyncio.Semaphore(4)
     processed_torrent = False
     for torrent_file in iglob(torrent_glob):
         download_path = await download_torrent(torrent_file)
-        await upload_data(download_path, destination)
-        cleanup_data(torrent_file, download_path)
         processed_torrent = True
+
+        # Wrapper coroutine to encapsulate the post-download work
+        async def upload_and_cleanup():
+            await upload_data(download_path, destination)
+            cleanup_data(torrent_file, download_path)
+
+        # Run this in parallel while the next download goes,
+        # but don't run too many at the same time.
+        # If the maximum number of tasks is reached, then wait
+        # until one of them finishes.
+        async with semaphore:
+            task = asyncio.create_task(upload_and_cleanup, name=torrent_file)
 
     if not processed_torrent:
         print("Nothing to do (did you run with -t first?)")
