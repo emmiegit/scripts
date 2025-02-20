@@ -1,11 +1,11 @@
 #!/usr/bin/env python
 
 import argparse
+import asyncio
 from glob import iglob
 import os
 import re
 import shutil
-import subprocess
 import sys
 from urllib.parse import urljoin
 
@@ -24,9 +24,24 @@ WIKICOMMA_URL_REGEX = re.compile(
 )
 
 
-def run_command(command):
+class CalledProcessError(RuntimeError):
+    def __init__(self, error_code, stderr):
+        stderr_text = stderr.decode("utf-8")
+        super().__init__(f"[{error_code}] {stderr_text}")
+
+
+async def run_command(command):
     print(f"Running {command}")
-    subprocess.check_call(command)
+    proc = await asyncio.create_subprocess_exec(
+        *command,
+        stdout=asyncio.subprocess.PIPE,
+        stderr=asyncio.subprocess.PIPE,
+    )
+    stdout, stderr = await proc.communicate()
+    if proc.returncode == 0:
+        return stdout
+
+    raise CalledProcessError(proc.returncode, stderr)
 
 
 def download_torrent_files(torrent_directory, url):
@@ -58,10 +73,10 @@ def download_torrent_files(torrent_directory, url):
                 file.write(chunk)
 
 
-def download_torrent(torrent_file):
+async def download_torrent(torrent_file):
     print(f"Downloading Wikicomma torrent data ({torrent_file})")
 
-    run_command(
+    await run_command(
         [
             "aria2c",
             "--continue",
@@ -84,7 +99,7 @@ def download_torrent(torrent_file):
     return path
 
 
-def upload_data(source, destination):
+async def upload_data(source, destination):
     print(f"Uploading Wikicomma data to remote server ({destination})")
     command = [
         "rsync",
@@ -102,9 +117,9 @@ def upload_data(source, destination):
     # Retry a few times in case of errors
     for _ in range(RSYNC_RETRIES):
         try:
-            run_command(command)
+            await run_command(command)
             break
-        except subprocess.CalledProcessError as exc:
+        except CalledProcessError as exc:
             print(f"rsync error: {exc}")
             continue
 
@@ -118,15 +133,15 @@ def cleanup_data(torrent_file, download_dir):
     shutil.rmtree(download_dir)  # temporary storage before upload
 
 
-def transfer_torrents(torrent_date, torrent_directory):
+async def transfer_torrents(torrent_date, torrent_directory):
     destination_path = os.path.join(UPLOAD_SSH_PATH, torrent_date)
     destination = f"{UPLOAD_SSH_SERVER}:{destination_path}"
 
     torrent_glob = os.path.join(torrent_directory, "*.torrent")
     processed_torrent = False
     for torrent_file in iglob(torrent_glob):
-        download_path = download_torrent(torrent_file)
-        upload_data(download_path, destination)
+        download_path = await download_torrent(torrent_file)
+        await upload_data(download_path, destination)
         cleanup_data(torrent_file, download_path)
         processed_torrent = True
 
@@ -134,18 +149,7 @@ def transfer_torrents(torrent_date, torrent_directory):
         print("Nothing to do (did you run with -t first?)")
 
 
-if __name__ == "__main__":
-    argparser = argparse.ArgumentParser()
-    argparser.add_argument(
-        "-t",
-        "--fetch-torrents",
-        dest="fetch_torrents",
-        action="store_true",
-        help="One-time job to fetch all the *.torrent files to pull from",
-    )
-    argparser.add_argument("url")
-    args = argparser.parse_args()
-
+async def main(args):
     match = WIKICOMMA_URL_REGEX.fullmatch(args.url)
     if match is None:
         print("Warning: URL does not match known Wikicomma torrent path")
@@ -162,7 +166,21 @@ if __name__ == "__main__":
         else:
             # Otherwise, assuming torrent files exist, and then download/upload
             os.makedirs(DOWNLOADS_DIRECTORY, exist_ok=True)
-            transfer_torrents(torrent_date, torrent_directory)
+            await transfer_torrents(torrent_date, torrent_directory)
     except KeyboardInterrupt:
         print("Interrupted")
         sys.exit(1)
+
+
+if __name__ == "__main__":
+    argparser = argparse.ArgumentParser()
+    argparser.add_argument(
+        "-t",
+        "--fetch-torrents",
+        dest="fetch_torrents",
+        action="store_true",
+        help="One-time job to fetch all the *.torrent files to pull from",
+    )
+    argparser.add_argument("url")
+    args = argparser.parse_args()
+    asyncio.run(main(args))
