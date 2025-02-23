@@ -93,7 +93,7 @@ def capture_and_blur(directory, monitor):
     )
     proc_convert = subprocess.Popen(
         [
-            "convert",
+            "magick",
             "/dev/stdin",
             "-scale",
             f"{SMALL_SCALE_PERCENT}%",
@@ -106,6 +106,7 @@ def capture_and_blur(directory, monitor):
     )
     proc_composite = subprocess.Popen(
         [
+            "magick",
             "composite",
             "-gravity",
             "Center",
@@ -131,7 +132,7 @@ def merge_images(directory, monitors):
         image_input = monitor.filename(directory)
         subprocess.check_call(
             [
-                "convert",
+                "magick",
                 full_output,
                 image_input,
                 "-geometry",
