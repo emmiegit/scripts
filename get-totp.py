@@ -5,18 +5,10 @@ import re
 import sys
 import subprocess
 from dataclasses import dataclass
+from typing import Self
 from urllib.parse import parse_qs, unquote, urlparse
 
 from colorama import init as colorama_init, Fore
-
-
-@dataclass(frozen=True)
-class TotpCode:
-    name: str
-    account: str
-    secret: str
-    digits: str
-    period: str
 
 
 def first_or_none(params, key):
@@ -30,64 +22,73 @@ def run_command(command):
     return subprocess.check_output(command).decode("utf-8")
 
 
-def get_totp_codes():
-    totp_raw = run_command(["pass", "show", "misc/totp-codes"])
-    totp_codes = []
+@dataclass(frozen=True)
+class TotpCode:
+    name: str
+    account: str
+    secret: str
+    digits: str
+    period: str
 
-    for line in totp_raw.splitlines():
-        parts = urlparse(line)
-        assert parts.netloc == "totp", "OTP kind not TOTP"
-        assert parts.path.startswith("/")
+    @staticmethod
+    def fetch_all() -> list[Self]:
+        totp_raw = run_command(["pass", "show", "misc/totp-codes"])
+        totp_codes = []
 
-        name = unquote(parts.path[1:])
-        if ":" in name:
-            name, account = name.split(":", 1)
-        else:
-            account = None
+        for line in totp_raw.splitlines():
+            parts = urlparse(line)
+            assert parts.netloc == "totp", "OTP kind not TOTP"
+            assert parts.path.startswith("/")
 
-        params = parse_qs(parts.query)
-        secret = first_or_none(params, "secret")
-        digits = first_or_none(params, "digits")
-        period = first_or_none(params, "period")
-        totp_codes.append(
-            TotpCode(
-                name=name,
-                account=account,
-                secret=secret,
-                digits=digits,
-                period=period,
+            name = unquote(parts.path[1:])
+            if ":" in name:
+                name, account = name.split(":", 1)
+            else:
+                account = None
+
+            params = parse_qs(parts.query)
+            secret = first_or_none(params, "secret")
+            digits = first_or_none(params, "digits")
+            period = first_or_none(params, "period")
+            totp_codes.append(
+                TotpCode(
+                    name=name,
+                    account=account,
+                    secret=secret,
+                    digits=digits,
+                    period=period,
+                )
             )
-        )
 
-    return totp_codes
+        return totp_codes
 
-def get_totp(entry):
-    command = ["oathtool", "--base32", "--totp"]
-    if entry.digits:
-        command.append(f"--digits={entry.digits}")
-    if entry.period:
-        command.append(f"--time-step-size={entry.period}")
-    command.append(entry.secret)
+    def get(self) -> str:
+        command = ["oathtool", "--base32", "--totp"]
+        if self.digits:
+            command.append(f"--digits={self.digits}")
+        if self.period:
+            command.append(f"--time-step-size={self.period}")
+        command.append(self.secret)
+        return run_command(command).strip()
 
-    return run_command(command).strip()
+    @property
+    def color_name(self):
+        base = f"{Fore.MAGENTA}{self.name}{Fore.RESET}"
+
+        if self.account is None:
+            return base
+        else:
+            return f"{base} ({Fore.GREEN}{self.account}{Fore.RESET})"
 
 
-def find_matching(totp_codes, app_regex):
+def find_matching(totps, app_regex):
     matching = []
 
-    for entry in totp_codes:
-        if app_regex.search(entry.name):
-            matching.append(entry)
+    for totp in totps:
+        if app_regex.search(totp.name):
+            matching.append(totp)
 
     return matching
-
-def format_name(entry):
-    base = f"{Fore.MAGENTA}{entry.name}{Fore.RESET}"
-
-    if entry.account is None:
-        return base
-    else:
-        return f"{base} ({Fore.GREEN}{entry.account}{Fore.RESET})"
 
 
 if __name__ == "__main__":
@@ -104,30 +105,26 @@ if __name__ == "__main__":
 
     exit_code = 0
     colorama_init()
-    totp_codes = get_totp_codes()
+    all_totps = TotpCode.fetch_all()
 
     # No arguments, list all app names
     if not args.app:
         print("List of all TOTP applications:")
-        if not totp_codes:
+        if not all_totps:
             print("* (no entries found)")
-        for entry in totp_codes:
-            totp = get_totp(entry)
-            print(f"* {format_name(entry)}: {totp}")
-
+        for totp in all_totps:
+            print(f"* {totp.color_name}: {totp.get()}")
         sys.exit(0)
 
     # Print TOTP codes for each app listed
     for app_pattern in args.app:
         app_regex = re.compile(app_pattern, re.IGNORECASE)
-        entries = find_matching(totp_codes, app_regex)
-        if not entries:
+        totps = find_matching(all_totps, app_regex)
+        if not totps:
             print(f"No matches for '{app_pattern}'", file=sys.stderr)
             exit_code += 1
             continue
-
-        for entry in entries:
-            totp = get_totp(entry)
-            print(f"{format_name(entry)}: {totp}")
+        for totp in totps:
+            print(f"{totp.color_name}: {totp.get()}")
 
     sys.exit(exit_code)
