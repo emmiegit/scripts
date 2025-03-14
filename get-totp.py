@@ -4,12 +4,19 @@ import argparse
 import re
 import sys
 import subprocess
-from collections import namedtuple
+from dataclasses import dataclass
 from urllib.parse import parse_qs, unquote, urlparse
 
 from colorama import init as colorama_init, Fore
 
-TotpCode = namedtuple("OtpInfo", ("name", "account", "secret", "digits", "period"))
+
+@dataclass(frozen=True)
+class TotpCode:
+    name: str
+    account: str
+    secret: str
+    digits: str
+    period: str
 
 
 def first_or_none(params, key):
@@ -37,7 +44,15 @@ def get_totp_codes():
         secret = first_or_none(params, "secret")
         digits = first_or_none(params, "digits")
         period = first_or_none(params, "period")
-        totp_codes.append(TotpCode(name=name, account=account, secret=secret, digits=digits, period=period))
+        totp_codes.append(
+            TotpCode(
+                name=name,
+                account=account,
+                secret=secret,
+                digits=digits,
+                period=period,
+            )
+        )
 
     return totp_codes
 
