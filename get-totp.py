@@ -41,7 +41,7 @@ def get_totp_codes():
 
         name = unquote(parts.path[1:])
         if ":" in name:
-            name, account = name.split(":")
+            name, account = name.split(":", 1)
         else:
             account = None
 
