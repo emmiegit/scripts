@@ -90,7 +90,7 @@ if __name__ == "__main__":
         entries = find_matching(totp_codes, app_regex)
         if not entries:
             print(f"No matches for '{app_pattern}'", file=sys.stderr)
-            exit_code = 1
+            exit_code += 1
             continue
 
         for entry in entries:
