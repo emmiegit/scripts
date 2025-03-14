@@ -25,8 +25,13 @@ def first_or_none(params, key):
     except KeyError:
         return None
 
+
+def run_command(command):
+    return subprocess.check_output(command).decode("utf-8")
+
+
 def get_totp_codes():
-    totp_raw = subprocess.check_output(["pass", "show", "misc/totp-codes"]).decode("utf-8")
+    totp_raw = run_command(["pass", "show", "misc/totp-codes"])
     totp_codes = []
 
     for line in totp_raw.splitlines():
@@ -64,8 +69,8 @@ def get_totp(entry):
         command.append(f"--time-step-size={entry.period}")
     command.append(entry.secret)
 
-    raw_output = subprocess.check_output(command)
-    return raw_output.decode("utf-8").strip()
+    return run_command(command).strip()
+
 
 def find_matching(totp_codes, app_regex):
     matching = []
