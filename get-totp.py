@@ -11,14 +11,14 @@ from urllib.parse import parse_qs, unquote, urlparse
 from colorama import init as colorama_init, Fore
 
 
-def first_or_none(params, key):
+def first_or_none(params: dict[str, list[str]], key: str) -> str:
     try:
         return params[key][0]
     except KeyError:
         return None
 
 
-def run_command(command):
+def run_command(command: list[str]) -> str:
     return subprocess.check_output(command).decode("utf-8")
 
 
@@ -72,7 +72,7 @@ class TotpCode:
         return run_command(command).strip()
 
     @property
-    def color_name(self):
+    def color_name(self) -> str:
         base = f"{Fore.MAGENTA}{self.name}{Fore.RESET}"
 
         if self.account is None:
@@ -81,7 +81,7 @@ class TotpCode:
             return f"{base} ({Fore.GREEN}{self.account}{Fore.RESET})"
 
 
-def find_matching(totps, app_regex):
+def find_matching(totps: list[TotpCode], app_regex: re.Pattern) -> list[TotpCode]:
     matching = []
 
     for totp in totps:
