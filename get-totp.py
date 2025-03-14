@@ -1,5 +1,6 @@
 #!/usr/bin/python3
 
+import argparse
 import re
 import sys
 import subprocess
@@ -68,13 +69,25 @@ def format_name(entry):
     else:
         return f"{base} ({Fore.GREEN}{entry.account}{Fore.RESET})"
 
+
 if __name__ == "__main__":
+    argparser = argparse.ArgumentParser(
+        prog="get-totp.py",
+        description="Fetch TOTP codes from the command line",
+    )
+    argparser.add_argument(
+        "app",
+        nargs="*",
+        help="Which application(s) to show codes for. If not specified, show all applications.",
+    )
+    args = argparser.parse_args()
+
     exit_code = 0
     colorama_init()
     totp_codes = get_totp_codes()
 
     # No arguments, list all app names
-    if len(sys.argv) < 2:
+    if not args.app:
         print("List of all TOTP applications:")
         if not totp_codes:
             print("* (no entries found)")
@@ -85,7 +98,7 @@ if __name__ == "__main__":
         sys.exit(0)
 
     # Print TOTP codes for each app listed
-    for app_pattern in sys.argv[1:]:
+    for app_pattern in args.app:
         app_regex = re.compile(app_pattern, re.IGNORECASE)
         entries = find_matching(totp_codes, app_regex)
         if not entries:
