@@ -1,4 +1,5 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
+
 import math
 import random
 import subprocess
@@ -8,6 +9,7 @@ NORMAL = 0
 NIGHTCORE = 1
 ANTICORE = 2
 RANDOM = -1
+
 
 def help_and_exit():
     print("Usage: %s [option...] song...")
@@ -23,9 +25,10 @@ def help_and_exit():
     print("      --flags=[value]        Give mpv additional flags")
     exit(0)
 
+
 def play(songs, options):
     song = random.choice(songs)
-    mode = random.choice(options['modes'])
+    mode = random.choice(options["modes"])
 
     if mode == NORMAL:
         speed = 1
@@ -34,75 +37,72 @@ def play(songs, options):
     elif mode == ANTICORE:
         speed = 0.67
     elif mode == RANDOM:
-        speed = random.uniform(options['min_speed'], options['max_speed'])
+        speed = random.uniform(options["min_speed"], options["max_speed"])
 
-    flags = [
-        "mpv",
-        "--no-video",
-        f"--speed={speed}"
-    ]
+    flags = ["mpv", "--no-video", f"--speed={speed}"]
 
-    if not options['pitch_adjust']:
+    if not options["pitch_adjust"]:
         flags.append("--audio-pitch-correction=no")
 
-    if options['volume'] is not None:
-        volume = options['volume']
+    if options["volume"] is not None:
+        volume = options["volume"]
         flags.append(f"--volume={volume}")
 
-    if options['extra_flags']:
-        flags.extend(options['extra_flags'])
+    if options["extra_flags"]:
+        flags.extend(options["extra_flags"])
 
     flags.append(song)
     ret = subprocess.call(flags)
     if ret != 0:
         exit(1)
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     songs = []
     options = {
-            'modes': (NORMAL, NIGHTCORE, ANTICORE),
-            'pitch_adjust': False,
-            'extra_flags': [],
-            'min_speed': 0.5,
-            'max_speed': 1.7,
-            'volume': None,
+        "modes": (NORMAL, NIGHTCORE, ANTICORE),
+        "pitch_adjust": False,
+        "extra_flags": [],
+        "min_speed": 0.5,
+        "max_speed": 1.7,
+        "volume": None,
     }
 
     for arg in sys.argv[1:]:
-        if arg in ('-h', '--help'):
+        if arg in ("-h", "--help"):
             help_and_exit()
-        elif arg in ('-n', '--nightcore-only'):
-            options['modes'] = (NIGHTCORE,)
-        elif arg in ('-a', '--anticore-only', '--vaporwave'):
-            options['modes'] = (ANTICORE,)
-        elif arg in ('-s', '--random-speeds'):
-            options['modes'] = (RANDOM,)
-        elif arg in ('-p', '--pitch-adjust'):
-            options['pitch_adjust'] = True
-        elif arg.startswith('-V=') or arg.startswith('--volume='):
-            _, value = arg.split('=')
+        elif arg in ("-n", "--nightcore-only"):
+            options["modes"] = (NIGHTCORE,)
+        elif arg in ("-a", "--anticore-only", "--vaporwave"):
+            options["modes"] = (ANTICORE,)
+        elif arg in ("-s", "--random-speeds"):
+            options["modes"] = (RANDOM,)
+        elif arg in ("-p", "--pitch-adjust"):
+            options["pitch_adjust"] = True
+        elif arg.startswith("-V=") or arg.startswith("--volume="):
+            _, value = arg.split("=")
             try:
-                options['volume'] = float(value)
+                options["volume"] = float(value)
             except ValueError:
                 print(f"Not a floating point number: {value}")
                 exit(1)
-        elif arg.startswith('--min='):
+        elif arg.startswith("--min="):
             value = arg[6:]
             try:
-                options['min_speed'] = float(value)
+                options["min_speed"] = float(value)
             except ValueError:
                 print(f"Not a floating point number: {value}")
                 exit(1)
-        elif arg.startswith('--max='):
+        elif arg.startswith("--max="):
             value = arg[6:]
             try:
-                options['max_speed'] = float(value)
+                options["max_speed"] = float(value)
             except ValueError:
                 print(f"Not a floating point number: {value}")
                 exit(1)
-        elif arg.startswith('--flags='):
-            options['extra_flags'] = arg[8:].split(' ')
-        elif arg.startswith('-'):
+        elif arg.startswith("--flags="):
+            options["extra_flags"] = arg[8:].split(" ")
+        elif arg.startswith("-"):
             print(f"Not a recognized option: {arg}")
             exit(1)
         else:
@@ -112,19 +112,21 @@ if __name__ == '__main__':
         print("No songs were specified.")
         exit(1)
 
-    if not math.isfinite(options['min_speed']) or not math.isfinite(options['max_speed']):
+    if not math.isfinite(options["min_speed"]) or not math.isfinite(
+        options["max_speed"]
+    ):
         print("Speeds must be real numbers.")
         exit(1)
 
-    if options['volume'] is not None:
-        if options['volume'] < 0 or options['volume'] > 100:
+    if options["volume"] is not None:
+        if options["volume"] < 0 or options["volume"] > 100:
             print("Volume is out of range")
 
-    if options['min_speed'] < 0 or options['max_speed'] < 0:
+    if options["min_speed"] < 0 or options["max_speed"] < 0:
         print("Speeds must be positive.")
         exit(1)
 
-    if options['min_speed'] > options['max_speed']:
+    if options["min_speed"] > options["max_speed"]:
         print("Minimum speed is larger than the maximum.")
         exit(1)
 
@@ -133,4 +135,3 @@ if __name__ == '__main__':
             play(songs, options)
     except KeyboardInterrupt:
         exit()
-
