@@ -7,5 +7,7 @@ exec \
 			-vahH \
 			--progress \
 			--delete-after \
-			--exclude=temporary/ \
+			--exclude=lost+found \
+			--exclude=backup/luks-headers \
+			--exclude=temporary \
 			"$@" -- /media/archive/* rsync.net:./backup/
