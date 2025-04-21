@@ -6,7 +6,6 @@ exec \
 		nice rsync \
 			-vahH \
 			--progress \
-			--preallocate \
 			--delete-after \
 			--exclude=temporary/ \
 			"$@" -- /media/archive/* rsync.net:./backup/
