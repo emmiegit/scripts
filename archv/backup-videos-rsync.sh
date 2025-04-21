@@ -6,7 +6,6 @@ exec \
 		nice rsync \
 			-vahH \
 			--progress \
-			--delete-after \
 			--exclude=temporary/ \
 			"$@" -- /media/media/videos/{anime,films,television} rsync.net:./videos/
 
