@@ -1,6 +1,6 @@
 #!/bin/bash
 
-export WINEPREFIX='/media/media/games/wine/line'
+export WINEPREFIX='/media/media/games/wine/fl-studio'
 export WINEHOME="$WINEPREFIX"
 export WINEARCH=win64
 
