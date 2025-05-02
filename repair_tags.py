@@ -23,6 +23,18 @@ def valid_tags(path):
     return result.returncode == 0
 
 
+def needs_repair(path):
+    if not is_opus(path):
+        return False
+
+    if valid_tags(path):
+        return False
+
+    if os.path.islink(path):
+        return False
+
+    return True
+
 def get_id3_tags(path):
     metadata = {}
     output = subprocess.check_output(["id3info", path]).decode("utf-8")
@@ -57,8 +69,7 @@ def get_id3_tags(path):
 
 
 def repair_file(path):
-    # Check that this file needs repair
-    if valid_tags(path):
+    if not needs_repair(path):
         return
 
     print(f"Repairing file {path}")
@@ -82,8 +93,7 @@ def repair_directory(directory):
         print(f"Checking {root} ({len(dirs)} directories, {len(files)} files)")
 
         for file in files:
-            if is_opus(file):
-                repair_file(file)
+            repair_file(file)
 
 
 def repair_path(path):
