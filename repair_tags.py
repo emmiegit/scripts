@@ -79,7 +79,11 @@ def repair_file(path):
 
 def repair_directory(directory):
     for root, dirs, files in os.walk(directory):
-        print(f"Checking {root}")
+        print(f"Checking {root} ({len(dirs)} directories, {len(files)} files)")
+
+        for file in files:
+            if is_opus(file):
+                repair_file(file)
 
 
 def repair_path(path):
