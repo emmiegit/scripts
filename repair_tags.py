@@ -85,7 +85,8 @@ def repair_directory(directory):
         print(f"Checking {root} ({len(dirs)} directories, {len(files)} files)")
 
         for file in files:
-            repair_file(file)
+            path = os.path.join(root, file)
+            repair_file(path)
 
 
 def repair_path(path):
