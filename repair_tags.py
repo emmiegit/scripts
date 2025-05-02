@@ -9,6 +9,11 @@ import sys
 ID3_INFO_REGEX = re.compile(r"=== ([^ ]+) \(.+\): (.+)")
 
 
+def run_command(command):
+    print(f"Running {command}")
+    subprocess.check_call(command)
+
+
 def is_opus(path):
     _, ext = os.path.splitext(path)
     return ext.casefold() == ".opus"
@@ -87,14 +92,14 @@ def repair_file(path):
     metadata = get_id3_tags(path)
 
     # Clear ID3 tags
-    subprocess.check_call(["id3convert", "-s", path])
+    run_command(["id3convert", "-s", path])
 
     # Re-apply tags using autotag in non-automatic mode (lol)
     arguments = ["tagit", "-x"]
     for key, value in metadata.items():
         arguments.extend((key, value))
     arguments.append(path)
-    subprocess.check_call(arguments)
+    run_command(arguments)
 
 
 def repair_directory(directory):
