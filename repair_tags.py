@@ -65,8 +65,10 @@ def get_id3_tags(path):
                 metadata["-X"] = f"PUBLISHER={value}"
             case "TPOS":
                 metadata["-X"] = f"DISCNUMBER={value}"
+            case "TORY":
+                metadata["-X"] = f"ORIGYEAR={value}"
             # Ignored
-            case "TXXX" | "UFID" | "APIC" | "TCMP" | "TSOP" | "TSO2":
+            case "TXXX" | "UFID" | "APIC" | "TCMP" | "TSOP" | "TSO2" | "TDAT":
                 pass
             # Unknown
             case _:
