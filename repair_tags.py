@@ -56,6 +56,10 @@ def get_id3_tags(path):
 
 
 def repair_file(path):
+    # Check that this file needs repair
+    if valid_tags(path):
+        return
+
     print(f"Repairing file {path}")
 
     # Retrieve existing tags
