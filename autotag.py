@@ -3,7 +3,7 @@
 """
 Auto-tags songs based on their placement in my directory hierarchy.
 
-Uses the "id3lib" command-line tool, install the id3lib package to get it.
+This script uses "opustags" for OPUS files, and "id3tag" for other files.
 
 My structure is rooted at my music directory, and from there each top-level directory
 is the name of the artist. For instance:
