@@ -385,7 +385,8 @@ if __name__ == "__main__":
         "-X",
         "--custom-tag",
         dest="custom_tags",
-        nargs="+",
+        default=[],
+        nargs="*",
         type=custom_arg,
         help="Add custom OpusTag entries to all songs",
     )
