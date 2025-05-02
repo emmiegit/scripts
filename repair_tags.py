@@ -2,6 +2,7 @@
 
 import os
 import re
+from stat import S_ISDIR, S_ISREG
 import subprocess
 import sys
 
@@ -81,12 +82,14 @@ def repair_directory(directory):
         print(f"Checking {root}")
 
 
-if __name__ == "__main__":
-    if len(sys.argv) > 2:
-        directory = sys.argv[1]
-        print(f"Repairing directory {directory}")
-    else:
-        directory = "."
-        print("Repairing current directory")
+def repair_path(path):
+    stat = os.stat(path)
+    if S_ISREG(stat.st_mode):
+        repair_file(path)
+    elif S_ISDIR(stat.st_mode):
+        repair_directory(path)
 
-    repair_directory(directory)
+
+if __name__ == "__main__":
+    for path in sys.argv[1:]:
+        repair_path(path)
