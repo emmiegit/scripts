@@ -59,7 +59,19 @@ NUMBERED_TRACK_REGEX = re.compile(r"(\d+)\. (.+)")
 PERMIT_NON_ASCII = False
 
 AudioMetadata = namedtuple("AudioMetadata", ("artist", "album", "title", "track"))
-AudioMetadataOverrides = namedtuple("AudioMetadataOverrides", ("artist", "album", "title", "track", "comment", "description", "date", "genre"))
+AudioMetadataOverrides = namedtuple(
+    "AudioMetadataOverrides",
+    (
+        "artist",
+        "album",
+        "title",
+        "track",
+        "comment",
+        "description",
+        "date",
+        "genre",
+    ),
+)
 
 
 def default_music_dir():
@@ -141,7 +153,10 @@ def edit_tags(path, metadata, overrides, version=2):
 
     if not PERMIT_NON_ASCII:
         if not cmdline.isascii() and cmdline.isprintable():
-            print(f"Command-line contains non-ASCII arguments, denying due to encoding issues:\n    {cmdline}")
+            print(
+                "Command-line contains non-ASCII arguments, denying due to encoding issues:"
+            )
+            print(f"    {cmdline}")
             sys.exit(1)
 
     print(cmdline)
