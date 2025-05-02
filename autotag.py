@@ -145,7 +145,7 @@ def edit_tags_opus(path, metadata, overrides):
     if album is not None:
         add_tag(ALBUM, album)
 
-    album_artist = get_override(metadata, overrides, "album_artist")
+    album_artist = overrides.album_artist
     if album_artist is not None:
         add_tag(ALBUM_ARTIST, album_artist)
 
@@ -188,7 +188,7 @@ def edit_tags_id3(path, metadata, overrides):
     if album is not None:
         arguments.append(f"--album={album}")
 
-    album_artist = get_override(metadata, overrides, "album_artist")
+    album_artist = overrides.album_artist
     if album_artist is not None:
         raise ValueError(f"Cannot set album artist for ID3-tagged audio files")
 
