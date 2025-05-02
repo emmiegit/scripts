@@ -114,15 +114,15 @@ def get_override(metadata, overrides, attr):
     return override or primary
 
 
-def edit_tags(path, metadata, overrides):
+def edit_tags(path, metadata, overrides, custom_tags):
     _, ext = os.path.splitext(path)
     if ext.casefold() == ".opus":
-        edit_tags_opus(path, metadata, overrides)
+        edit_tags_opus(path, metadata, overrides, custom_tags)
     else:
-        edit_tags_id3(path, metadata, overrides)
+        edit_tags_id3(path, metadata, overrides, custom_tags)
 
 
-def edit_tags_opus(path, metadata, overrides):
+def edit_tags_opus(path, metadata, overrides, custom_tags):
     ARTIST = "ARTIST"
     ALBUM = "ALBUM"
     ALBUM_ARTIST = "ALBUMARTIST"
@@ -169,6 +169,9 @@ def edit_tags_opus(path, metadata, overrides):
     if genre is not None:
         add_tag(GENRE, genre)
 
+    for key, value in custom_tags:
+        add_tag(key, value)
+
     arguments.append("--")
     arguments.append(path)
     cmdline = " ".join(arguments)
@@ -177,7 +180,7 @@ def edit_tags_opus(path, metadata, overrides):
     subprocess.check_call(arguments)
 
 
-def edit_tags_id3(path, metadata, overrides):
+def edit_tags_id3(path, metadata, overrides, custom_tags):
     arguments = ["id3tag", f"--v{ID3_TAG_VERSION}tag"]
 
     artist = get_override(metadata, overrides, "artist")
@@ -211,6 +214,9 @@ def edit_tags_id3(path, metadata, overrides):
     genre = overrides.genre
     if genre is not None:
         arguments.append(f"--genre={genre}")
+
+    if custom_tags:
+        raise ValueError("ID3 tagging does not support custom OpusTags")
 
     arguments.append("--")
     arguments.append(path)
@@ -289,6 +295,7 @@ def process_file(orig_path, args):
         date=args.date_override,
         genre=args.genre_override,
     )
+    custom_tags = args.custom_tags
 
     if args.automatic_tags:
         path = get_relative_path(root, orig_path)
@@ -301,10 +308,14 @@ def process_file(orig_path, args):
             album=None,
         )
 
-    edit_tags(orig_path, metadata, overrides)
+    edit_tags(orig_path, metadata, overrides, custom_tags)
 
 
 if __name__ == "__main__":
+    def custom_arg(arg):
+        key, value = arg.split("=")
+        return key, value
+
     argparser = argparse.ArgumentParser(description="Auto-tagger for music files")
     argparser.add_argument(
         "-m",
@@ -369,6 +380,14 @@ if __name__ == "__main__":
         "--genre",
         dest="genre_override",
         help="Override the genre value to write for all songs",
+    )
+    argparser.add_argument(
+        "-X",
+        "--custom-tag",
+        dest="custom_tags",
+        nargs="+",
+        type=custom_arg,
+        help="Add custom OpusTag entries to all songs",
     )
     argparser.add_argument(
         "FILE",
