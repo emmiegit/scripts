@@ -24,16 +24,8 @@ def valid_tags(path):
 
 
 def needs_repair(path):
-    if not is_opus(path):
-        return False
+    return is_opus(path) and not os.path.islink(path) and not valid_tags(path)
 
-    if valid_tags(path):
-        return False
-
-    if os.path.islink(path):
-        return False
-
-    return True
 
 def get_id3_tags(path):
     metadata = {}
