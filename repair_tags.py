@@ -73,7 +73,7 @@ def get_id3_tags(path):
             case "TORY":
                 metadata["-X"] = f"ORIGYEAR={value}"
             # Ignored
-            case "TXXX" | "UFID" | "APIC" | "TCMP" | "TSOP" | "TSO2" | "TDAT":
+            case "TXXX" | "UFID" | "APIC" | "TCMP" | "TSOP" | "TSO2" | "TDAT" | "TSRC" | "IPLS":
                 pass
             # Unknown
             case _:
