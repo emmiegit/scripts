@@ -94,10 +94,15 @@ def repair_file(path):
     # Clear ID3 tags
     run_command(["id3convert", "-s", path])
 
-    # Re-apply tags using autotag in non-automatic mode (lol)
-    arguments = ["tagit", "-x"]
-    for key, value in metadata.items():
-        arguments.extend((key, value))
+    if metadata:
+        # Re-apply tags using autotag in non-automatic mode (lol)
+        arguments = ["tagit", "-x"]
+        for key, value in metadata.items():
+            arguments.extend((key, value))
+    else:
+        # This one doesn't have any prior metadata! Use autotag
+        arguments = ["tagit"]
+
     arguments.append(path)
     run_command(arguments)
 
