@@ -290,8 +290,17 @@ def process_file(orig_path, args):
         genre=args.genre_override,
     )
 
-    path = get_relative_path(root, orig_path)
-    metadata = interpret_path(path)
+    if args.automatic_tags:
+        path = get_relative_path(root, orig_path)
+        metadata = interpret_path(path)
+    else:
+        metadata = AudioMetadata(
+            title=None,
+            track=None,
+            artist=None,
+            album=None,
+        )
+
     edit_tags(orig_path, metadata, overrides, args.version)
 
 
@@ -304,6 +313,13 @@ if __name__ == "__main__":
         dest="music_dir",
         default=default_music_dir(),
         help="Override the directory to use as the music root",
+    )
+    argparser.add_argument(
+        "-x",
+        "--no-automatic-tags",
+        dest="automatic_tags",
+        action="store_false",
+        help="Don't determine any tag information from the file. Without any override flags, this script will do nothing.",
     )
     argparser.add_argument(
         "-a",
