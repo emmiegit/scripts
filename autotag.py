@@ -53,6 +53,8 @@ from pathlib import Path
 HOME_DIR = os.path.expanduser("~")
 NUMBERED_TRACK_REGEX = re.compile(r"(\d+)\. (.+)")
 
+ID3_TAG_VERSION = 2
+
 # Because there are issues with encoding non-ASCII information in a way that mpd can understand
 # (it seems to be using latin-1 or something? I can't tell what the issue is), the tool should
 # refuse to encode non-ASCII characters as a precaution.
@@ -64,10 +66,10 @@ AudioMetadataOverrides = namedtuple(
     (
         "artist",
         "album",
+        "album_artist",
         "title",
         "track",
         "comment",
-        "description",
         "date",
         "genre",
     ),
@@ -112,8 +114,71 @@ def get_override(metadata, overrides, attr):
     return override or primary
 
 
-def edit_tags(path, metadata, overrides, version=2):
-    arguments = ["id3tag", f"--v{version}tag"]
+def edit_tags(path, metadata, overrides):
+    _, ext = os.path.splitext(path)
+    if ext.casefold() == ".opus":
+        edit_tags_opus(path, metadata, overrides)
+    else:
+        edit_tags_id3(path, metadata, overrides)
+
+
+def edit_tags_opus(path, metadata, overrides):
+    ARTIST = "ARTIST"
+    ALBUM = "ALBUM"
+    ALBUM_ARTIST = "ALBUMARTIST"
+    TITLE = "TITLE"
+    TRACK_NUMBER = "TRACKNUMBER"
+    COMMENT = "COMMENT"
+    DATE = "DATE"
+    GENRE = "GENRE"
+
+    arguments = ["opustags", "-i"]
+
+    def add_tag(key, value):
+        arguments.extend(("--set", f"{key}={value}"))
+
+    artist = get_override(metadata, overrides, "artist")
+    if artist is not None:
+        add_tag(ARTIST, artist)
+
+    album = get_override(metadata, overrides, "album")
+    if album is not None:
+        add_tag(ALBUM, album)
+
+    album_artist = get_override(metadata, overrides, "album_artist")
+    if album_artist is not None:
+        add_tag(ALBUM_ARTIST, album_artist)
+
+    title = get_override(metadata, overrides, "title")
+    if title is not None:
+        add_tag(TITLE, title)
+
+    track = get_override(metadata, overrides, "track")
+    if track is not None:
+        add_tag(TRACK_NUMBER, track)
+
+    comment = overrides.comment
+    if comment is not None:
+        add_tag(COMMENT, comment)
+
+    date = overrides.date
+    if date is not None:
+        add_tag(DATE, date)
+
+    genre = overrides.genre
+    if genre is not None:
+        add_tag(GENRE, genre)
+
+    arguments.append("--")
+    arguments.append(path)
+    cmdline = " ".join(arguments)
+
+    print(cmdline)
+    subprocess.check_call(arguments)
+
+
+def edit_tags_id3(path, metadata, overrides):
+    arguments = ["id3tag", f"--v{ID3_TAG_VERSION}tag"]
 
     artist = get_override(metadata, overrides, "artist")
     if artist is not None:
@@ -122,6 +187,10 @@ def edit_tags(path, metadata, overrides, version=2):
     album = get_override(metadata, overrides, "album")
     if album is not None:
         arguments.append(f"--album={album}")
+
+    album_artist = get_override(metadata, overrides, "album_artist")
+    if album_artist is not None:
+        raise ValueError(f"Cannot set album artist for ID3-tagged audio files")
 
     title = get_override(metadata, overrides, "title")
     if title is not None:
@@ -134,10 +203,6 @@ def edit_tags(path, metadata, overrides, version=2):
     comment = overrides.comment
     if comment is not None:
         arguments.append(f"--comment={comment}")
-
-    description = overrides.description
-    if description is not None:
-        arguments.append(f"--desc={description}")
 
     date = overrides.date
     if date is not None:
@@ -217,10 +282,10 @@ def process_file(orig_path, args):
     overrides = AudioMetadataOverrides(
         artist=args.artist_override,
         album=args.album_override,
+        album_artist=args.album_artist_override,
         title=args.title_override,
         track=args.track_override,
         comment=args.comment_override,
-        description=args.description_override,
         date=args.date_override,
         genre=args.genre_override,
     )
@@ -241,23 +306,6 @@ if __name__ == "__main__":
         help="Override the directory to use as the music root",
     )
     argparser.add_argument(
-        "-1",
-        "--v1",
-        dest="version",
-        action="store_const",
-        const=1,
-        default=2,
-        help="Force use of version 1 for ID tagging",
-    )
-    argparser.add_argument(
-        "-2",
-        "--v2",
-        dest="version",
-        action="store_const",
-        const=2,
-        help="Force use of version 1 for ID tagging",
-    )
-    argparser.add_argument(
         "-a",
         "--artist",
         dest="artist_override",
@@ -268,6 +316,12 @@ if __name__ == "__main__":
         "--album",
         dest="album_override",
         help="Override the album value to write for all songs",
+    )
+    argparser.add_argument(
+        "-T",
+        "--album-artist",
+        dest="album_artist_override",
+        help="Override the album artist value to write for all songs",
     )
     argparser.add_argument(
         "-t",
@@ -286,12 +340,6 @@ if __name__ == "__main__":
         "--comment",
         dest="comment_override",
         help="Override the comment value to write for all songs",
-    )
-    argparser.add_argument(
-        "-C",
-        "--description",
-        dest="description_override",
-        help="Override the description value to write for all songs",
     )
     argparser.add_argument(
         "-d",
