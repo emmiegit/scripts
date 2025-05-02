@@ -36,14 +36,18 @@ def get_id3_tags(path):
             continue
 
         tag, value = match[1], match[2]
+        if not value:
+            continue
+
         # See https://docs.mp3tag.de/mapping-table/
         match tag:
+            # Standard tags
             case "TPE1":
                 metadata["--artist"] = value
+            case "TPE2":
+                metadata["--album-artist"] = value
             case "TALB":
                 metadata["--album"] = value
-            case "TSOA":
-                metadata["--album-artist"] = value
             case "TIT2":
                 metadata["--title"] = value
             case "TRCK":
@@ -54,6 +58,17 @@ def get_id3_tags(path):
                 metadata["--year"] = value
             case "TCON":
                 metadata["--genre"] = value
+            # Other tags
+            case "TMED":
+                metadata["-X"] = f"MEDIATYPE={value}"
+            case "TPUB":
+                metadata["-X"] = f"PUBLISHER={value}"
+            case "TPOS":
+                metadata["-X"] = f"DISCNUMBER={value}"
+            # Ignored
+            case "TXXX" | "UFID" | "APIC" | "TCMP" | "TSOP" | "TSO2":
+                pass
+            # Unknown
             case _:
                 raise ValueError(f"Unknown ID3 tag: {tag}")
 
