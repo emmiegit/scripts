@@ -301,7 +301,7 @@ def process_file(orig_path, args):
             album=None,
         )
 
-    edit_tags(orig_path, metadata, overrides, args.version)
+    edit_tags(orig_path, metadata, overrides)
 
 
 if __name__ == "__main__":
