@@ -95,6 +95,9 @@ def repair_path(path):
         repair_file(path)
     elif S_ISDIR(stat.st_mode):
         repair_directory(path)
+    else:
+        # Let's not bother with character devices or whatever
+        raise ValueError(f"Invalid file type: {path}")
 
 
 if __name__ == "__main__":
