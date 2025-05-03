@@ -35,28 +35,31 @@ class RipDownloader:
     def __exit__(self, exc_type, exc_value, tb):
         self.temp_dir.cleanup()
 
+    def __repr__(self):
+        return f"<{type(self).__name__} writing to '{self.temp_dir.name}' at {hex(id(self))}>"
+
     def download_audio(self, url):
-        output = os.path.join(self.temp_dir, "%(title)s.%(ext)s")
+        output = os.path.join(self.temp_dir.name, "%(title)s.%(ext)s")
         command = [self.youtube_dl_program, url, "--no-playlist", "-x", "-o", output]
         print(command)
         subprocess.check_output(command)
 
     def process_files(self):
         paths_to_tag = []
-        for path in os.listdir(self.temp_dir):
+        for path in os.listdir(self.temp_dir.name):
             if os.path.isfile(path):
                 continue
 
             # Replace Windows-safe replacement characters, if present
             new_path = unmap_windows_chars(path)
             if new_path is not None:
-                old_sourcefile = os.path.join(self.temp_dir, path)
-                new_sourcefile = os.path.join(self.temp_dir, new_path)
+                old_sourcefile = os.path.join(self.temp_dir.name, path)
+                new_sourcefile = os.path.join(self.temp_dir.name, new_path)
                 os.rename(old_sourcefile, new_sourcefile)
                 print(f"{old_sourcefile} -> {new_sourcefile}")
                 path = new_path
 
-            sourcefile = os.path.join(self.temp_dir, path)
+            sourcefile = os.path.join(self.temp_dir.name, path)
             filename, ext = os.path.splitext(path)
             parts = filename.split(" - ")
             match len(parts):
@@ -88,7 +91,6 @@ class RipDownloader:
 
 if __name__ == "__main__":
     argparser = argparse.ArgumentParser(
-        name="siivagunner-download",
         description="Download assistant for SiIva-style rips",
     )
     argparser.add_argument(
