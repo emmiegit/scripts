@@ -27,6 +27,8 @@ class RipDownloader:
         self.dest_dir = args.destination
         self.youtube_dl_program = args.youtube_downloader
         self.autotagger_script = args.autotagger_script if args.autotag else None
+        self.ffmpeg_binary = args.ffmpeg_binary
+        self.convert_m4a = args.convert_m4a
 
     def __enter__(self):
         self.temp_dir = TemporaryDirectory(prefix="rip")
@@ -59,8 +61,25 @@ class RipDownloader:
                 print(f"{old_sourcefile} -> {new_sourcefile}")
                 path = new_path
 
-            sourcefile = os.path.join(self.temp_dir.name, path)
             filename, ext = os.path.splitext(path)
+
+            if self.convert_m4a and ext.casefold() == ".m4a":
+                new_path = f"{filename}.opus"
+                old_sourcefile = os.path.join(self.temp_dir.name, path)
+                new_sourcefile = os.path.join(self.temp_dir.name, new_path)
+                command = [
+                    self.ffmpeg_binary,
+                    "-hide_banner",
+                    "-i",
+                    old_sourcefile,
+                    new_sourcefile,
+                ]
+                print(command)
+                subprocess.check_output(command)
+                os.remove(old_sourcefile)
+                path = new_path
+
+            sourcefile = os.path.join(self.temp_dir.name, path)
             parts = filename.split(" - ")
             match len(parts):
                 case 2:
@@ -108,12 +127,27 @@ if __name__ == "__main__":
         help="The music autotagger script to use",
     )
     argparser.add_argument(
+        "-F",
+        "--ffmpeg",
+        "--ffmpeg-binary",
+        dest="ffmpeg_binary",
+        default="ffmpeg",
+        help="The ffmpeg binary to use",
+    )
+    argparser.add_argument(
         "-t",
         "--no-tag",
         "--no-autotag",
         dest="autotag",
         action="store_false",
         help="Disable the autotagger after downloading and placing the rip(s)",
+    )
+    argparser.add_argument(
+        "-M",
+        "--no-convert-m4a",
+        dest="convert_m4a",
+        action="store_false",
+        help="Disable the m4a to opus conversion",
     )
     argparser.add_argument(
         "-d",
