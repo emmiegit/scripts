@@ -1,5 +1,6 @@
 #!/bin/env python3
 
+import argparse
 import os
 import shutil
 import subprocess
@@ -78,8 +79,24 @@ def process_files(temp_dir, dest="."):
         subprocess.check_output(command)
 
 if __name__ == "__main__":
+    argparser = argparse.ArgumentParser(description="Download assistant for SiIva-style rips")
+    argparser.add_argument(
+        "-t",
+        "--no-tag",
+        "--no-autotag",
+        output="autotag",
+        action="store_false",
+        help="Disable the autotagger after downloading and placing the rip",
+    )
+    argparser.add_argument(
+        "url",
+        nargs="+",
+        help="URL(s) of the rip(s) that should be downloaded",
+    )
+    args = argparser.parse_args()
+
     with TemporaryDirectory(prefix="rip") as temp_dir:
-        for url in sys.argv[1:]:
+        for url in args.url:
             download_audio(temp_dir, url)
 
         process_files(temp_dir)
