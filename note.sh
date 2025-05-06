@@ -83,14 +83,14 @@ case "$1" in
 		git status
 		;;
 	push)
-		git push
+		chronic git push
 		;;
 	pull)
-		git pull
+		chronic git pull
 		;;
 	git)
 		shift
-		git "$@"
+		chronic git "$@"
 		;;
 	*)
 		usage_and_exit
