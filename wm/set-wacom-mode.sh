@@ -78,5 +78,3 @@ function main() {
 			;;
 	esac
 }
-
-notify "$(main 2>&1)"
