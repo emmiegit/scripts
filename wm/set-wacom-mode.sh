@@ -78,3 +78,5 @@ function main() {
 			;;
 	esac
 }
+
+main
