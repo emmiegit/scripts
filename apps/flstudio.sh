@@ -16,4 +16,4 @@ esac
 wine FL64.exe \
 	< /dev/null \
 	> /dev/null \
-	2>&1
+	2>&1 &
