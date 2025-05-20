@@ -19,7 +19,7 @@ check_args() {
 
 usage() {
 	echo "Usage:"
-	echo "    ${0##*/} list"
+	echo "    ${0##*/} ls|list [dir]"
 	echo "    ${0##*/} edit <note>"
 	echo "    ${0##*/} new <note>"
 	echo "    ${0##*/} show|view <note>"
@@ -36,8 +36,8 @@ usage_and_exit() {
 list_files() {
 	local files=()
 
-	for filename in *.md; do
-		files+=("${filename%.*}")
+	for filename in "$1/"*.md; do
+		files+=("$(basename "${filename%.*}")")
 	done
 
 	tr ' ' '\n' <<< "${files[@]}" | column -x
@@ -50,9 +50,8 @@ case "$1" in
 	help)
 		usage
 		;;
-	list)
-		check_args 1
-		list_files
+	ls|list)
+		list_files "${2:-.}"
 		;;
 	edit)
 		check_args 2
