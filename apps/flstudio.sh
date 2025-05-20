@@ -6,7 +6,7 @@ export WINEARCH=win64
 
 cd "$WINEHOME/drive_c/Program Files/Image-Line/FL Studio 2024/"
 
-case $1 in
+case "$1" in
 	exit|quit|kill|stop)
 		wineserver -k
 		exit 0
