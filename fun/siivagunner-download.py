@@ -10,7 +10,8 @@ from tempfile import TemporaryDirectory
 UNMAP = {
     "：": ":",
     "＂": '"',
-    # TODO |, \, ?
+    "？": "?",
+    # TODO |, \
 }
 
 
