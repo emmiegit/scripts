@@ -44,7 +44,7 @@ class RipDownloader:
         output = os.path.join(self.temp_dir.name, "%(title)s.%(ext)s")
         command = [self.youtube_dl_program, url, "--no-playlist", "-x", "-o", output]
         print(command)
-        subprocess.check_output(command)
+        subprocess.check_output(command, stdin=subprocess.DEVNULL)
 
     def process_files(self):
         paths_to_tag = []
