@@ -23,16 +23,25 @@ class ImageMover:
         self.remap_extensions = remap_extensions
         self.dry_run = dry_run
 
-    def rename_file(self, filename: str) -> None:
+    def rename_files(self, paths: list[str]) -> None:
+        new_paths = []
+        for path in paths:
+            new_path = self.remap_and_mark(path)
+            if new_path is not None:
+                new_paths.append(new_path)
+
+        subprocess.check_call([IMG_MOVE_PROGRAM] + new_paths)
+
+    def remap_and_mark(self, filename: str) -> str | None:
         if not os.path.isfile(filename):
-            return
+            return None
 
         file_stem, extension = os.path.splitext(filename)
         extension = extension.removeprefix(".")
 
         if not self.ignore_extensions:
             if extension not in ALLOWED_EXTENSIONS:
-                return
+                return None
 
         if self.remap_extensions:
             try:
@@ -43,13 +52,12 @@ class ImageMover:
         if self.dry_run:
             # TODO add --dry-run to hash-digest-rename
             print(f"+ {filename}")
+            return None
+        elif new_extension is not None:
+            os.rename(filename, f"{file_stem}.{new_extension}")
+            return f"{file_stem}.{new_extension}"
         else:
-            if new_extension is not None:
-                os.rename(filename, f"{file_stem}.{new_extension}")
-                extension = new_extension
-
-            new_filename = f"{file_stem}.{extension}"
-            subprocess.check_call([IMG_MOVE_PROGRAM, new_filename])
+            return f"{file_stem}.{extension}"
 
 
 if __name__ == "__main__":
@@ -84,5 +92,4 @@ if __name__ == "__main__":
 
     mover = ImageMover(args.force, args.remap_extensions, args.dry_run)
     paths = args.file if args.file else os.listdir(".")
-    for path in paths:
-        mover.rename_file(path)
+    mover.rename_files(paths)
