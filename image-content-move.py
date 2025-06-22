@@ -3,6 +3,7 @@
 import argparse
 import os
 import subprocess
+import sys
 
 IMG_MOVE_PROGRAM = "sha224mv"
 ALLOWED_EXTENSIONS = (
@@ -23,14 +24,14 @@ class ImageMover:
         self.remap_extensions = remap_extensions
         self.dry_run = dry_run
 
-    def rename_files(self, paths: list[str]) -> None:
+    def rename_files(self, paths: list[str]) -> int:
         new_paths = []
         for path in paths:
             new_path = self.remap_and_mark(path)
             if new_path is not None:
                 new_paths.append(new_path)
 
-        subprocess.check_call([IMG_MOVE_PROGRAM] + new_paths)
+        return subprocess.run([IMG_MOVE_PROGRAM] + new_paths).returncode
 
     def remap_and_mark(self, filename: str) -> str | None:
         if not os.path.isfile(filename):
@@ -92,4 +93,5 @@ if __name__ == "__main__":
 
     mover = ImageMover(args.force, args.remap_extensions, args.dry_run)
     paths = args.file if args.file else os.listdir(".")
-    mover.rename_files(paths)
+    status_code = mover.rename_files(paths)
+    sys.exit(status_code)
