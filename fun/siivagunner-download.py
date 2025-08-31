@@ -29,6 +29,7 @@ class RipDownloader:
         self.youtube_dl_program = args.youtube_downloader
         self.autotagger_script = args.autotagger_script if args.autotag else None
         self.ffmpeg_binary = args.ffmpeg_binary
+        self.flip_title_album = args.flip_title_album
         self.convert_m4a = args.convert_m4a
 
     def __enter__(self):
@@ -85,7 +86,11 @@ class RipDownloader:
             match len(parts):
                 case 2:
                     # Move to album subdirectory
-                    title, album = parts
+                    if self.flip_title_album:
+                        album, title = parts
+                    else:
+                        title, album = parts
+
                     album_dir = os.path.join(self.dest_dir, album)
                     os.makedirs(album_dir, exist_ok=True)
                     print(f"{filename} -> {album_dir}")
@@ -142,6 +147,14 @@ if __name__ == "__main__":
         dest="autotag",
         action="store_false",
         help="Disable the autotagger after downloading and placing the rip(s)",
+    )
+    argparser.add_argument(
+        "-p",
+        "--flip",
+        "--flip-title-album",
+        dest="flip_title_album",
+        action="store_true",
+        help="Reverse the order of title and album extracted from the YouTube video title",
     )
     argparser.add_argument(
         "-M",
