@@ -43,7 +43,7 @@ class RipDownloader:
 
     def download_audio(self, url):
         output = os.path.join(self.temp_dir.name, "%(title)s.%(ext)s")
-        command = [self.youtube_dl_program, url, "--no-playlist", "-x", "-o", output]
+        command = [self.youtube_dl_program, url, "--no-playlist", "--audio-format", "opus", "-x", "-o", output]
         print(command)
         subprocess.check_output(command, stdin=subprocess.DEVNULL)
 
