@@ -44,7 +44,7 @@ class RipDownloader:
 
     def download_audio(self, url):
         output = os.path.join(self.temp_dir.name, "%(title)s.%(ext)s")
-        command = [self.youtube_dl_program, url, "--no-playlist", "--audio-format", "opus", "-x", "-o", output]
+        command = [self.youtube_dl_program, url, "--no-playlist", "-x", "-o", output]
         print(command)
         subprocess.check_output(command, stdin=subprocess.DEVNULL)
 
@@ -90,6 +90,9 @@ class RipDownloader:
                         album, title = parts
                     else:
                         title, album = parts
+
+                    if "(" in album:
+                        print(f"Parentheses found in album name, is this the right order? {title!r}, {album!r}")
 
                     album_dir = os.path.join(self.dest_dir, album)
                     os.makedirs(album_dir, exist_ok=True)
