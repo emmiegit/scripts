@@ -13,12 +13,6 @@ import sys
 # - Command-line options
 # - Support ctrl+z backgrounding
 
-HEADER = """\
-psplit v0.1
-Copyright (C) 2016 Ammon Smith
-Licensed under the GPL, version 2 or later.
-"""
-
 HELP_STRING = """
 Keybinds:
     Next:     n j l <down> <space> <enter> <right>
@@ -200,8 +194,7 @@ class BlockDisplay:
 
     def print_help(self, win):
         win.erase()
-        win.addstr(0, 0, HEADER)
-        win.addstr(HELP_STRING)
+        win.addstr(0, 0, HELP_STRING)
         win.refresh()
         _ = win.getch()
 
