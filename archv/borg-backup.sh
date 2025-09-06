@@ -20,5 +20,8 @@ exec \
 			--stats \
 			--progress \
 			--compression auto,lzma \
+			--exclude /media/media/docker \
+			--exclude /media/media/games/steam \
+			--exclude /media/media/videos \
 			"$backup::$archive" \
 			"${locations[@]}"
