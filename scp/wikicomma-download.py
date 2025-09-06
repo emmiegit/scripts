@@ -12,7 +12,7 @@ from urllib.parse import urljoin
 import requests
 from bs4 import BeautifulSoup
 
-TORRENT_DIRECTORY = "/tmp/emmie/wikicomma"
+TORRENT_DIRECTORY = "/media/media/temporary/wikicomma"
 TORRENT_URL_REGEX = re.compile(r"/snapshots/[^\.]+\.torrent/[^\.]+\.torrent")
 WIKICOMMA_URL_REGEX = re.compile(
     r"https://wikidot.dbotthepony.ru/snapshots/([^\.]+)\.torrent/?"
