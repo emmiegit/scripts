@@ -4,9 +4,7 @@ set -euo pipefail
 archive_location='/media/archive/backup'
 archive_name='dotmozilla.tar.xz'
 archive="$archive_location/$archive_name"
-tabs_name='firefox-tabs.txt'
 tabs="$archive_location/$tabs_name"
-firefox_profile='0s56fc3h.dev-edition-default'
 gpg_key='2C3CF0C7'
 tar_program='/usr/bin/tar'
 temp_dir="$(mktemp -d /tmp/dot-mozilla-XXXXXXXXX)"
@@ -31,5 +29,4 @@ cp -a ~/.mozilla "$temp_dir"
 gpg --yes -er "$gpg_key" "$archive"
 
 # Export open browser tabs
-dejsonlz4 "$HOME/.mozilla/firefox/$firefox_profile/sessionstore.jsonlz4" "$temp_dir/sessionstore.json"
-jq -r '.windows[].tabs[].entries[].url' "$temp_dir/sessionstore.json" > "$tabs"
+/usr/local/scripts/archv/backup-firefox-tabs.sh "$tabs"
