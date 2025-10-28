@@ -2,7 +2,6 @@
 set -euo pipefail
 
 firefox_profile='0s56fc3h.dev-edition-default'
-tabs_name='firefox-tabs.txt'
 temp_file="$(mktemp /tmp/sessionstore-XXXXXX.json)"
 output="$1"
 

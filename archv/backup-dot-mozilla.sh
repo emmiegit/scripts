@@ -3,6 +3,7 @@ set -euo pipefail
 
 archive_location='/media/archive/backup'
 archive_name='dotmozilla.tar.xz'
+tabs_name='firefox-tabs.txt'
 archive="$archive_location/$archive_name"
 tabs="$archive_location/$tabs_name"
 gpg_key='2C3CF0C7'
