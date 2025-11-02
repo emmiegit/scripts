@@ -65,6 +65,9 @@ class RipDownloader:
 
             filename, ext = os.path.splitext(path)
 
+            if "m4a" in path:
+                breakpoint()
+
             if self.convert_m4a and ext.casefold() == ".m4a":
                 new_path = f"{filename}.opus"
                 old_sourcefile = os.path.join(self.temp_dir.name, path)
