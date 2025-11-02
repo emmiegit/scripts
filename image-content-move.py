@@ -12,8 +12,9 @@ ALLOWED_EXTENSIONS = (
     "jpg",
     "jpeg",
     "png",
+    "pnj",
 )
-EXTENSION_MAPPING = {"jpeg": "jpg"}
+EXTENSION_MAPPING = {"jpeg": "jpg", "pnj": "jpg"}
 
 
 class ImageMover:
