@@ -21,7 +21,7 @@ case "$1" in
 				cjk_japanese_on
 		;;
 	run|window)
-		exec rofi -show combi -modi combi -combi-modes 'window,drun,run'
+		exec rofi -show combi -modi combi -combi-modes 'drun,window,run'
 		;;
 	*)
 		echo "Unknown mode: $1" >&2
