@@ -7,6 +7,3 @@ xset dpms force suspend
 
 # Suspension
 systemctl suspend
-
-# Post-suspend recovery
-systemctl --user restart ibus.service
