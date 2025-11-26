@@ -74,23 +74,6 @@ function main() {
 					;;
 			esac
 			;;
-		Domitian)
-			# 1440 x 900
-			case "$mode" in
-				draw)
-					notify 'Setting tablet to drawing mode.'
-					xsetwacom --set "$tablet_part" MapToOutput 'LVDS-1'
-					;;
-				osu)
-					notify 'Setting tablet to circle-clicking mode.'
-					xsetwacom --set "$tablet_part" MapToOutput 'LVDS-1'
-					xsetwacom --set "$tablet_part" Area 2000 2000 8000 5750
-					;;
-				*)
-					printf >&2 'Unknown tablet mode: %s.\n' "$mode"
-					exit 1
-			esac
-			;;
 		*)
 			printf >&2 'Unknown tablet mode: %s.\n' "$mode"
 			exit 1
