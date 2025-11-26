@@ -6,7 +6,7 @@ case "$(hostname)" in
 		workspaces=({1..4})
 		;;
 	Augustus)
-		workspaces=({1..5} 7)
+		workspaces=({1..5})
 		;;
 	*)
 		notify-send "Unknown hostname $(hostname), cannot determine workspaces to restore"
