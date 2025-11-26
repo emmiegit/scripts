@@ -1,7 +1,7 @@
 #!/bin/bash
 set -eu
 
-case "$(cat /etc/hostname)" in
+case "$(hostname)" in
 	Titus)
 		workspaces=({1..4})
 		;;
@@ -9,7 +9,7 @@ case "$(cat /etc/hostname)" in
 		workspaces=({1..5} 7)
 		;;
 	*)
-		notify-msg "Unknown hostname $(cat /etc/hostname), cannot determine workspaces to restore"
+		notify-msg "Unknown hostname $(hostname), cannot determine workspaces to restore"
 		exit 1
 esac
 
