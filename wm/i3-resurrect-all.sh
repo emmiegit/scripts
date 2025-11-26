@@ -9,7 +9,7 @@ case "$(hostname)" in
 		workspaces=({1..5} 7)
 		;;
 	*)
-		notify-msg "Unknown hostname $(hostname), cannot determine workspaces to restore"
+		notify-send "Unknown hostname $(hostname), cannot determine workspaces to restore"
 		exit 1
 esac
 
