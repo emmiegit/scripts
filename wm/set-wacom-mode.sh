@@ -55,6 +55,25 @@ function main() {
 					;;
 			esac
 			;;
+		Augustus)
+			# 1920 x 1080
+			case "$mode" in
+				draw)
+					notify 'Setting tablet to drawing mode.'
+					xsetwacom --set "$tablet_part" MapToOutput 'eDP1'
+					xsetwacom --set "$tablet_part" Area 0 0 14796 8250
+					;;
+				osu)
+					notify 'Setting tablet to circle-clicking mode.'
+					xsetwacom --set "$tablet_part" MapToOutput 'eDP1'
+					xsetwacom --set "$tablet_part" Area 2000 2000 7000 4700
+					;;
+				*)
+					printf >&2 'Unknown tablet mode: %s.\n' "$mode"
+					exit 1
+					;;
+			esac
+			;;
 		Domitian)
 			# 1440 x 900
 			case "$mode" in
