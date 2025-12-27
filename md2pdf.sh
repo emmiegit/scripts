@@ -38,4 +38,3 @@ recursively_convert() {
 
 recursively_convert "$start_dir"
 "$did_something" || printf 'Nothing to do.\n'
-

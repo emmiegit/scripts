@@ -18,4 +18,3 @@ cp -f "$FILE" "$COPY"
 chmod +w "$COPY"
 "$EDITOR" "$COPY" 2> /dev/null
 rm -f "$COPY"
-

@@ -1,12 +1,13 @@
 #!/bin/sh
-HIBERNATE=true
+set -eu
 
-if $HIBERNATE; then
+hibernate=true
+
+if "$hibernate"; then
 	notify-send 'Hibernating computer...'
 else
 	notify-send 'Not hibernating, only locking...'
 fi
 
 /usr/local/scripts/wm/lock
-$HIBERNATE && systemctl hibernate
-
+$hibernate && systemctl hibernate
