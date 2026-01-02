@@ -20,6 +20,9 @@ case "$1" in
 				cjk_japanese_kun \
 				cjk_japanese_on
 		;;
+	calc)
+		exec rofi -show calc -modi calc -no-show-match -no-sort
+		;;
 	run|window)
 		exec rofi -show combi -modi combi -combi-modes 'drun,window,run'
 		;;
