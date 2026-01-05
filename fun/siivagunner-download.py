@@ -83,6 +83,7 @@ class RipDownloader:
                 subprocess.check_output(command)
                 os.remove(old_sourcefile)
                 path = new_path
+                ext = ".opus"
 
             sourcefile = os.path.join(self.temp_dir.name, path)
             parts = filename.split(" - ")
