@@ -83,7 +83,7 @@ def build_memmap(addresses: Sequence[int | tuple[int, int]] = ADDRESSES) -> str:
     return f"memmap={parts}"
 
 if __name__ == "__main__":
-    print("[")
+    print("ADDRESSES = [")
     for value in from_badram():
         match value:
             case (start, stop):
