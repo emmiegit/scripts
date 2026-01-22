@@ -91,3 +91,5 @@ if __name__ == "__main__":
             case address:
                 print(f"    0x{address:016x},")
     print("]")
+
+    print(build_memmap())
