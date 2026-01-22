@@ -4,7 +4,6 @@ import math
 from typing import Sequence
 
 BADRAM = [
-    (),
 ]
 
 ADDRESSES = [
@@ -85,4 +84,11 @@ def build_memmap(addresses: Sequence[int | tuple[int, int]] = ADDRESSES) -> str:
     return f"memmap={parts}"
 
 if __name__ == "__main__":
-    print(build_memmap())
+    print("[")
+    for value in from_badram():
+        match value:
+            case (start, stop):
+                print(f"    (0x{start:016x}, 0x{stop:016x}),")
+            case address:
+                print(f"    0x{address:016x},")
+    print("]")
