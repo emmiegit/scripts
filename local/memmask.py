@@ -3,6 +3,10 @@
 import math
 from typing import Sequence
 
+BADRAM = [
+    (),
+]
+
 ADDRESSES = [
     0x000000000062c010,
     0x0000000004060000,
@@ -49,6 +53,22 @@ def region_size(size: int) -> str:
         mult = 4
 
     return f"{mult}{unit}"
+
+
+def from_badram(bad_ram: Sequence[tuple[int, int]] = BADRAM) -> Sequence[int | tuple[int, int]]:
+    """
+    Converts the badram format to the format used by ADDRESSES.
+    That is, either a singular bad address, or a (start, stop) range of them.
+    """
+
+    addresses = []
+    for start, mask in bad_ram:
+        stop = start & mask
+        if start == stop:
+            addresses.append(start)
+        else:
+            addresses.append((start, stop))
+    return addresses
 
 
 def build_memmap(addresses: Sequence[int | tuple[int, int]] = ADDRESSES) -> str:
