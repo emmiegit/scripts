@@ -9,7 +9,7 @@ fi
 
 # Stop old instances
 if compgen -G /tmp/polybar_mqueue.*; then
-	polybar-msg cmd quit
+	polybar-msg cmd quit || true
 fi
 
 # Load mpd password
