@@ -15,4 +15,5 @@ esac
 
 for workspace in "${workspaces[@]}"; do
 	i3-resurrect restore --workspace "$workspace"
+	sleep 0.2  # give time for the windows to appear in
 done
