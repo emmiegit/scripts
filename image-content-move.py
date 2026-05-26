@@ -13,6 +13,8 @@ ALLOWED_EXTENSIONS = (
     "jpeg",
     "png",
     "pnj",
+    "webp",
+    "webm",
 )
 EXTENSION_MAPPING = {"jpeg": "jpg", "pnj": "jpg"}
 
