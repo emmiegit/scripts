@@ -17,4 +17,3 @@ if [[ ${DISPLAY:-none} == none ]]; then
 fi
 
 feh --recursive --randomize --"$spread" "$dir/$section"
-
