@@ -11,6 +11,7 @@ ALLOWED_EXTENSIONS = (
     "gif",
     "jpg",
     "jpeg",
+    "mp4",
     "png",
     "pnj",
     "webp",
