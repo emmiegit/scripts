@@ -5,7 +5,14 @@
 # Since they don't appear together in sorted output
 # but need to be built together
 
-exec yay -Syu \
+# TODO figure out how to best implement this
+#      since saying "just install these packages"
+#      in a row doesn't actually work...
+#
+#      perhaps cloning and doing makepkg on the relevant
+#      base packages then installing the *.pkg.tar files?
+
+echo yay -Sy \
 	nvidia-580xx-dkms
 	nvidia-580xx-settings
 	nvidia-580xx-utils
