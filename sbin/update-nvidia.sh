@@ -37,7 +37,7 @@ readonly packages=(
 (
 	cd "$AURDEST"
 	for pkg in "${packages[@]}"; do
-		[[ ! -d $pkg/.git ]] && continue
+		[[ ! -f $pkg/PKGBUILD ]] && continue
 		makepkg
 	done
 )
