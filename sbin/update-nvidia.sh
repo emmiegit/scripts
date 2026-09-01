@@ -9,7 +9,7 @@ set -eux
 (
 	existing=("$AURDEST/"*/)
 	if ! [[ ${existing[@]} = *\** ]]; then
-		echo "Directories exist in $AURDEST"
+		echo "Directories exist in $AURDEST: ${existing[@]}"
 		exit 1
 	fi
 )
