@@ -6,6 +6,11 @@ set -eux
 # Since they don't appear together in sorted output
 # but need to be built together
 
+if [[ ! -d $AURDEST/*/ ]]; then
+	echo "Directories exist in $AURDEST"
+	exit 1
+fi
+
 # List of packages
 readonly packages=(
 	nvidia-580xx-dkms
