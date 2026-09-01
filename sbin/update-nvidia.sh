@@ -43,4 +43,4 @@ readonly packages=(
 )
 
 # Install all the packages
-sudo pacman -U "$AURDEST/**/*.pkg.tar
+sudo pacman -U "$AURDEST"/**/*.pkg.tar
