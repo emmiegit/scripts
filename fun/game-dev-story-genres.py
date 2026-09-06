@@ -10,7 +10,7 @@ Data sourced from https://gamefaqs.gamespot.com/xbox-series-x/424246-game-dev-st
 import sys
 from enum import Enum, unique
 
-MAXIMUM_TIER = 1
+MAXIMUM_TIER = 0
 
 
 @unique
