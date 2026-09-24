@@ -11,7 +11,9 @@ from typing import Final
 
 DOWNLOAD_DIRECTORY: Final[str] = "/media/media/temporary/wikicomma"
 
-WIKICOMMA_DATE_REGEX: Final[re.Pattern[str]] = re.compile(r"([0-9]{4})-([0-9]{2})-([0-9]{2})-[0-9]{2}-[0-9]{2}-[0-9]{2}")
+WIKICOMMA_DATE_REGEX: Final[re.Pattern[str]] = re.compile(
+    r"([0-9]{4})-([0-9]{2})-([0-9]{2})-[0-9]{2}-[0-9]{2}-[0-9]{2}"
+)
 
 UPLOAD_SSH_SERVER: Final[str] = "rsync.net"  # params set in .ssh/config
 UPLOAD_SSH_PATH: Final[str] = "./wikicomma"
@@ -58,7 +60,12 @@ def trim_wikicomma_date(value: str) -> str:
 
 # Main functions
 
-async def download_torrent(torrent_name: str, torrent_file_path: str, download_directory: str) -> None:
+
+async def download_torrent(
+    torrent_name: str,
+    torrent_file_path: str,
+    download_directory: str,
+) -> None:
     command = [
         "aria2c",
         "--dir",
@@ -84,7 +91,11 @@ async def download_torrent(torrent_name: str, torrent_file_path: str, download_d
             file.write("\n")
 
 
-async def upload_data(torrent_name: str, directory_path: str, date: str) -> None:
+async def upload_data(
+    torrent_name: str,
+    directory_path: str,
+    date: str,
+) -> None:
     torrent_name = os.path.basename(directory_path)
     destination = f"{UPLOAD_SSH_SERVER}:{UPLOAD_SSH_PATH}/{date}"
     command = [
@@ -105,7 +116,10 @@ async def upload_data(torrent_name: str, directory_path: str, date: str) -> None
     except CalledProcessError as error:
         # Write out failure
         print(f"Download exited with exit code {error.exit_code}")
-        path = os.path.join(os.path.dirname(directory_path), f"{torrent_name}-upload-stderr")
+        path = os.path.join(
+            os.path.dirname(directory_path),
+            f"{torrent_name}-upload-stderr",
+        )
         with open(path, "w") as file:
             file.write(error.stderr_text)
             file.write("\n")
