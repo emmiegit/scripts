@@ -127,15 +127,16 @@ async def upload_data(
 
 def cleanup_data(directory_path: str) -> None:
     print(f"Deleting download directory '{directory_path}'")
-    shutil.rmtree(download_path)
+    shutil.rmtree(directory_path)
 
 
-async def main(torrent_file: str) -> None:
+async def main(torrent_file_path: str) -> None:
+    date = os.path.basename(os.path.dirname(torrent_file_path))  # assumes parent directory is the wikicomma torrent list
     date = trim_wikicomma_date(date)
     torrent_name, _ = os.path.splitext(os.path.basename(torrent_file_path))
 
     print(f"Running sync for {torrent_name} on {date}")
-    await download_torrent(torrent_name, args.torrent_file, DOWNLOAD_DIRECTORY)
+    await download_torrent(torrent_name, torrent_file_path, DOWNLOAD_DIRECTORY)
     download_path = os.path.join(DOWNLOAD_DIRECTORY, torrent_name)
     await upload_data(torrent_name, download_path, date)
     cleanup_data(download_path)
