@@ -7,6 +7,7 @@ Downloads Wikicomma torrent files and then uploads each via rsync
 import argparse
 import asyncio
 import os
+from pprint import pformat
 import re
 import shutil
 from typing import Final
@@ -31,12 +32,8 @@ class CalledProcessError(RuntimeError):
         super().__init__(f"[{self.error_code}] {self.stderr_text}")
 
 
-async def run_command(command: list[str], dry_run: bool = False) -> None:
-    if dry_run:
-        print(f"Running {command} (DRY-RUN)")
-        return
-
-    print(f"Running {command}")
+async def run_command(command: list[str]) -> None:
+    print(f"Running command: {pformat(command)}")
     proc = await asyncio.create_subprocess_exec(
         *command,
         stdout=None,
