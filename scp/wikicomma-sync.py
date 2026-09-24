@@ -4,13 +4,12 @@ Downloads Wikicomma torrent files and then uploads each via rsync
 
 import argparse
 import asyncio
-from glob import iglob, glob
 import re
 import os
 import shutil
 from typing import Final
 
-TORRENT_DIRECTORY_GLOB: Final[str] = "/media/media/temporary/wikicomma/*"
+DOWNLOAD_DIRECTORY: Final[str] = "/media/media/temporary/wikicomma"
 
 WIKICOMMA_DATE_REGEX: Final[re.Pattern[str]] = re.compile(r"([0-9]{4})-([0-9]{2})-([0-9]{2})-[0-9]{2}-[0-9]{2}-[0-9]{2}")
 
@@ -59,11 +58,9 @@ def trim_wikicomma_date(value: str) -> str:
 
 # Main functions
 
-async def download_torrent(torrent_file_path: str, download_directory: str) -> None:
-    torrent_name, _ = os.path.splitext(os.path.basename(torrent_file_path))
+async def download_torrent(torrent_name: str, torrent_file_path: str, download_directory: str) -> None:
     command = [
         "aria2c",
-        "--continue",
         "--dir",
         download_directory,
         "--max-tries=3",
@@ -76,18 +73,20 @@ async def download_torrent(torrent_file_path: str, download_directory: str) -> N
     ]
 
     try:
-        print(f"Downloading '{torrent_name}'...")
+        print(f"Downloading {torrent_name}")
         await run_command(command)
     except CalledProcessError as error:
         # Write out failure
         print(f"Download exited with exit code {error.exit_code}")
-        path = os.path.join(download_directory, f"{torrent_name}-stderr")
+        path = os.path.join(download_directory, f"{torrent_name}-download-stderr")
         with open(path, "w") as file:
             file.write(error.stderr_text)
             file.write("\n")
 
 
-async def upload_data() -> None:
+async def upload_data(torrent_name: str, directory_path: str, date: str) -> None:
+    torrent_name = os.path.basename(directory_path)
+    destination = f"{UPLOAD_SSH_SERVER}:{UPLOAD_SSH_PATH}/{date}"
     command = [
         "rsync",
         "--verbose",
@@ -96,12 +95,36 @@ async def upload_data() -> None:
         "--human-readable",
         "--partial",
         "--progress",
-        source,
+        directory_path,
         destination,
     ]
 
-    # TODO
-    ...
+    try:
+        print(f"Uploading {torrent_name} to {UPLOAD_SSH_PATH}/{date}")
+        await run_command(command)
+    except CalledProcessError as error:
+        # Write out failure
+        print(f"Download exited with exit code {error.exit_code}")
+        path = os.path.join(os.path.dirname(directory_path), f"{torrent_name}-upload-stderr")
+        with open(path, "w") as file:
+            file.write(error.stderr_text)
+            file.write("\n")
+
+
+def cleanup_data(directory_path: str) -> None:
+    print(f"Deleting download directory '{directory_path}'")
+    shutil.rmtree(download_path)
+
+
+async def main(torrent_file: str) -> None:
+    date = trim_wikicomma_date(date)
+    torrent_name, _ = os.path.splitext(os.path.basename(torrent_file_path))
+
+    print(f"Running sync for {torrent_name} on {date}")
+    await download_torrent(torrent_name, args.torrent_file, DOWNLOAD_DIRECTORY)
+    download_path = os.path.join(DOWNLOAD_DIRECTORY, torrent_name)
+    await upload_data(torrent_name, download_path, date)
+    cleanup_data(download_path)
 
 
 if __name__ == "__main__":
@@ -113,17 +136,4 @@ if __name__ == "__main__":
         help="Path to a Wikicomma *.torrent file",
     )
     args = argparser.parse_args()
-
-    # if there's only one directory, we can infer it
-    if args.torrent_file_directory is None:
-        torrent_dirs = glob(TORRENT_DIRECTORY_GLOB)
-        if len(torrent_dirs) != 1:
-            message = f"Multiple directories found in {os.path.dirname(TORRENT_DIRECTORY_GLOB)}, you must specify one"
-            raise ValueError(message)
-
-        torrent_file_directory = torrent_dirs[0]
-    else:
-        torrent_file_directory = args.torrent_file_directory
-
-    # TODO
-    ...
+    asyncio.run(main(args.torrent_file))
