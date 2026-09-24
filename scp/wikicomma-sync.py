@@ -82,12 +82,7 @@ async def download_torrent(
         print(f"Downloading {torrent_name}")
         await run_command(command)
     except CalledProcessError as error:
-        # Write out failure
         print(f"Download exited with exit code {error.exit_code}")
-        path = os.path.join(download_directory, f"{torrent_name}-download-stderr")
-        with open(path, "w") as file:
-            file.write(error.stderr_text)
-            file.write("\n")
 
 
 async def upload_data(
@@ -113,15 +108,7 @@ async def upload_data(
         print(f"Uploading {torrent_name} to {UPLOAD_SSH_PATH}/{date}")
         await run_command(command)
     except CalledProcessError as error:
-        # Write out failure
         print(f"Download exited with exit code {error.exit_code}")
-        path = os.path.join(
-            os.path.dirname(directory_path),
-            f"{torrent_name}-upload-stderr",
-        )
-        with open(path, "w") as file:
-            file.write(error.stderr_text)
-            file.write("\n")
 
 
 def cleanup_data(directory_path: str) -> None:
