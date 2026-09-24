@@ -7,9 +7,9 @@ Downloads Wikicomma torrent files and then uploads each via rsync
 import argparse
 import asyncio
 import os
-from pprint import pformat
 import re
 import shutil
+from pprint import pformat
 from typing import Final
 
 DOWNLOAD_DIRECTORY: Final[str] = "/media/media/temporary/wikicomma"
