@@ -147,7 +147,7 @@ async def main(torrent_file_path: str) -> None:
 if __name__ == "__main__":
     argparser = argparse.ArgumentParser()
     argparser.add_argument(
-        "torrent-file",
+        "torrent_file",
         nargs="?",
         type=str,
         help="Path to a Wikicomma *.torrent file",
