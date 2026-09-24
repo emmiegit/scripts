@@ -25,11 +25,11 @@ UPLOAD_SSH_PATH: Final[str] = "./wikicomma"
 
 
 class CalledProcessError(RuntimeError):
-    def __init__(self, error_code: int, stderr: bytes):
-        self.error_code = error_code
+    def __init__(self, exit_code: int, stderr: bytes):
+        self.exit_code = exit_code
         self.stderr_bytes = stderr
         self.stderr_text = stderr.decode("utf-8")
-        super().__init__(f"[{self.error_code}] {self.stderr_text}")
+        super().__init__(f"[{self.exit_code}] {self.stderr_text}")
 
 
 async def run_command(command: list[str]) -> None:
