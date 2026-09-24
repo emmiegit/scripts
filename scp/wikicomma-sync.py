@@ -73,6 +73,7 @@ async def download_torrent(
         "--timeout=30",
         "--max-tries=3",
         "--retry-wait=10",
+        "--max-concurrent-downloads=8",
         "--split=8",
         "--http-accept-gzip=true",
         "--seed-time=0",
@@ -115,7 +116,6 @@ async def upload_data(
 def cleanup_data(directory_path: str) -> None:
     print(f"Deleting download directory '{directory_path}'")
     shutil.rmtree(directory_path)
-    os.remove(f"{directory_path}.aria2")
 
 
 async def main(torrent_file_path: str) -> None:
