@@ -9,7 +9,7 @@ import asyncio
 import os
 import re
 import shutil
-from pprint import pformat
+from pprint import pprint
 from typing import Final
 
 DOWNLOAD_DIRECTORY: Final[str] = "/media/media/temporary/wikicomma"
@@ -33,7 +33,8 @@ class CalledProcessError(RuntimeError):
 
 
 async def run_command(command: list[str]) -> None:
-    print(f"Running command: {pformat(command)}")
+    print("Running command:")
+    pprint(command)
     proc = await asyncio.create_subprocess_exec(
         *command,
         stdout=None,
