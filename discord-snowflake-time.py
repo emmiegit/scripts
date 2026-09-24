@@ -9,13 +9,16 @@ a small utility function.
 
 import sys
 from datetime import datetime
+from zoneinfo import ZoneInfo
 
 
 DISCORD_EPOCH = 1420070400000
+UTC = ZoneInfo("UTC")
 
 
-def snowflake_time(id):
-    return datetime.utcfromtimestamp(((id >> 22) + DISCORD_EPOCH) / 1000)
+def snowflake_time(id: int) -> datetime:
+    timestamp = ((id >> 22) + DISCORD_EPOCH) / 1000
+    return datetime.fromtimestamp(timestamp, tz=UTC)
 
 
 def timedelta_string(timedelta):
@@ -67,7 +70,7 @@ if __name__ == "__main__":
             continue
 
         timestamp = snowflake_time(id)
-        elapsed = datetime.utcnow() - timestamp
+        elapsed = datetime.now(tz=UTC) - timestamp
         delta_string, offset_name = timedelta_string(elapsed)
 
         print(f"{id} - {timestamp} ({delta_string} {offset_name})")
