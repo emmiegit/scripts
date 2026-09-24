@@ -1,11 +1,13 @@
+#!/usr/bin/env python3
+
 """
 Downloads Wikicomma torrent files and then uploads each via rsync
 """
 
 import argparse
 import asyncio
-import re
 import os
+import re
 import shutil
 from typing import Final
 
