@@ -13,17 +13,12 @@ if __name__ == "__main__":
         help="Run in decoder mode",
     )
     argparser.add_argument(
-        "-f",
-        "--force",
-        action="store_true",
-        help="Force encoding of all non-alphanumeric characters",
-    )
-    argparser.add_argument(
         "input",
         nargs="+",
         help="String inputs to encode/decode",
     )
     args = argparser.parse_args()
+    process = unquote if args.decode else quote
 
     for string in args.input:
-        print(quote(string))
+        print(process(string))
