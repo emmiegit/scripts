@@ -358,6 +358,8 @@ if __name__ == "__main__":
     )
     argparser.add_argument(
         "-n",
+        "--num",
+        "--number",
         "--track",
         dest="track_override",
         help="Override the track value to write for all songs",
