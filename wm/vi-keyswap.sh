@@ -52,14 +52,10 @@ keyswap() {
 
 for arg in "$@"; do
 	case "$arg" in
-		-f)             FORCE=true ;;
-		--force)        FORCE=true ;;
-		-r)             RESET=true ;;
-		--reset)        RESET=true ;;
-		-h)             help_and_exit ;;
-		--help)         help_and_exit ;;
-		-m*)            set_xmodmap_file "$arg" ;;
-		--modmapfile=*) set_xmodmap_file "$arg" ;;
+		-f|--force)         FORCE=true ;;
+		-r|--reset)         RESET=true ;;
+		-h|--help)          help_and_exit ;;
+		-m*|--modmapfile=*) set_xmodmap_file "$arg" ;;
 		*)
 			printf >&2 'Unrecognized option: %s\nUse "--help" for a list of options.\n' "$arg"
 			exit 1
