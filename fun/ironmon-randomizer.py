@@ -41,6 +41,11 @@ def get_rnqs_path(game: str, variant: str) -> Path:
 def main() -> None:
     argparser = argparse.ArgumentParser("ironmon-randomizer")
     argparser.add_argument(
+        "-n",
+        "--dry-run",
+        help="Print the command to be invoked, but don't actually run it",
+    )
+    argparser.add_argument(
         "game",
         choices=["heartgold", "platinum"],
         help="The Pokémon game to randomize",
@@ -69,6 +74,10 @@ def main() -> None:
         rnqs_path,
         "-l",
     ]
+
+    if args.dry_run:
+        command.insert(0, "echo")
+
     print(f"Running command: {command}")
     subprocess.run(command, check=True, cwd=RANDOMIZER_DIRECTORY)
 
