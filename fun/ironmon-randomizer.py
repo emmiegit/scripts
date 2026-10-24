@@ -55,7 +55,7 @@ def main() -> None:
     input_rom_path, output_rom_path = get_rom_paths(args.game)
     rnqs_path = get_rnqs_path(args.game, args.variant)
 
-    command = [
+    command: list[str | Path] = [
         "java",
         "-Xmx4096M",
         "-jar",
