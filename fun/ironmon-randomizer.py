@@ -10,6 +10,7 @@ from typing import Final
 
 IRONMON_DIRECTORY: Final[Path] = Path("/media/media/games/emulator/DS/Ironmon")
 RANDOMIZER_DIRECTORY: Final[Path] = IRONMON_DIRECTORY / "PokeRandoZX"
+RANDOMIZER_JAR: Final[Path] = RANDOMIZER_DIRECTORY / "PokeRandoZX.jar"
 
 def get_rom_file_stem(game: str) -> tuple[str, str]:
     match game:
@@ -53,7 +54,22 @@ def main() -> None:
     input_rom_path, output_rom_path = get_rom_paths(game)
     rnqs_path = get_rnqs_path(game, variant)
 
-    # TODO
+    command = [
+        "java",
+        "-Xmx4096M",
+        "-jar",
+        RANDOMIZER_JAR,
+        "cli",
+        "-i",
+        input_rom_path,
+        "-o",
+        output_rom_path,
+        "-s",
+        rnqs_path,
+        "-l",
+    ]
+    print(f"Running command: {command}")
+    subprocess.run(command, check=True, cwd=RANDOMIZER_DIRECTORY)
 
 
 if __name__ == "__main__":
