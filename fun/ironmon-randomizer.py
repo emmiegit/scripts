@@ -43,6 +43,7 @@ def main() -> None:
     argparser.add_argument(
         "-n",
         "--dry-run",
+        action="store_true",
         help="Print the command to be invoked, but don't actually run it",
     )
     argparser.add_argument(
