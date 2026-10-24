@@ -12,6 +12,7 @@ IRONMON_DIRECTORY: Final[Path] = Path("/media/media/games/emulator/DS/Ironmon")
 RANDOMIZER_DIRECTORY: Final[Path] = IRONMON_DIRECTORY / "PokeRandoZX"
 RANDOMIZER_JAR: Final[Path] = RANDOMIZER_DIRECTORY / "PokeRandoZX.jar"
 
+
 def get_rom_file_stem(game: str) -> tuple[str, str]:
     match game:
         case "heartgold":
@@ -51,8 +52,8 @@ def main() -> None:
     )
     args = argparser.parse_args()
 
-    input_rom_path, output_rom_path = get_rom_paths(game)
-    rnqs_path = get_rnqs_path(game, variant)
+    input_rom_path, output_rom_path = get_rom_paths(args.game)
+    rnqs_path = get_rnqs_path(args.game, args.variant)
 
     command = [
         "java",
