@@ -79,7 +79,7 @@ def main() -> None:
     if args.dry_run:
         command.insert(0, "echo")
 
-    print(f"Running command: {command}")
+    print(f"Running command: {" ".join(map(str, command))}")
     subprocess.run(command, check=True, cwd=RANDOMIZER_DIRECTORY)
 
 
